@@ -1,0 +1,51 @@
+{
+  "name": "drip-form-validator",
+  "version": "0.0.1",
+  "description": "Simple form validation logic for JavaScript.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel -d lib/ src/",
+    "watch": "npm run test:unit -- -w",
+    "test": "npm run test:lint && npm run test:unit",
+    "test:lint": "eslint --no-ignore src/**/*.js .eslintrc.js",
+    "test:unit": "mocha --compilers js:babel-register ./test/**/*.spec.js",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsuyoshiwada/drip-form-validator.git"
+  },
+  "keywords": [
+    "form",
+    "validation",
+    "drip-form"
+  ],
+  "author": "tsuyoshiwada",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tsuyoshiwada/drip-form-validator/issues"
+  },
+  "homepage": "https://github.com/tsuyoshiwada/drip-form-validator#readme",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.1",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-power-assert": "^1.0.0",
+    "babel-preset-stage-1": "^6.16.0",
+    "babel-register": "^6.18.0",
+    "browserify": "^13.3.0",
+    "eslint": "^3.13.0",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "glob": "^7.1.1",
+    "mocha": "^3.2.0",
+    "power-assert": "^1.4.2"
+  },
+  "dependencies": {
+    "invariant": "^2.2.2",
+    "lodash.foreach": "^4.5.0",
+    "lodash.isempty": "^4.4.0",
+    "lodash.isplainobject": "^4.0.6",
+    "validator": "^6.2.1"
+  }
+}
