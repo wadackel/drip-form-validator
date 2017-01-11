@@ -1,7 +1,7 @@
 import assert from "power-assert";
 import Validator from "../src/";
 
-describe("index", () => {
+describe("Export", () => {
   it("Should be module export", () => {
     assert(Validator);
   });
