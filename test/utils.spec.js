@@ -1,0 +1,103 @@
+/* eslint-disable max-nested-callbacks, no-undefined */
+import assert from "power-assert";
+import * as utils from "../src/utils";
+
+describe("Utilities", () => {
+
+
+  describe("isNumeric()", () => {
+    it("Should be return true", () => {
+      assert(utils.isNumeric(0) === true);
+      assert(utils.isNumeric(10) === true);
+      assert(utils.isNumeric(1.12) === true);
+      assert(utils.isNumeric(-12.28) === true);
+      assert(utils.isNumeric("10") === true);
+      assert(utils.isNumeric("02") === true);
+      assert(utils.isNumeric("-2888.2122") === true);
+      assert(utils.isNumeric("+120") === true);
+    });
+
+    it("Should be return false", () => {
+      assert(utils.isNumeric(NaN) === false);
+      assert(utils.isNumeric(null) === false);
+      assert(utils.isNumeric([]) === false);
+      assert(utils.isNumeric({}) === false);
+      assert(utils.isNumeric("0.0.0") === false);
+      assert(utils.isNumeric("+-1289.82") === false);
+    });
+  });
+
+
+  describe("isInteger()", () => {
+    it("Should be return true", () => {
+      assert(utils.isInteger(0) === true);
+      assert(utils.isInteger(120) === true);
+      assert(utils.isInteger(-12) === true);
+    });
+
+    it("Should be return false", () => {
+      assert(utils.isInteger(NaN) === false);
+      assert(utils.isInteger(null) === false);
+      assert(utils.isInteger([]) === false);
+      assert(utils.isInteger({}) === false);
+      assert(utils.isInteger(85.202) === false);
+      assert(utils.isInteger("622") === false);
+    });
+  });
+
+
+  describe("isFloat()", () => {
+    it("Should be return true", () => {
+      assert(utils.isFloat(-0.27) === true);
+      assert(utils.isFloat(85.202) === true);
+    });
+
+    it("Should be return false", () => {
+      assert(utils.isFloat(NaN) === false);
+      assert(utils.isFloat(null) === false);
+      assert(utils.isFloat([]) === false);
+      assert(utils.isFloat({}) === false);
+      assert(utils.isFloat(0) === false);
+      assert(utils.isFloat(120) === false);
+      assert(utils.isFloat(-12) === false);
+      assert(utils.isFloat("0.23") === false);
+    });
+  });
+
+
+  describe("template()", () => {
+    it("Should be compile template", () => {
+      const tests = [
+        {
+          tmpl: "My name is {{name}}!!",
+          data: { name: "Tsuyoshi Wada", hoge: "fuga" },
+          expected: "My name is Tsuyoshi Wada!!"
+        },
+        {
+          tmpl: "{{key1}} {{key2}} {{key3}}",
+          data: {},
+          expected: "  "
+        },
+        {
+          tmpl: "{fuga}{hoge}",
+          data: { fuga: "test", hoge: "test" },
+          expected: "{fuga}{hoge}"
+        },
+        {
+          tmpl: "{{tmpl-_+}key!!}}!!",
+          data: { "tmpl-_+}key!!": "value" },
+          expected: "value!!"
+        },
+        {
+          tmpl: "{{key}}",
+          data: null,
+          expected: ""
+        }
+      ];
+
+      tests.forEach(({ tmpl, data, expected }) => {
+        assert(utils.template(tmpl, data) === expected);
+      });
+    });
+  });
+});
