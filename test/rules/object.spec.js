@@ -2,17 +2,14 @@
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
-const tester = makeRuleTester(assert, "truthy");
+const tester = makeRuleTester(assert, "object");
 
 
-describe("Rules#truthy", () => {
+describe("Rules#object", () => {
   it("Should be return true", () => {
     tester([
-      1,
-      true,
-      "OK",
-      "Ok",
-      "ok"
+      {},
+      { key: "value" }
     ], true);
   });
 
@@ -22,9 +19,9 @@ describe("Rules#truthy", () => {
       undefined,
       0,
       "",
-      "NO",
-      "No",
-      "no"
+      new Date(),
+      [[], true],
+      () => {}
     ], false);
   });
 });

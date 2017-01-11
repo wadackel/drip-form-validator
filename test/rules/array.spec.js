@@ -2,17 +2,15 @@
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
-const tester = makeRuleTester(assert, "truthy");
+const tester = makeRuleTester(assert, "array");
 
 
-describe("Rules#truthy", () => {
+describe("Rules#array", () => {
   it("Should be return true", () => {
     tester([
-      1,
-      true,
-      "OK",
-      "Ok",
-      "ok"
+      [],
+      ["test"],
+      [{ key: "value" }]
     ], true);
   });
 
@@ -22,9 +20,8 @@ describe("Rules#truthy", () => {
       undefined,
       0,
       "",
-      "NO",
-      "No",
-      "no"
+      {},
+      new Date()
     ], false);
   });
 });

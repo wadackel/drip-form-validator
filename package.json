@@ -8,7 +8,7 @@
     "watch": "npm run test:unit -- -w",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint --no-ignore src/**/*.js .eslintrc.js",
-    "test:unit": "mocha --compilers js:babel-register ./test/**/*.spec.js",
+    "test:unit": "mocha --recursive --compilers js:babel-register",
     "prepublish": "npm run build"
   },
   "repository": {

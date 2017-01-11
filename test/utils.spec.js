@@ -2,9 +2,8 @@
 import assert from "power-assert";
 import * as utils from "../src/utils";
 
+
 describe("Utilities", () => {
-
-
   describe("isNumeric()", () => {
     it("Should be return true", () => {
       assert(utils.isNumeric(0) === true);
@@ -61,6 +60,28 @@ describe("Utilities", () => {
       assert(utils.isFloat(120) === false);
       assert(utils.isFloat(-12) === false);
       assert(utils.isFloat("0.23") === false);
+    });
+  });
+
+
+  describe("isEmpty()", () => {
+    it("Should be return true", () => {
+      assert(utils.isEmpty(false) === true);
+      assert(utils.isEmpty(0) === true);
+      assert(utils.isEmpty(null) === true);
+      assert(utils.isEmpty(undefined) === true);
+      assert(utils.isEmpty(NaN) === true);
+      assert(utils.isEmpty({}) === true);
+      assert(utils.isEmpty([]) === true);
+    });
+
+    it("Should be return false", () => {
+      assert(utils.isEmpty(true) === false);
+      assert(utils.isEmpty(1) === false);
+      assert(utils.isEmpty("0") === false);
+      assert(utils.isEmpty({ key: "value" }) === false);
+      assert(utils.isEmpty(["val"]) === false);
+      assert(utils.isEmpty(new Date()) === false);
     });
   });
 

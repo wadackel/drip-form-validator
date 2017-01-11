@@ -1,3 +1,9 @@
+import "./array.js";
+import "./date.js";
 import "./falsy.js";
 import "./length.js";
+import "./number.js";
+import "./object.js";
+import "./required.js";
+import "./string.js";
 import "./truthy.js";

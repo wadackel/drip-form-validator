@@ -11,6 +11,7 @@ describe("Rules#falsy", () => {
       null,
       undefined,
       0,
+      "",
       "NO",
       "No",
       "no"
