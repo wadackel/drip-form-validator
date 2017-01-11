@@ -1,33 +1,19 @@
 import invariant from "invariant";
 import isPlainObject from "lodash.isplainobject";
 import forEach from "lodash.foreach";
+import { hasProp, template } from "./utils";
 
-const hasProp = (obj, name) => obj.hasOwnProperty(name);
-// TODO
-// "minlength:5",
-// "maxlength:15",
-// "length:5,15",
-// "min:5",
-// "max:15",
-// "range:1,5",
-// "regex:/^hoge$/",
-// "same:password",
-// "different:oldPassword",
-// "in:val1,val2",
-// "notIn:val1,val2",
-// "date",
-// "dateFormat:'YYYY-MM-DD HH:mm:ss'",
 
 class Validator {
   static locale =  "en";
-  static locales = {};
+  static errorMessages = {};
   static rules = {};
 
-  static addRule(name, mapParams, test) {
+  static addRule(name, test) {
     if (Validator.hasRule(name)) {
       invariant(false, `"${name}" rule already exists`);
     } else {
-      Validator.rules[name] = { mapParams, test };
+      Validator.rules[name] = test;
     }
   }
 
@@ -39,19 +25,15 @@ class Validator {
     if (!Validator.hasRule(name)) {
       invariant(false, `"${name}" rule does not exist`);
     } else {
-      return {
-        ...Validator.rules[name],
-        errorMessage: Validator.getErrorMessage(name)
-      };
+      return Validator.rules[name];
     }
   }
 
   static defineLocale(locale, messages) {
-    invariant(
-      hasProp(messages, "defaultMessage"),
-      "locale messages is required by 'defaultMessage' field"
-    );
-    Validator.locales[locale] = messages;
+    const currentLocale = Validator.getLocale();
+    Validator.setLocale(locale);
+    Validator.setErrorMessages(messages);
+    Validator.setLocale(currentLocale);
   }
 
   static getLocale() {
@@ -68,48 +50,128 @@ class Validator {
   }
 
   static getErrorMessages() {
-    return Validator.locales[Validator.locale];
+    return Validator.errorMessages[Validator.getLocale()];
   }
 
-  static parseValidateRule(rule) {
-    // TODO
-    console.log(rule);
+  static setErrorMessages(messages) {
+    invariant(
+      hasProp(messages, "defaultMessage"),
+      "locale messages is required by 'defaultMessage' field"
+    );
+    Validator.errorMessages[Validator.getLocale()] = messages;
+  }
+
+  static addErrorMessage(name, message) {
+    const messages = Validator.getErrorMessages();
+
+    invariant(
+      !hasProp(messages, name),
+      `"${name}" error message already exists`
+    );
+
+    Validator.setErrorMessages({ ...messages, [name]: message });
   }
 
   constructor(values = {}, rules = {}) {
-    invariant(isPlainObject(values), "`values` must be plain object");
-    this.rules = this.setRules(rules);
-    this.values = { ...values };
+    this.setRules(rules);
+    this.setValues(values);
     this.errors = {};
   }
 
   setRules(rules) {
-    invariant(isPlainObject(rules), "`rules` must be plain object");
-    forEach(rule => {
-      // TODO
-      console.log(rule);
-    });
+    this.rules = {};
+    this.mergeRules(rules);
   }
 
-  // TODO
+  mergeRules(rules) {
+    invariant(isPlainObject(rules), "`rules` must be plain object");
+    this.rules = { ...this.rules, ...rules };
+  }
+
+  getValues() {
+    return this.values;
+  }
+
+  setValues(values) {
+    this.values = {};
+    this.mergeValues(values);
+  }
+
+  mergeValues(values) {
+    invariant(isPlainObject(values), "`values` must be plain object");
+    this.values = { ...this.values, ...values };
+  }
+
+  getValue(key) {
+    return this.hasValue(key) ? this.values[key] : null;
+  }
+
+  setValue(key, value) {
+    this.values[key] = value;
+  }
+
+  hasValue(key) {
+    return hasProp(this.values, key);
+  }
+
+  getErrors() {
+    return this.errors;
+  }
+
+  setErrors(errors) {
+    this.errors = errors;
+  }
+
+  getError(key) {
+    return this.hasError(key) ? this.errors[key] : null;
+  }
+
+  setError(key, params = null) {
+    const tmpl = Validator.getErrorMessage(key);
+    this.errors[key] = template(tmpl, params);
+  }
+
+  hasError(key) {
+    return hasProp(this.errors, key);
+  }
+
+  hasErrors() {
+    return Object.keys(this.errors).length > 0;
+  }
+
+  clearError(key) {
+    if (this.hasError(key)) {
+      delete this.errors[key];
+    }
+  }
+
+  clearErrors() {
+    this.errors = {};
+  }
+
   validate() {
-  //   this._errors = {};
-  //
-  //   forEach(this._rules, (rules, key) => {
-  //     const value = this._values[key];
-  //
-  //     forEach(rules, rule => {
-  //       const { test, errorMessage } = Validator.getRule(rule);
-  //       const res = test(value, key, null, this._values, this);
-  //
-  //       if (!res) {
-  //         this.setError(key, errorMessage);
-  //         return false;
-  //       }
-  //     });
-  //   });
-  //
-  //   return Object.keys(this._errors).length === 0;
+    this.setErrors({});
+
+    forEach(this.values, (value, key) => {
+      if (!hasProp(this.rules, key)) return false;
+      const validates = this.rules[key];
+
+      forEach(validates, rules => {
+        forEach(rules, (params, ruleName) => {
+          const isObj = isPlainObject(params);
+          if (!isObj && params !== true) return;
+
+          const test = Validator.getRule(ruleName);
+          const res = test(value, isObj ? params : null, key, this.values, this);
+          if (res) return;
+
+          this.setError(key, params);
+          return false;
+        });
+      });
+    });
+
+    return !this.hasErrors();
   }
 }
 
