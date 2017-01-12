@@ -16,9 +16,18 @@ class Validator {
     }
 
     const isDependsArray = isArray(depends);
-    if (isDependsArray && !depends.every(Validator.hasRule)) {
-      invariant(false, "invalid depends");
-      return;
+
+    if (isDependsArray) {
+      const isDependsValid = depends.every(rule => {
+        let res = true;
+        forEach(rule, (params, key) => {
+          res = Validator.hasRule(key);
+          invariant(res, `"${key}" rule does not exist`);
+        });
+        return res;
+      });
+
+      if (!isDependsValid) return;
     }
 
     const finalDepends = isDependsArray ? depends : [];
@@ -171,19 +180,7 @@ class Validator {
 
       forEach(validates, rules => {
         forEach(rules, (params, ruleName) => {
-          const isObj = isPlainObject(params);
-          if (!isObj && params !== true) return;
-
-          const res = this.execTest(
-            ruleName,
-            key,
-            value,
-            isObj ? params : null,
-            this.values
-          );
-
-          if (res) return;
-
+          if (this.execTest(ruleName, key, value, params, this.values)) return;
           this.setError(key, params);
           return false;
         });
@@ -194,12 +191,23 @@ class Validator {
   }
 
   execTest(ruleName, key, value, params, values) {
-    const { test, depends } = Validator.getRule(ruleName);
-    const dependsFailure = depends.some(k =>
-      !this.execTest(k, key, value, params, values)
-    );
+    const isObj = isPlainObject(params);
+    if (!isObj && params !== true) return true;
 
-    return dependsFailure ? true : test(value, params, key, values, this);
+    const finalParams = isObj ? params : null;
+    const { test, depends } = Validator.getRule(ruleName);
+    const dependsFailure = depends.some(dep => {
+      let res = false;
+      forEach(dep, (p, k) => {
+        if (!this.execTest(k, key, value, p, values)) {
+          res = true;
+          return false;
+        }
+      });
+      return res;
+    });
+
+    return dependsFailure ? true : test(value, finalParams, key, values, this);
   }
 }
 
