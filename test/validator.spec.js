@@ -83,7 +83,7 @@ describe("Validator", () => {
 
       it("Should be added rule with depends", () => {
         const addTest = () => false;
-        const dep = [{ truthy: true }];
+        const dep = { truthy: true };
         const rule = "testRuleName2";
         Validator.addRule(rule, dep, addTest);
 
@@ -95,7 +95,7 @@ describe("Validator", () => {
 
       it("Should be throw a error when call rule does not exist", () => {
         assert.throws(() => {
-          Validator.addRule("passnotfoundrule", [{ notfound: true }], () => false);
+          Validator.addRule("passnotfoundrule", { notfound: true }, () => false);
         });
       });
     });
@@ -198,8 +198,8 @@ describe("Validator", () => {
 
       Validator.addRule("returnTrue", returnTrue);
       Validator.addRule("returnFalse", returnFalse);
-      Validator.addRule(rule1, [{ returnTrue: true }], test1);
-      Validator.addRule(rule2, [{ returnTrue: true }, { returnFalse: true }], test2);
+      Validator.addRule(rule1, { returnTrue: true }, test1);
+      Validator.addRule(rule2, { returnTrue: true, returnFalse: true }, test2);
 
       assert(v.validate() === true);
       assert(returnTrue.callCount === 2);

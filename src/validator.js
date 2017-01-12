@@ -1,7 +1,7 @@
 import invariant from "invariant";
 import isPlainObject from "lodash.isplainobject";
 import forEach from "lodash.foreach";
-import { isArray, hasProp, template } from "./utils";
+import { hasProp, template } from "./utils";
 
 
 class Validator {
@@ -15,23 +15,20 @@ class Validator {
       return;
     }
 
-    const isDependsArray = isArray(depends);
+    const isDependsObj = isPlainObject(depends);
 
-    if (isDependsArray) {
-      const isDependsValid = depends.every(rule => {
-        let res = true;
-        forEach(rule, (params, key) => {
-          res = Validator.hasRule(key);
-          invariant(res, `"${key}" rule does not exist`);
-        });
-        return res;
+    if (isDependsObj) {
+      let res = true;
+      forEach(depends, (params, key) => {
+        res = Validator.hasRule(key);
+        invariant(res, `"${key}" rule does not exist`);
       });
 
-      if (!isDependsValid) return;
+      if (!res) return;
     }
 
-    const finalDepends = isDependsArray ? depends : [];
-    const finalTest = isDependsArray ? test : depends;
+    const finalDepends = isDependsObj ? depends : [];
+    const finalTest = isDependsObj ? test : depends;
 
     Validator.rules[name] = {
       depends: finalDepends,
@@ -196,18 +193,16 @@ class Validator {
 
     const finalParams = isObj ? params : null;
     const { test, depends } = Validator.getRule(ruleName);
-    const dependsFailure = depends.some(dep => {
-      let res = false;
-      forEach(dep, (p, k) => {
-        if (!this.execTest(k, key, value, p, values)) {
-          res = true;
-          return false;
-        }
-      });
-      return res;
+    let passDepends = true;
+
+    forEach(depends, (p, k) => {
+      if (!this.execTest(k, key, value, p, values)) {
+        passDepends = false;
+        return false;
+      }
     });
 
-    return dependsFailure ? true : test(value, finalParams, key, values, this);
+    return passDepends ? test(value, finalParams, key, values, this) : true;
   }
 }
 
