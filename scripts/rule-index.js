@@ -4,9 +4,30 @@ const glob = require("glob");
 
 const rulesDir = path.join(__dirname, "..", "src", "rules");
 const indexFile = path.join(rulesDir, "index.js");
-const ignore = [indexFile];
+const mapRulesDir = arr => arr.map(f => path.join(rulesDir, f));
+
+const ignore = mapRulesDir([
+  "index.js"
+]);
+
+const coreRules = mapRulesDir([
+  "array.js",
+  "date.js",
+  "falsy.js",
+  "float.js",
+  "integer.js",
+  "number.js",
+  "numeric.js",
+  "object.js",
+  "required.js",
+  "string.js",
+  "truthy.js"
+]);
+
 const nodir = true;
-const files = glob.sync(`${rulesDir}/*.js`, { nodir, ignore });
+const globPath = `${rulesDir}/*.js`;
+const advancedRules = glob.sync(globPath, { nodir, ignore: [...ignore, ...coreRules] });
+const files = [...coreRules, ...advancedRules];
 const indexContent = files.map(f =>
   `import "./${path.basename(f)}";`
 ).join("\n");

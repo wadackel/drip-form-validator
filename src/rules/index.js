@@ -1,9 +1,14 @@
 import "./array.js";
 import "./date.js";
 import "./falsy.js";
-import "./length.js";
+import "./float.js";
+import "./integer.js";
 import "./number.js";
+import "./numeric.js";
 import "./object.js";
 import "./required.js";
 import "./string.js";
 import "./truthy.js";
+import "./email.js";
+import "./length.js";
+import "./url.js";
