@@ -68,7 +68,7 @@ describe("Validator", () => {
         const addTest = () => false;
         Validator.addRule("testRuleName1", addTest);
 
-        const test = Validator.getRule("testRuleName1");
+        const { test } = Validator.getRule("testRuleName1");
         assert(test === addTest);
       });
 
@@ -77,6 +77,24 @@ describe("Validator", () => {
         Validator.addRule("hoge", params => ({ key1: params[0] }), () => true);
         assert.throws(() => {
           Validator.addRule("hoge", null, () => false);
+        });
+      });
+
+
+      it("Should be added rule with depends", () => {
+        const addTest = () => false;
+        const dep = ["truthy"];
+        Validator.addRule("testRuleName2", dep, addTest);
+
+        const { test, depends } = Validator.getRule("testRuleName2");
+        assert(test === addTest);
+        assert.deepStrictEqual(depends, dep);
+      });
+
+
+      it("Should be throw a error when call rule does not exist", () => {
+        assert.throws(() => {
+          Validator.addRule("passnotfoundrule", ["notfound!!"], () => false);
         });
       });
     });
@@ -162,6 +180,31 @@ describe("Validator", () => {
 
       assert(v.validate() === true);
       assert(test.called === true);
+    });
+
+
+    it("Should be called rules dependent on validation", () => {
+      const rule1 = "depend-test-1";
+      const rule2 = "depend-test-2";
+      const returnTrue = sinon.stub().returns(true);
+      const returnFalse = sinon.stub().returns(false);
+      const test1 = sinon.stub().returns(true);
+      const test2 = sinon.stub().returns(true);
+      const v = new Validator(
+        { k1: "v1", k2: "v2" },
+        { k1: [{ [rule1]: true }], k2: [{ [rule2]: true }] }
+      );
+
+      Validator.addRule("returnTrue", returnTrue);
+      Validator.addRule("returnFalse", returnFalse);
+      Validator.addRule(rule1, ["returnTrue"], test1);
+      Validator.addRule(rule2, ["returnTrue", "returnFalse"], test2);
+
+      assert(v.validate() === true);
+      assert(returnTrue.callCount === 2);
+      assert(returnFalse.callCount === 1);
+      assert(test1.called === true);
+      assert(test2.called === false);
     });
   });
 });

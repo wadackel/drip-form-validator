@@ -1,7 +1,7 @@
 import invariant from "invariant";
 import isPlainObject from "lodash.isplainobject";
 import forEach from "lodash.foreach";
-import { hasProp, template } from "./utils";
+import { isArray, hasProp, template } from "./utils";
 
 
 class Validator {
@@ -9,12 +9,25 @@ class Validator {
   static errorMessages = {};
   static rules = {};
 
-  static addRule(name, test) {
+  static addRule(name, depends, test) {
     if (Validator.hasRule(name)) {
       invariant(false, `"${name}" rule already exists`);
-    } else {
-      Validator.rules[name] = test;
+      return;
     }
+
+    const isDependsArray = isArray(depends);
+    if (isDependsArray && !depends.every(Validator.hasRule)) {
+      invariant(false, "invalid depends");
+      return;
+    }
+
+    const finalDepends = isDependsArray ? depends : [];
+    const finalTest = isDependsArray ? test : depends;
+
+    Validator.rules[name] = {
+      depends: finalDepends,
+      test: finalTest
+    };
   }
 
   static hasRule(name) {
@@ -161,8 +174,14 @@ class Validator {
           const isObj = isPlainObject(params);
           if (!isObj && params !== true) return;
 
-          const test = Validator.getRule(ruleName);
-          const res = test(value, isObj ? params : null, key, this.values, this);
+          const res = this.execTest(
+            ruleName,
+            key,
+            value,
+            isObj ? params : null,
+            this.values
+          );
+
           if (res) return;
 
           this.setError(key, params);
@@ -172,6 +191,15 @@ class Validator {
     });
 
     return !this.hasErrors();
+  }
+
+  execTest(ruleName, key, value, params, values) {
+    const { test, depends } = Validator.getRule(ruleName);
+    const dependsFailure = depends.some(k =>
+      !this.execTest(k, key, value, params, values)
+    );
+
+    return dependsFailure ? true : test(value, params, key, values, this);
   }
 }
 
