@@ -22,6 +22,8 @@ import "./json.js";
 import "./length.js";
 import "./lowerCase.js";
 import "./match.js";
+import "./maxLength.js";
+import "./minLength.js";
 import "./same.js";
 import "./upperCase.js";
 import "./url.js";

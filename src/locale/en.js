@@ -17,7 +17,7 @@ Validator.defineLocale("en", {
   dateFormat: "This field does not match the format {{format}}",
   length: "This field must be between {{min}} and {{max}} characters",
   minLength: "This field must be at least {{min}} characters",
-  maxLength: "This field may not be greater than {{max}} characters",
+  maxLength: "This field may not be greater than or equal {{max}} characters",
   range: "This field must be between {{min}} and {{max}}",
   min: "This field must be at least {{min}}",
   max: "This field may not be greater than {{max}}",

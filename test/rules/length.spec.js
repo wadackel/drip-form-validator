@@ -8,7 +8,7 @@ const tester = makeRuleTester(assert, "length");
 describe("Rules#length", () => {
   it("Should be return true", () => {
     tester([
-      ["hoge", { min: 4, max: 15 }],
+      ["hoge", { min: 4, max: 4 }],
       ["1234567890", { min: 0, max: 10 }],
       ["日本語", { min: 3, max: 3 }]
     ], true);
