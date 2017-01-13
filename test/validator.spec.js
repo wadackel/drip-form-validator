@@ -151,9 +151,9 @@ describe("Validator", () => {
         notcall: "teststring"
       };
       const v = new Validator(values, {
-        username: [{ [rule1]: true }],
-        password: [{ [rule1]: true }],
-        notcall: [{ [rule2]: false }]
+        username: { [rule1]: true },
+        password: { [rule1]: true },
+        notcall: { [rule2]: false }
       });
 
       test1.withArgs("tsuyoshiwada", null, "username", values, v).returns(true);
@@ -173,7 +173,7 @@ describe("Validator", () => {
       const test = sinon.stub();
       const values = { fuga: "hoge", key: "value" };
       const params = { arg1: "val1", arg2: "val2" };
-      const v = new Validator(values, { fuga: [{ [rule]: params }] });
+      const v = new Validator(values, { fuga: { [rule]: params } });
 
       test.withArgs("hoge", params, "fuga", values, v).returns(true);
 
@@ -193,7 +193,7 @@ describe("Validator", () => {
       const test2 = sinon.stub().returns(true);
       const v = new Validator(
         { k1: "v1", k2: "v2" },
-        { k1: [{ [rule1]: true }], k2: [{ [rule2]: true }] }
+        { k1: { [rule1]: true }, k2: { [rule2]: true } }
       );
 
       Validator.addRule("returnTrue", returnTrue);

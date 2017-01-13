@@ -175,12 +175,10 @@ class Validator {
       if (!hasProp(this.rules, key)) return false;
       const validates = this.rules[key];
 
-      forEach(validates, rules => {
-        forEach(rules, (params, ruleName) => {
-          if (this.execTest(ruleName, key, value, params, this.values)) return;
-          this.setError(key, params);
-          return false;
-        });
+      forEach(validates, (params, ruleName) => {
+        if (this.execTest(ruleName, key, value, params, this.values)) return;
+        this.setError(key, params);
+        return false;
       });
     });
 

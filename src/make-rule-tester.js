@@ -9,10 +9,18 @@ const makeRuleTester = (assert, ruleName) => ((tests, bool) => {
     const v = new Validator({
       key: value
     }, {
-      key: [{ [ruleName]: params }]
+      key: { [ruleName]: params }
     });
 
-    assert(v.validate() === bool, `${ruleName}#${value}(${params}) = ${bool}`);
+    let prettyParams = "";
+
+    try {
+      prettyParams = JSON.stringify(params);
+    } catch (e) {
+      prettyParams = params;
+    }
+
+    assert(v.validate() === bool, `${ruleName}#${value}(${prettyParams}) = ${bool}`);
   });
 });
 

@@ -16,6 +16,7 @@ describe("Rules#required", () => {
       0.0,
       -90.2,
       "0",
+      true,
       new Date()
     ], true);
   });
@@ -26,6 +27,7 @@ describe("Rules#required", () => {
       undefined,
       {},
       [[], true],
+      false,
       ""
     ], false);
   });
