@@ -14,6 +14,7 @@ import "./alphaDash.js";
 import "./alphaNumeric.js";
 import "./creditCard.js";
 import "./email.js";
+import "./equals.js";
 import "./hexColor.js";
 import "./ip.js";
 import "./json.js";
