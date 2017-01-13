@@ -14,7 +14,6 @@ Validator.defineLocale("en", {
   alphaDash: "This field may only contain letters, numbers, and dasheds",
   alphaNum: "This field may only contain letters, and numbers",
   date: "This field is not a valid date",
-  dateFormat: "This field does not match the format {{format}}",
   length: "This field must be between {{min}} and {{max}} characters",
   minLength: "This field must be at least {{min}} characters",
   maxLength: "This field may not be greater than or equal {{max}} characters",

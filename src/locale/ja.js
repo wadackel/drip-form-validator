@@ -14,7 +14,6 @@ Validator.defineLocale("ja", {
   alphaDash: "英数字(-や_を含む)である必要があります",
   alphaNum: "英数字である必要があります",
   date: "日付が正しくありません",
-  dateFormat: "日付の形式は「{{{format}}」である必要があります",
   length: "{{min}}〜{{max}}文字である必要があります",
   minLength: "{{min}}文字以上である必要があります",
   maxLength: "{{max}}文字以下である必要があります",
