@@ -37,7 +37,7 @@ class Validator {
   }
 
   static hasRule(name) {
-    return Validator.rules.hasOwnProperty(name);
+    return hasProp(Validator.rules, name);
   }
 
   static getRule(name) {
@@ -69,7 +69,7 @@ class Validator {
 
   static getErrorMessage(name) {
     const messages = Validator.getErrorMessages();
-    return messages.hasOwnProperty(name) ? messages[name] : messages.defaultMessage;
+    return hasProp(messages, name) ? messages[name] : messages.defaultMessage;
   }
 
   static getErrorMessages() {
