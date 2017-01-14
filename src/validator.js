@@ -50,9 +50,9 @@ class Validator {
 
   static defineLocale(locale, messages) {
     const currentLocale = Validator.getLocale();
-    Validator.setLocale(locale);
+    Validator.locale = locale;
     Validator.setErrorMessages(messages);
-    Validator.setLocale(currentLocale);
+    Validator.locale = currentLocale;
   }
 
   static getLocale() {
@@ -60,6 +60,10 @@ class Validator {
   }
 
   static setLocale(locale) {
+    invariant(
+      hasProp(Validator.errorMessages, locale),
+      `"${locale}" locale is does not exist`
+    );
     Validator.locale = locale;
   }
 

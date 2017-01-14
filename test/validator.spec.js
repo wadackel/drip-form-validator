@@ -29,6 +29,13 @@ describe("Validator", () => {
       });
 
 
+      it("should throw a error when specify doesn't exist locale", () => {
+        assert.throws(() => {
+          Validator.setLocale("notfoundlocale");
+        });
+      });
+
+
       it("Should throw a error when missing defaultMessage field", () => {
         assert.throws(() => {
           Validator.defineLocale("hoge", {});
