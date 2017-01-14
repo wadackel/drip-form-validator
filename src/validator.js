@@ -149,8 +149,8 @@ class Validator {
     return this.hasError(key) ? this.errors[key] : null;
   }
 
-  setError(key, params = null) {
-    const tmpl = Validator.getErrorMessage(key);
+  setError(key, ruleName, params = null) {
+    const tmpl = Validator.getErrorMessage(ruleName);
     this.errors[key] = template(tmpl, params);
   }
 
@@ -181,7 +181,7 @@ class Validator {
 
       forEach(validates, (params, ruleName) => {
         if (this.execTest(ruleName, key, value, params, this.values)) return;
-        this.setError(key, params);
+        this.setError(key, ruleName, params);
         return false;
       });
     });

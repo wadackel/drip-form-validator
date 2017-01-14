@@ -123,6 +123,7 @@ describe("Validator", () => {
 
 
     it("Should be manupilate errors", () => {
+      const key = "key";
       const rule = "manupilate-error-false";
       Validator.addRule(rule, () => false);
       Validator.addErrorMessage(rule, "{{key}}");
@@ -130,18 +131,18 @@ describe("Validator", () => {
       const v = new Validator();
 
       assert.deepStrictEqual(v.getErrors(), {});
-      assert(v.getError(rule) == null);
+      assert(v.getError(key) == null);
 
-      v.setError(rule, { key: "value" });
-      assert(v.getError(rule) === "value");
+      v.setError(key, rule, { key: "value" });
+      assert(v.getError(key) === "value");
 
-      v.setError(rule);
-      assert(v.getError(rule) === "");
+      v.setError(key, rule);
+      assert(v.getError(key) === "");
 
-      v.clearError(rule);
-      assert(v.getError(rule) == null);
+      v.clearError(key);
+      assert(v.getError(key) == null);
 
-      v.setError(rule);
+      v.setError(key, rule);
       v.clearErrors();
       assert.deepStrictEqual(v.getErrors(), {});
     });
