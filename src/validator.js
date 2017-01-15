@@ -175,9 +175,8 @@ class Validator {
   validate() {
     this.setErrors({});
 
-    forEach(this.values, (value, key) => {
-      if (!hasProp(this.rules, key)) return false;
-      const validates = this.rules[key];
+    forEach(this.rules, (validates, key) => {
+      const value = this.getValue(key);
 
       forEach(validates, (params, ruleName) => {
         if (this.execTest(ruleName, key, value, params, this.values)) return;

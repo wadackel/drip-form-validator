@@ -1,6 +1,6 @@
 /* eslint-disable no-undefined */
 import assert from "power-assert";
-import { makeRuleTester } from "../../src/";
+import Validator, { makeRuleTester } from "../../src/";
 
 const tester = makeRuleTester(assert, "required");
 
@@ -30,5 +30,12 @@ describe("Rules#required", () => {
       false,
       ""
     ], false);
+
+    // key does not exist
+    const v = new Validator({}, {
+      key: { required: true }
+    });
+
+    assert(v.validate() === false);
   });
 });
