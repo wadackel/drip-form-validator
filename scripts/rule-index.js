@@ -29,8 +29,8 @@ const globPath = `${rulesDir}/*.js`;
 const advancedRules = glob.sync(globPath, { nodir, ignore: [...ignore, ...coreRules] });
 const files = [...coreRules, ...advancedRules];
 const indexContent = files.map(f =>
-  `import "./${path.basename(f)}";`
-).join("\n");
+  `import "./${path.basename(f)}";\n`
+).join("");
 
 fs.writeFileSync(indexFile, indexContent, "utf8");
 console.log("Done!!");
