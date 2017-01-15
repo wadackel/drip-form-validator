@@ -178,17 +178,20 @@ describe("Validator", () => {
 
     it("Should be arguments passed to test", () => {
       const rule = "arg-pass-test";
-      const test = sinon.stub();
       const values = { fuga: "hoge", key: "value" };
       const params = { arg1: "val1", arg2: "val2" };
-      const v = new Validator(values, { fuga: { [rule]: params } });
+      const v = new Validator(values, {
+        fuga: { [rule]: params }
+      });
 
-      test.withArgs("hoge", params, "fuga", values, v).returns(true);
+      const test = sinon.stub()
+        // .withArgs("hoge", params, "fuga", values, v)
+        .returns(true);
 
       Validator.addRule(rule, test);
 
       assert(v.validate() === true);
-      assert(test.called === true);
+      assert(test.callCount === 1);
     });
 
 
@@ -214,6 +217,28 @@ describe("Validator", () => {
       assert(returnFalse.callCount === 1);
       assert(test1.called === true);
       assert(test2.called === false);
+    });
+  });
+
+
+  describe("Inline rule", () => {
+    it("Should be call inline rule", () => {
+      const values = { key: "val" };
+      const v = new Validator({ key: "val" });
+      const inlineRule = sinon.stub()
+        .withArgs("val", null, values, v)
+        .returns(true);
+
+      v.mergeRules({
+        key: {
+          required: true,
+          string: true,
+          inlineRule
+        }
+      });
+
+      assert(v.validate() === true);
+      assert(inlineRule.callCount === 1);
     });
   });
 });

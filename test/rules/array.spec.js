@@ -8,9 +8,9 @@ const tester = makeRuleTester(assert, "array");
 describe("Rules#array", () => {
   it("Should be return true", () => {
     tester([
-      [],
-      ["test"],
-      [{ key: "value" }]
+      [[], true],
+      [["test"], true],
+      [[{ key: "value" }], true]
     ], true);
   });
 

@@ -1,7 +1,7 @@
 import invariant from "invariant";
 import isPlainObject from "lodash.isplainobject";
 import forEach from "lodash.foreach";
-import { hasProp, template } from "./utils";
+import { hasProp, template, isString, isFunction } from "./utils";
 
 
 class Validator {
@@ -149,9 +149,13 @@ class Validator {
     return this.hasError(key) ? this.errors[key] : null;
   }
 
+  setErrorRaw(key, message) {
+    this.errors[key] = message;
+  }
+
   setError(key, ruleName, params = null) {
     const tmpl = Validator.getErrorMessage(ruleName);
-    this.errors[key] = template(tmpl, params);
+    this.setErrorRaw(key, template(tmpl, params));
   }
 
   hasError(key) {
@@ -179,8 +183,15 @@ class Validator {
       const value = this.getValue(key);
 
       forEach(validates, (params, ruleName) => {
-        if (this.execTest(ruleName, key, value, params, this.values)) return;
-        this.setError(key, ruleName, params);
+        const res = this.executeTest(ruleName, key, value, params, this.values);
+        if (res === true) return;
+
+        if (isString(res)) {
+          this.setErrorRaw(key, res);
+        } else {
+          this.setError(key, ruleName, params);
+        }
+
         return false;
       });
     });
@@ -188,22 +199,46 @@ class Validator {
     return !this.hasErrors();
   }
 
-  execTest(ruleName, key, value, params, values) {
-    const isObj = isPlainObject(params);
-    if (!isObj && params !== true) return true;
+  executeTest(ruleName, key, value, params, values) {
+    const isObjParams = isPlainObject(params);
+    const isCallable = isFunction(params);
+    if (!isCallable && !isObjParams && params !== true) return true;
 
-    const finalParams = isObj ? params : null;
+    if (Validator.hasRule(ruleName)) {
+      return this.executeBuiltInTest(
+        ruleName,
+        key,
+        value,
+        isObjParams ? params : null,
+        values
+      );
+
+    } else if (isCallable) {
+      return this.executeInlineTest(
+        params,
+        key,
+        value,
+        values
+      );
+    }
+  }
+
+  executeBuiltInTest(ruleName, key, value, params, values) {
     const { test, depends } = Validator.getRule(ruleName);
     let passDepends = true;
 
     forEach(depends, (p, k) => {
-      if (!this.execTest(k, key, value, p, values)) {
+      if (!this.executeTest(k, key, value, p, values)) {
         passDepends = false;
         return false;
       }
     });
 
-    return passDepends ? test(value, finalParams, key, values, this) : true;
+    return passDepends ? test(value, params, key, values, this) : true;
+  }
+
+  executeInlineTest(test, key, value, values) {
+    return test(value, null, key, values, this);
   }
 }
 

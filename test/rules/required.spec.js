@@ -9,7 +9,7 @@ describe("Rules#required", () => {
   it("Should be return true", () => {
     tester([
       "test",
-      ["hoge"],
+      [["hoge"], true],
       { key: "value" },
       1.2,
       0,

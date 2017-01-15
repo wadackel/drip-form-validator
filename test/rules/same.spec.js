@@ -17,7 +17,7 @@ describe("Rules#same", () => {
       password: "testhogefuga",
       passwordConfirm: "testhogefuga"
     }, {
-      password: { same: "passwordConfirm" }
+      password: { same: { key: "passwordConfirm" } }
     });
 
     assert(v.validate() === true);
@@ -26,7 +26,7 @@ describe("Rules#same", () => {
       key: { prop: "obj" },
       other: { prop: "obj" }
     }, {
-      key: { same: "other" }
+      key: { same: { key: "other" } }
     });
 
     assert(v.validate() === true);
