@@ -3,13 +3,21 @@ import assert from "power-assert";
 import sinon from "sinon";
 import Validator from "../src/";
 
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const defaultMessages = Validator.getErrorMessages();
+let clock = null;
 
 
 describe("Validator", () => {
   beforeEach(() => {
+    clock = sinon.useFakeTimers();
     Validator.setLocale("en");
     Validator.setErrorMessages(defaultMessages);
+  });
+
+  afterEach(() => {
+    clock.restore();
   });
 
 
@@ -239,6 +247,114 @@ describe("Validator", () => {
 
       assert(v.validate() === true);
       assert(inlineRule.callCount === 1);
+    });
+  });
+
+
+  describe("Asynchronous validation", () => {
+    it("Should be return resolve (success)", done => {
+      const passValues = { key: "test" };
+      const v = new Validator(passValues, {
+        key: {
+          accountExist: () => sleep(200)
+        }
+      });
+
+      assert(v.isValidating() === false);
+
+      const p = v.asyncValidate();
+
+      p.then(values => {
+        assert(v.isValidating() === false);
+        assert.deepStrictEqual(passValues, values);
+        done();
+      });
+
+      assert(v.isValidating() === true);
+      clock.tick(100);
+
+      assert(v.isValidating() === true);
+      clock.tick(100);
+    });
+
+
+    it("Should be return reject (failure)", done => {
+      const passValues = { key: "test" };
+      const v = new Validator(passValues, {
+        key: {
+          accountExist: () => sleep(100).then(() => Promise.reject("Error!!"))
+        }
+      });
+
+      assert(v.isValidating() === false);
+
+      v.asyncValidate()
+        .then(() => {
+          throw new Error("Failure");
+        })
+        .catch(errors => {
+          assert(v.isValidating() === false);
+          assert.deepStrictEqual(errors, { key: "Error!!" });
+          done();
+        });
+
+      assert(v.isValidating() === true);
+      clock.tick(100);
+    });
+
+
+    it("Should be called sync and async test (success)", done => {
+      const passValues = {
+        email: "test@mail.com",
+        password: "123456"
+      };
+
+      const v = new Validator(passValues, {
+        email: {
+          email: true,
+          login: () => sleep(1000)
+        },
+        password: {
+          required: true,
+          passFormat: val => /^\d+$/.test(val)
+        }
+      });
+
+      v.asyncValidate().then(values => {
+        assert.deepStrictEqual(passValues, values);
+        done();
+      });
+
+      clock.tick(1000);
+    });
+
+
+    it("Should be called sync and async test (failure)", done => {
+      const passValues = {
+        email: "test@mail.com",
+        password: ""
+      };
+
+      const v = new Validator(passValues, {
+        email: {
+          email: true,
+          login: () => sleep(1000).then(() => Promise.reject("Error!!"))
+        },
+        password: {
+          required: true,
+          passFormat: val => /^\d+$/.test(val)
+        }
+      });
+
+      v.asyncValidate().catch(errors => {
+        assert.deepStrictEqual(errors, {
+          email: "Error!!",
+          password: "This field is required"
+        });
+        done();
+      });
+
+      clock.tick(1000);
     });
   });
 });

@@ -1,8 +1,15 @@
 import invariant from "invariant";
+import map from "lodash.map";
 import isPlainObject from "lodash.isplainobject";
 import forEach from "lodash.foreach";
-import { hasProp, template, isString, isFunction } from "./utils";
-
+import {
+  hasProp,
+  isString,
+  isFunction,
+  isPromise,
+  template,
+  seriallyPromises
+} from "./utils";
 
 class Validator {
   static locale =  "en";
@@ -99,6 +106,7 @@ class Validator {
     this.setRules(rules);
     this.setValues(values);
     this.errors = {};
+    this.validating = false;
   }
 
   setRules(rules) {
@@ -176,7 +184,12 @@ class Validator {
     this.errors = {};
   }
 
+  isValidating() {
+    return this.validating;
+  }
+
   validate() {
+    this.validating = true;
     this.setErrors({});
 
     forEach(this.rules, (validates, key) => {
@@ -196,7 +209,51 @@ class Validator {
       });
     });
 
+    this.validating = false;
     return !this.hasErrors();
+  }
+
+  asyncValidate() {
+    this.validating = true;
+    this.setErrors({});
+
+    return seriallyPromises(map(this.rules, (validates, key) => {
+      const value = this.getValue(key);
+
+      return seriallyPromises(map(validates, (params, ruleName) =>
+        this.executeAsyncTest(ruleName, key, value, params, this.values)
+      ));
+    }))
+      .then(() => {
+        this.validating = false;
+        return Promise.resolve(this.getValues());
+      })
+      .catch(() => {
+        this.validating = false;
+        return Promise.reject(this.getErrors());
+      });
+  }
+
+  executeAsyncTest(ruleName, key, value, params, values) {
+    const res = this.executeTest(ruleName, key, value, params, values);
+
+    if (res === true) return Promise.resolve();
+
+    if (!isPromise(res)) {
+      if (!this.hasError(key)) {
+        if (isString(res)) {
+          this.setErrorRaw(key, res);
+        } else {
+          this.setError(key, ruleName, params);
+        }
+      }
+      return Promise.reject();
+    }
+
+    return res.catch(message => {
+      this.setErrorRaw(key, message);
+      return Promise.reject();
+    });
   }
 
   executeTest(ruleName, key, value, params, values) {

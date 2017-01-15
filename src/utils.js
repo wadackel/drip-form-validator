@@ -8,6 +8,7 @@ export const isBoolean = val => typeOf(val) === "boolean";
 export const isString = val => typeOf(val) === "string";
 export const isNumber = val => typeOf(val) === "number";
 export const isFunction = val => !!(val && val.constructor && val.call && val.apply);
+export const isPromise = val => val && isFunction(val.then);
 export const isDate = val => toString(val) === "[object Date]" ? true : isString(val) && _isDate(val);
 export const isArray = val => Array.isArray(val);
 export const isNumeric = val => !isArray(val) && (val - parseFloat(val, 10) + 1) >= 0;
@@ -24,4 +25,10 @@ export const hasProp = (obj, name) => obj.hasOwnProperty(name);
 
 export const template = (str, data) => (
   str.replace(/{{([\s\S]+?)}}/g, (all, key) => data && hasProp(data, key) ? data[key] : "")
+);
+
+export const seriallyPromises = array => (
+  array.reduce((current, next) => (
+    current.then(() => next)
+  ), Promise.resolve())
 );
