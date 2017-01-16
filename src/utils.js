@@ -26,9 +26,3 @@ export const hasProp = (obj, name) => obj.hasOwnProperty(name);
 export const template = (str, data) => (
   str.replace(/{{([\s\S]+?)}}/g, (all, key) => data && hasProp(data, key) ? data[key] : "")
 );
-
-export const seriallyPromises = array => (
-  array.reduce((current, next) => (
-    current.then(() => next)
-  ), Promise.resolve())
-);

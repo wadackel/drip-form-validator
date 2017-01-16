@@ -7,8 +7,7 @@ import {
   isString,
   isFunction,
   isPromise,
-  template,
-  seriallyPromises
+  template
 } from "./utils";
 
 class Validator {
@@ -217,10 +216,10 @@ class Validator {
     this.validating = true;
     this.setErrors({});
 
-    return seriallyPromises(map(this.rules, (validates, key) => {
+    return Promise.all(map(this.rules, (validates, key) => {
       const value = this.getValue(key);
 
-      return seriallyPromises(map(validates, (params, ruleName) =>
+      return Promise.all(map(validates, (params, ruleName) =>
         this.executeAsyncTest(ruleName, key, value, params, this.values)
       ));
     }))
