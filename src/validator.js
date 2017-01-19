@@ -1,7 +1,7 @@
 import invariant from "invariant";
-import map from "lodash.map";
 import isPlainObject from "lodash.isplainobject";
 import forEach from "lodash.foreach";
+import map from "lodash.map";
 import {
   hasProp,
   isString,
@@ -144,43 +144,90 @@ class Validator {
     return hasProp(this.values, key);
   }
 
-  getErrors() {
+  getAllErrors() {
     return this.errors;
   }
 
-  setErrors(errors) {
+  setAllErrors(errors) {
     this.errors = errors;
   }
 
-  getError(key) {
-    return this.hasError(key) ? this.errors[key] : null;
+  clearAllErrors() {
+    this.setAllErrors({});
   }
 
-  setErrorRaw(key, message) {
-    this.errors[key] = message;
-  }
-
-  setError(key, ruleName, params = null) {
-    const tmpl = Validator.getErrorMessage(ruleName);
-    this.setErrorRaw(key, template(tmpl, params));
-  }
-
-  hasError(key) {
-    return hasProp(this.errors, key);
-  }
-
-  hasErrors() {
+  hasAnyErrors() {
     return Object.keys(this.errors).length > 0;
   }
 
-  clearError(key) {
-    if (this.hasError(key)) {
-      delete this.errors[key];
-    }
+  getErrors(key) {
+    return this.hasErrors(key) ? this.errors[key] : null;
   }
 
-  clearErrors() {
-    this.errors = {};
+  setErrors(key, errors) {
+    this.errors[key] = errors;
+  }
+
+  getError(key, rule) {
+    const index = this.getErrorIndexByKeyAndRule(key, rule);
+    if (index < 0) return null;
+
+    return this.getErrors(key)[index].message;
+  }
+
+  addError(key, rule, result, params = null) {
+    const error = {
+      message: isString(result)
+        ? result
+        : template(Validator.getErrorMessage(rule), params),
+      rule,
+      params
+    };
+
+    this.setErrors(key, [
+      ...(!this.hasErrors(key) ? [] : this.getErrors(key)),
+      error
+    ]);
+  }
+
+  removeError(key, rule) {
+    const index = this.getErrorIndexByKeyAndRule(key, rule);
+    if (index < 0) return;
+
+    const errors = this.getErrors(key);
+    if (errors.length <= 1) {
+      this.clearErrors(key);
+      return;
+    }
+
+    this.setErrors(key, errors.slice(0, index).concat(errors.slice(index + 1)));
+  }
+
+  hasErrors(key) {
+    return hasProp(this.errors, key);
+  }
+
+  hasError(key, rule) {
+    return this.getErrorIndexByKeyAndRule(key, rule) > -1;
+  }
+
+  getErrorIndexByKeyAndRule(key, rule) {
+    const notFound = -1;
+
+    if (!this.hasErrors(key)) return notFound;
+    const errors = this.getErrors(key);
+
+    for (let i = 0; i < errors.length; i++) {
+      if (errors[i].rule === rule) return i;
+    }
+
+    return notFound;
+  }
+
+  clearErrors(key) {
+    if (this.hasErrors(key)) {
+      delete this.errors[key];
+    }
   }
 
   isValidating() {
@@ -189,38 +236,32 @@ class Validator {
 
   validate() {
     this.validating = true;
-    this.setErrors({});
+    this.clearAllErrors();
 
     forEach(this.rules, (validates, key) => {
       const value = this.getValue(key);
 
-      forEach(validates, (params, ruleName) => {
-        const res = this.executeTest(ruleName, key, value, params, this.values);
+      forEach(validates, (params, rule) => {
+        const res = this.executeTest(rule, key, value, params, this.values);
         if (res === true) return;
 
-        if (isString(res)) {
-          this.setErrorRaw(key, res);
-        } else {
-          this.setError(key, ruleName, params);
-        }
-
-        return false;
+        this.addError(key, rule, res, params);
       });
     });
 
     this.validating = false;
-    return !this.hasErrors();
+    return !this.hasAnyErrors();
   }
 
   asyncValidate() {
     this.validating = true;
-    this.setErrors({});
+    this.clearAllErrors();
 
     return Promise.all(map(this.rules, (validates, key) => {
       const value = this.getValue(key);
 
-      return Promise.all(map(validates, (params, ruleName) =>
-        this.executeAsyncTest(ruleName, key, value, params, this.values)
+      return Promise.all(map(validates, (params, rule) =>
+        this.executeAsyncTest(rule, key, value, params, this.values)
       ));
     }))
       .then(() => {
@@ -229,40 +270,34 @@ class Validator {
       })
       .catch(() => {
         this.validating = false;
-        return Promise.reject(this.getErrors());
+        return Promise.reject(this.getAllErrors());
       });
   }
 
-  executeAsyncTest(ruleName, key, value, params, values) {
-    const res = this.executeTest(ruleName, key, value, params, values);
+  executeAsyncTest(rule, key, value, params, values) {
+    const res = this.executeTest(rule, key, value, params, values);
 
     if (res === true) return Promise.resolve();
 
     if (!isPromise(res)) {
-      if (!this.hasError(key)) {
-        if (isString(res)) {
-          this.setErrorRaw(key, res);
-        } else {
-          this.setError(key, ruleName, params);
-        }
-      }
+      this.addError(key, rule, res, params);
       return Promise.reject();
     }
 
     return res.catch(message => {
-      this.setErrorRaw(key, message);
+      this.addError(key, rule, message, params);
       return Promise.reject();
     });
   }
 
-  executeTest(ruleName, key, value, params, values) {
+  executeTest(rule, key, value, params, values) {
     const isObjParams = isPlainObject(params);
     const isCallable = isFunction(params);
     if (!isCallable && !isObjParams && params !== true) return true;
 
-    if (Validator.hasRule(ruleName)) {
+    if (Validator.hasRule(rule)) {
       return this.executeBuiltInTest(
-        ruleName,
+        rule,
         key,
         value,
         isObjParams ? params : null,
@@ -279,8 +314,8 @@ class Validator {
     }
   }
 
-  executeBuiltInTest(ruleName, key, value, params, values) {
-    const { test, depends } = Validator.getRule(ruleName);
+  executeBuiltInTest(rule, key, value, params, values) {
+    const { test, depends } = Validator.getRule(rule);
     let passDepends = true;
 
     forEach(depends, (p, k) => {

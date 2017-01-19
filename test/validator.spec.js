@@ -134,25 +134,41 @@ describe("Validator", () => {
       const key = "key";
       const rule = "manupilate-error-false";
       Validator.addRule(rule, () => false);
-      Validator.addErrorMessage(rule, "{{key}}");
+      Validator.addErrorMessage(rule, "compiled {{key}}");
 
       const v = new Validator();
 
-      assert.deepStrictEqual(v.getErrors(), {});
-      assert(v.getError(key) == null);
+      // empty
+      assert.deepStrictEqual(v.getAllErrors(), {});
+      assert(v.getErrors(key) == null);
+      assert(v.getErrors(key, rule) == null);
 
-      v.setError(key, rule, { key: "value" });
-      assert(v.getError(key) === "value");
+      // 1 error
+      v.addError(key, rule, false, { key: "value" });
+      assert.deepStrictEqual(v.getAllErrors(), {
+        key: [
+          { message: "compiled value", rule, params: { key: "value" } }
+        ]
+      });
+      assert.deepStrictEqual(v.getErrors(key), [
+        { message: "compiled value", rule, params: { key: "value" } }
+      ]);
+      assert(v.getError(key, rule) === "compiled value");
 
-      v.setError(key, rule);
-      assert(v.getError(key) === "");
+      // remove error
+      v.removeError(key, rule);
+      assert.deepStrictEqual(v.getAllErrors(), {});
+      assert(v.getErrors(key) == null);
+      assert(v.getErrors(key, rule) == null);
 
-      v.clearError(key);
-      assert(v.getError(key) == null);
+      // 1 error (no params)
+      v.addError(key, rule, false);
+      assert(v.getError(key, rule) === "compiled ");
 
-      v.setError(key, rule);
-      v.clearErrors();
-      assert.deepStrictEqual(v.getErrors(), {});
+      v.clearErrors(key);
+      assert.deepStrictEqual(v.getAllErrors(), {});
+      assert(v.getErrors(key) == null);
+      assert(v.getErrors(key, rule) == null);
     });
 
 
@@ -280,21 +296,21 @@ describe("Validator", () => {
 
     it("Should be return reject (failure)", done => {
       const passValues = { key: "test" };
+      const accountExist = () => sleep(100).then(() => Promise.reject("Error!!"));
       const v = new Validator(passValues, {
-        key: {
-          accountExist: () => sleep(100).then(() => Promise.reject("Error!!"))
-        }
+        key: { accountExist }
       });
 
       assert(v.isValidating() === false);
 
       v.asyncValidate()
-        .then(() => {
-          throw new Error("Failure");
-        })
         .catch(errors => {
           assert(v.isValidating() === false);
-          assert.deepStrictEqual(errors, { key: "Error!!" });
+          assert.deepStrictEqual(errors, {
+            key: [
+              { rule: "accountExist", message: "Error!!", params: accountExist }
+            ]
+          });
           done();
         });
 
@@ -335,21 +351,23 @@ describe("Validator", () => {
         password: ""
       };
 
+      const login = () => sleep(1000).then(() => Promise.reject("Error!!"));
+      const passFormat = val => /^\d+$/.test(val);
+
       const v = new Validator(passValues, {
-        email: {
-          email: true,
-          login: () => sleep(1000).then(() => Promise.reject("Error!!"))
-        },
-        password: {
-          required: true,
-          passFormat: val => /^\d+$/.test(val)
-        }
+        email: { email: true, login },
+        password: { required: true, passFormat }
       });
 
       v.asyncValidate().catch(errors => {
         assert.deepStrictEqual(errors, {
-          email: "Error!!",
-          password: "This field is required"
+          email: [
+            { rule: "login", message: "Error!!", params: login }
+          ],
+          password: [
+            { rule: "required", message: "This field is required", params: true },
+            { rule: "passFormat", message: "This field value is invalid", params: passFormat }
+          ]
         });
         done();
       });
