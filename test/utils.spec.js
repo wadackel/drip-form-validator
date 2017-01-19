@@ -1,9 +1,26 @@
-/* eslint-disable max-nested-callbacks, no-undefined */
+/* eslint-disable max-nested-callbacks */
 import assert from "power-assert";
 import * as utils from "../src/utils";
 
 
 describe("Utilities", () => {
+  describe("getType()", () => {
+    it("Should be return true", () => {
+      // eslint-disable-next-line brace-style
+      class Hoge { fuga() { return "fugaValue"; } }
+
+      assert(utils.typeOf(null) === "null");
+      assert(utils.typeOf(undefined) === "undefined");
+      assert(utils.typeOf("str") === "string");
+      assert(utils.typeOf(0) === "number");
+      assert(utils.typeOf({}) === "object");
+      assert(utils.typeOf([]) === "array");
+      assert(utils.typeOf(() => {}) === "function");
+      assert(utils.typeOf(new Date()) === "date");
+      assert(utils.typeOf(new Hoge()) === "hoge");
+    });
+  });
+
   describe("isNumeric()", () => {
     it("Should be return true", () => {
       assert(utils.isNumeric(0) === true);
