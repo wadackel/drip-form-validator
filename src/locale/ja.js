@@ -14,12 +14,21 @@ Validator.defineLocale("ja", {
   alphaDash: "英数字(-や_を含む)である必要があります",
   alphaNum: "英数字である必要があります",
   date: "日付が正しくありません",
-  length: "{{min}}〜{{max}}文字である必要があります",
-  minLength: "{{min}}文字以上である必要があります",
-  maxLength: "{{max}}文字以下である必要があります",
-  range: "{{min}}〜{{max}}である必要があります",
-  min: "{{min}}以上である必要があります",
-  max: "{{max}}以下である必要があります",
+  min: {
+    string: "{{min}}文字以上である必要があります",
+    number: "{{min}}以上である必要があります",
+    array: "{{min}}以上である必要があります"
+  },
+  max: {
+    string: "{{max}}文字以下である必要があります",
+    number: "{{max}}以下である必要があります",
+    array: "{{max}}以下である必要があります"
+  },
+  between: {
+    string: "{{min}}〜{{max}}文字である必要があります",
+    number: "{{min}}〜{{max}}である必要があります",
+    array: "{{min}}〜{{max}}である必要があります"
+  },
   url: "URLの形式が正しくありません",
   email: "Emailアドレスの形式が正しくありません",
   regex: "形式が異なります",

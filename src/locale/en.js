@@ -14,12 +14,21 @@ Validator.defineLocale("en", {
   alphaDash: "This field may only contain letters, numbers, and dasheds",
   alphaNum: "This field may only contain letters, and numbers",
   date: "This field is not a valid date",
-  length: "This field must be between {{min}} and {{max}} characters",
-  minLength: "This field must be at least {{min}} characters",
-  maxLength: "This field may not be greater than or equal {{max}} characters",
-  range: "This field must be between {{min}} and {{max}}",
-  min: "This field must be at least {{min}}",
-  max: "This field may not be greater than {{max}}",
+  min: {
+    string: "This field must be at least {{min}} characters",
+    number: "This field must be at least {{min}}",
+    array: "This field must be at least {{min}}"
+  },
+  max: {
+    string: "This field may not be greater than or equal {{max}} characters",
+    number: "This field may not be greater than {{max}}",
+    array: "This field may not be greater than {{max}}"
+  },
+  between: {
+    string: "This field must be between {{min}} and {{max}} characters",
+    number: "This field must be between {{min}} and {{max}}",
+    array: "This field must be between {{min}} and {{max}}"
+  },
   url: "This field format is invalid",
   email: "This field must be a valid email address",
   regex: "This field format is invalid",
