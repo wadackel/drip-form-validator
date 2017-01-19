@@ -4,11 +4,13 @@ import forEach from "lodash.foreach";
 import map from "lodash.map";
 import {
   hasProp,
+  typeOf,
   isString,
   isFunction,
   isPromise,
   template
 } from "./utils";
+
 
 class Validator {
   static locale =  "en";
@@ -73,9 +75,17 @@ class Validator {
     Validator.locale = locale;
   }
 
-  static getErrorMessage(name) {
+  static getErrorMessage(name, typeString = null) {
     const messages = Validator.getErrorMessages();
-    return hasProp(messages, name) ? messages[name] : messages.defaultMessage;
+    const { defaultMessage } = messages;
+    const message = hasProp(messages, name) ? messages[name] : defaultMessage;
+
+    if (isPlainObject(message)) {
+      if (typeString == null) return defaultMessage;
+      return hasProp(message, typeString) ? message[typeString] : defaultMessage;
+    }
+
+    return message;
   }
 
   static getErrorMessages() {
@@ -175,14 +185,17 @@ class Validator {
     return this.getErrors(key)[index].message;
   }
 
-  addError(key, rule, result, params = null) {
-    const error = {
-      message: isString(result)
-        ? result
-        : template(Validator.getErrorMessage(rule), params),
-      rule,
-      params
-    };
+  addError(key, rule, args) {
+    const { result, params, value } = args;
+    const error = { rule, params };
+
+    if (isString(result)) {
+      error.message = result;
+
+    } else {
+      const tmpl = Validator.getErrorMessage(rule, typeOf(value));
+      error.message = template(tmpl, params);
+    }
 
     this.setErrors(key, [
       ...(!this.hasErrors(key) ? [] : this.getErrors(key)),
@@ -245,7 +258,7 @@ class Validator {
         const res = this.executeTest(rule, key, value, params, this.values);
         if (res === true) return;
 
-        this.addError(key, rule, res, params);
+        this.addError(key, rule, { result: res, params, value });
       });
     });
 
@@ -280,12 +293,12 @@ class Validator {
     if (res === true) return Promise.resolve();
 
     if (!isPromise(res)) {
-      this.addError(key, rule, res, params);
+      this.addError(key, rule, { result: res, params, value });
       return Promise.reject();
     }
 
     return res.catch(message => {
-      this.addError(key, rule, message, params);
+      this.addError(key, rule, { result: message, params, value });
       return Promise.reject();
     });
   }

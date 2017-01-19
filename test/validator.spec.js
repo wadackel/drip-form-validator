@@ -53,13 +53,14 @@ describe("Validator", () => {
 
       it("Should be get error message", () => {
         Validator.defineLocale("test1", { defaultMessage: "1", required: "message1" });
-        Validator.defineLocale("test2", { defaultMessage: "2", required: "message2" });
+        Validator.defineLocale("test2", { defaultMessage: "2", min: { string: "msg2-1", number: "msg2-2" } });
 
         Validator.setLocale("test1");
         assert(Validator.getErrorMessage("required") === "message1");
 
         Validator.setLocale("test2");
-        assert(Validator.getErrorMessage("required") === "message2");
+        assert(Validator.getErrorMessage("min", "string") === "msg2-1");
+        assert(Validator.getErrorMessage("min", "number") === "msg2-2");
       });
 
 
@@ -69,9 +70,10 @@ describe("Validator", () => {
         Validator.setLocale(locale);
 
         Validator.addErrorMessage("test-error1", "value is {{test}}");
-        Validator.addErrorMessage("test-error2", "test!!");
+        Validator.addErrorMessage("test-error2", { string: "{{key}}!!", number: "{{key}}??" });
         assert(Validator.getErrorMessage("test-error1") === "value is {{test}}");
-        assert(Validator.getErrorMessage("test-error2") === "test!!");
+        assert(Validator.getErrorMessage("test-error2", "string") === "{{key}}!!");
+        assert(Validator.getErrorMessage("test-error2", "number") === "{{key}}??");
 
         assert.throws(() => Validator.addErrorMessage("test-error1", ""));
       });
@@ -144,7 +146,7 @@ describe("Validator", () => {
       assert(v.getErrors(key, rule) == null);
 
       // 1 error
-      v.addError(key, rule, false, { key: "value" });
+      v.addError(key, rule, { result: false, params: { key: "value" } });
       assert.deepStrictEqual(v.getAllErrors(), {
         key: [
           { message: "compiled value", rule, params: { key: "value" } }
@@ -162,13 +164,54 @@ describe("Validator", () => {
       assert(v.getErrors(key, rule) == null);
 
       // 1 error (no params)
-      v.addError(key, rule, false);
+      v.addError(key, rule, { result: false });
       assert(v.getError(key, rule) === "compiled ");
 
       v.clearErrors(key);
       assert.deepStrictEqual(v.getAllErrors(), {});
       assert(v.getErrors(key) == null);
       assert(v.getErrors(key, rule) == null);
+    });
+
+
+    it("Should be return different error message for each type", () => {
+      const rule = "type-message";
+
+      Validator.addRule(rule, () => false);
+      Validator.addErrorMessage(rule, {
+        string: "string={{fuga}}",
+        number: "number={{fuga}}"
+      });
+
+      const v = new Validator();
+
+      // string
+      v.addError("testKey", rule, {
+        result: false,
+        params: { fuga: "stringValue" },
+        value: "this is string"
+      });
+      assert(v.getError("testKey", rule) === "string=stringValue");
+
+      v.clearAllErrors();
+
+      // number
+      v.addError("testKey", rule, {
+        result: false,
+        params: { fuga: "numberValue" },
+        value: 10.2
+      });
+      assert(v.getError("testKey", rule) === "number=numberValue");
+
+      v.clearAllErrors();
+
+      // default
+      v.addError("testKey", rule, {
+        result: false,
+        params: { fuga: "numberValue" },
+        value: null
+      });
+      assert(v.getError("testKey", rule) === "This field value is invalid");
     });
 
 
