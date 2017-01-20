@@ -255,7 +255,7 @@ class Validator {
       const value = this.getValue(key);
 
       forEach(validates, (params, rule) => {
-        const res = this.executeTest(rule, key, value, params, this.values);
+        const res = this.performTest(rule, key, value, params, this.values);
         if (res === true) return;
 
         this.addError(key, rule, { result: res, params, value });
@@ -274,7 +274,7 @@ class Validator {
       const value = this.getValue(key);
 
       return Promise.all(map(validates, (params, rule) =>
-        this.executeAsyncTest(rule, key, value, params, this.values)
+        this.performAsyncTest(rule, key, value, params, this.values)
       ));
     }))
       .then(() => {
@@ -287,8 +287,8 @@ class Validator {
       });
   }
 
-  executeAsyncTest(rule, key, value, params, values) {
-    const res = this.executeTest(rule, key, value, params, values);
+  performAsyncTest(rule, key, value, params, values) {
+    const res = this.performTest(rule, key, value, params, values);
 
     if (res === true) return Promise.resolve();
 
@@ -303,13 +303,13 @@ class Validator {
     });
   }
 
-  executeTest(rule, key, value, params, values) {
+  performTest(rule, key, value, params, values) {
     const isObjParams = isPlainObject(params);
     const isCallable = isFunction(params);
     if (!isCallable && !isObjParams && params !== true) return true;
 
     if (Validator.hasRule(rule)) {
-      return this.executeBuiltInTest(
+      return this.performBuiltInTest(
         rule,
         key,
         value,
@@ -318,7 +318,7 @@ class Validator {
       );
 
     } else if (isCallable) {
-      return this.executeInlineTest(
+      return this.performInlineTest(
         params,
         key,
         value,
@@ -327,12 +327,12 @@ class Validator {
     }
   }
 
-  executeBuiltInTest(rule, key, value, params, values) {
+  performBuiltInTest(rule, key, value, params, values) {
     const { test, depends } = Validator.getRule(rule);
     let passDepends = true;
 
     forEach(depends, (p, k) => {
-      if (!this.executeTest(k, key, value, p, values)) {
+      if (!this.performTest(k, key, value, p, values)) {
         passDepends = false;
         return false;
       }
@@ -341,7 +341,7 @@ class Validator {
     return passDepends ? test(value, params, key, values, this) : true;
   }
 
-  executeInlineTest(test, key, value, values) {
+  performInlineTest(test, key, value, values) {
     return test(value, null, key, values, this);
   }
 }
