@@ -215,6 +215,10 @@ describe("Validator", () => {
     });
 
 
+    it("Should be return custom error message", () => {
+    });
+
+
     it("Should be called test when validation", () => {
       const rule1 = "pass-test1";
       const rule2 = "pass-test2";
@@ -416,6 +420,172 @@ describe("Validator", () => {
       });
 
       clock.tick(1000);
+    });
+  });
+
+
+  describe("Array", () => {
+    const getValues = () => ({
+      hoge: "str",
+      followers: [
+        {
+          hoge: [
+            { nickname: "" },
+            { nickname: "tes" },
+            { nickname: "" }
+          ]
+        },
+        {
+          hoge: [
+            { nickname: "tes" },
+            { nickname: "" },
+            { nickname: "" }
+          ]
+        }
+      ]
+    });
+
+
+    it("Shoulb be validate to array", () => {
+      const v = new Validator(getValues(), {
+        hoge: {
+          numeric: true
+        },
+        "followers.*.hoge.*.nickname": {
+          required: true
+        }
+      });
+
+      assert(v.validate() === false);
+
+      assert.deepStrictEqual(v.getAllErrors(), {
+        hoge: [
+          { rule: "numeric", params: true, message: "This field is must be a number" }
+        ],
+        "followers.0.hoge.0.nickname": [
+          { rule: "required", params: true, message: "This field is required" }
+        ],
+        "followers.0.hoge.2.nickname": [
+          { rule: "required", params: true, message: "This field is required" }
+        ],
+        "followers.1.hoge.1.nickname": [
+          { rule: "required", params: true, message: "This field is required" }
+        ],
+        "followers.1.hoge.2.nickname": [
+          { rule: "required", params: true, message: "This field is required" }
+        ]
+      });
+
+      assert.deepStrictEqual(v.getErrors("hoge"), [
+        { rule: "numeric", params: true, message: "This field is must be a number" }
+      ]);
+
+      assert(v.getErrors("followers.0.hoge.1.nickname") == null);
+      assert(v.hasErrors("followers.1.hoge.1.nickname") === true);
+      assert(v.hasErrors("followers[1]hoge[1]nickname") === true);
+
+      assert.deepStrictEqual(v.getErrors("followers.0.hoge.0.nickname"), [
+        { rule: "required", params: true, message: "This field is required" }
+      ]);
+
+      assert.deepStrictEqual(v.getErrors("followers[0]hoge[0]nickname"), [
+        { rule: "required", params: true, message: "This field is required" }
+      ]);
+
+      v.setValues({
+        hoge: 10,
+        followers: [
+          {
+            hoge: [
+              { nickname: "value" },
+              { nickname: "value" },
+              { nickname: "value" }
+            ]
+          }
+        ]
+      });
+
+      assert(v.validate() === true);
+    });
+
+
+    it("Shoulb be async validate to array", done => {
+      const v = new Validator(getValues(), {
+        hoge: {
+          numeric: true
+        },
+        "followers.*.hoge.*.nickname": {
+          required: true
+        }
+      });
+
+      v.asyncValidate()
+        .catch(errors => {
+          assert.deepStrictEqual(errors, {
+            hoge: [
+              { rule: "numeric", params: true, message: "This field is must be a number" }
+            ],
+            "followers.0.hoge.0.nickname": [
+              { rule: "required", params: true, message: "This field is required" }
+            ],
+            "followers.0.hoge.2.nickname": [
+              { rule: "required", params: true, message: "This field is required" }
+            ],
+            "followers.1.hoge.1.nickname": [
+              { rule: "required", params: true, message: "This field is required" }
+            ],
+            "followers.1.hoge.2.nickname": [
+              { rule: "required", params: true, message: "This field is required" }
+            ]
+          });
+
+          assert.deepStrictEqual(v.getErrors("hoge"), [
+            { rule: "numeric", params: true, message: "This field is must be a number" }
+          ]);
+
+          assert(v.getErrors("followers.0.hoge.1.nickname") == null);
+          assert(v.hasErrors("followers.1.hoge.1.nickname") === true);
+          assert(v.hasErrors("followers[1]hoge[1]nickname") === true);
+
+          assert.deepStrictEqual(v.getErrors("followers.0.hoge.0.nickname"), [
+            { rule: "required", params: true, message: "This field is required" }
+          ]);
+
+          assert.deepStrictEqual(v.getErrors("followers[0]hoge[0]nickname"), [
+            { rule: "required", params: true, message: "This field is required" }
+          ]);
+
+          v.setValues({
+            hoge: 10,
+            followers: [
+              {
+                hoge: [
+                  { nickname: "value" },
+                  { nickname: "value" },
+                  { nickname: "value" }
+                ]
+              }
+            ]
+          });
+
+          return v.asyncValidate();
+        })
+        .then(values => {
+          assert.deepStrictEqual(values, {
+            hoge: 10,
+            followers: [
+              {
+                hoge: [
+                  { nickname: "value" },
+                  { nickname: "value" },
+                  { nickname: "value" }
+                ]
+              }
+            ]
+          });
+
+          done();
+        });
     });
   });
 });

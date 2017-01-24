@@ -43,6 +43,7 @@
     "sinon": "^1.17.7"
   },
   "dependencies": {
+    "dot-wild": "^0.1.0",
     "invariant": "^2.2.2",
     "lodash.foreach": "^4.5.0",
     "lodash.isempty": "^4.4.0",

@@ -2,6 +2,7 @@ import invariant from "invariant";
 import isPlainObject from "lodash.isplainobject";
 import forEach from "lodash.foreach";
 import map from "lodash.map";
+import dot from "dot-wild";
 import {
   hasProp,
   typeOf,
@@ -143,7 +144,7 @@ class Validator {
   }
 
   getValue(key) {
-    return this.hasValue(key) ? this.values[key] : null;
+    return dot.get(this.values, key, null);
   }
 
   setValue(key, value) {
@@ -151,7 +152,7 @@ class Validator {
   }
 
   hasValue(key) {
-    return hasProp(this.values, key);
+    return dot.has(this.values, key);
   }
 
   getAllErrors() {
@@ -171,7 +172,14 @@ class Validator {
   }
 
   getErrors(key) {
-    return this.hasErrors(key) ? this.errors[key] : null;
+    let result = null;
+    forEach(this.errors, (_, k) => {
+      if (dot.matchPath(key, k)) {
+        result = this.errors[k];
+        return false;
+      }
+    });
+    return result;
   }
 
   setErrors(key, errors) {
@@ -217,7 +225,14 @@ class Validator {
   }
 
   hasErrors(key) {
-    return hasProp(this.errors, key);
+    let result = false;
+    forEach(this.errors, (_, k) => {
+      if (dot.matchPath(key, k)) {
+        result = true;
+        return false;
+      }
+    });
+    return result;
   }
 
   hasError(key, rule) {
@@ -247,11 +262,32 @@ class Validator {
     return this.validating;
   }
 
+  normalizeRules(rules, values) {
+    const result = {};
+    const flat = dot.flatten(values);
+
+    forEach(rules, (rule, key) => {
+      if (/\*/.test(key)) {
+        forEach(flat, (_, k) => {
+          if (dot.matchPath(key, k)) {
+            result[k] = rule;
+          }
+        });
+      } else {
+        result[key] = rule;
+      }
+    });
+
+    return result;
+  }
+
   validate() {
     this.validating = true;
     this.clearAllErrors();
 
-    forEach(this.rules, (validates, key) => {
+    const rules = this.normalizeRules(this.rules, this.values);
+
+    forEach(rules, (validates, key) => {
       const value = this.getValue(key);
 
       forEach(validates, (params, rule) => {
@@ -270,7 +306,9 @@ class Validator {
     this.validating = true;
     this.clearAllErrors();
 
-    return Promise.all(map(this.rules, (validates, key) => {
+    const rules = this.normalizeRules(this.rules, this.values);
+
+    return Promise.all(map(rules, (validates, key) => {
       const value = this.getValue(key);
 
       return Promise.all(map(validates, (params, rule) =>
