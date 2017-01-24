@@ -216,6 +216,50 @@ describe("Validator", () => {
 
 
     it("Should be return custom error message", () => {
+      const v = new Validator({}, {
+        hoge: { required: true }
+      }, {
+        hoge: { required: "Custom error message" }
+      });
+
+      const addError = (value = "") => {
+        v.removeError("hoge", "required");
+        v.addError("hoge", "required", {
+          result: false,
+          params: null,
+          value
+        });
+      };
+
+      const getError = () => v.getError("hoge", "required");
+
+      // Basic
+      addError();
+      assert(getError() === "Custom error message");
+
+      // Callback
+      const t = sinon.stub();
+      t.withArgs("This field is required", "hoge", "", null, v).returns("callback");
+      v.setErrorMessages({ hoge: { required: t } });
+      addError();
+      assert(t.called === true);
+      assert(getError() === "callback");
+
+      // Types
+      v.setErrorMessages({ hoge: { required: { string: "string message" } } });
+      addError();
+      assert(getError() === "string message");
+
+      v.setErrorMessages({
+        hoge: {
+          required: {
+            string: "string message",
+            array: "array message"
+          }
+        }
+      });
+      addError([]);
+      assert(getError() === "array message");
     });
 
 

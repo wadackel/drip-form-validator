@@ -112,9 +112,10 @@ class Validator {
     Validator.setErrorMessages({ ...messages, [name]: message });
   }
 
-  constructor(values = {}, rules = {}) {
+  constructor(values = {}, rules = {}, errorMessages = {}) {
     this.setRules(rules);
     this.setValues(values);
+    this.setErrorMessages(errorMessages);
     this.errors = {};
     this.validating = false;
   }
@@ -153,6 +154,19 @@ class Validator {
 
   hasValue(key) {
     return dot.has(this.values, key);
+  }
+
+  setErrorMessages(messages) {
+    this.errors = {};
+    this.mergeErrorMessages(messages);
+  }
+
+  mergeErrorMessages(messages) {
+    invariant(
+      isPlainObject(messages),
+      "`messages` must be plain object"
+    );
+    this.errorMessages = { ...this.errorMessages, ...messages };
   }
 
   getAllErrors() {
@@ -199,6 +213,28 @@ class Validator {
 
     if (isString(result)) {
       error.message = result;
+
+    } else if (hasProp(this.errorMessages, key)) {
+      if (hasProp(this.errorMessages[key], rule)) {
+        const msg = this.errorMessages[key][rule];
+
+        if (isString(msg)) {
+          error.message = template(msg, params);
+
+        } else if (isPlainObject(msg)) {
+          const type = typeOf(value);
+          error.message = hasProp(msg, type) ? template(msg[type], params) : "";
+
+        } else if (isFunction(msg)) {
+          error.message = msg(
+            Validator.getErrorMessage(rule, typeOf(value)),
+            key,
+            value,
+            params,
+            this
+          );
+        }
+      }
 
     } else {
       const tmpl = Validator.getErrorMessage(rule, typeOf(value));
