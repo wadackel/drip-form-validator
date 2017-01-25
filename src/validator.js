@@ -25,9 +25,9 @@ class Validator {
       return;
     }
 
-    const isDependsObj = isPlainObject(depends);
+    const hasDepends = isPlainObject(depends);
 
-    if (isDependsObj) {
+    if (hasDepends) {
       let res = true;
       forEach(depends, (params, key) => {
         res = Validator.hasRule(key);
@@ -38,9 +38,9 @@ class Validator {
     }
 
     /* eslint-disable no-nested-ternary */
-    const finalDepends = isDependsObj ? depends : [];
-    const finalTest = isDependsObj ? test : depends;
-    const finalImplicit = isDependsObj
+    const finalDepends = hasDepends ? depends : [];
+    const finalTest = hasDepends ? test : depends;
+    const finalImplicit = hasDepends
       ? isBoolean(implicit) ? implicit : true
       : isBoolean(test) ? test : true;
     /* eslint-enable no-nested-ternary */
@@ -83,13 +83,12 @@ class Validator {
     Validator.locale = locale;
   }
 
-  static getErrorMessage(name, typeString = null) {
+  static getErrorMessage(name, typeString = "") {
     const messages = Validator.getErrorMessages();
     const { defaultMessage } = messages;
     const message = hasProp(messages, name) ? messages[name] : defaultMessage;
 
     if (isPlainObject(message)) {
-      if (typeString == null) return defaultMessage;
       return hasProp(message, typeString) ? message[typeString] : defaultMessage;
     }
 
@@ -164,7 +163,7 @@ class Validator {
   }
 
   setErrorMessages(messages) {
-    this.errors = {};
+    this.errorMessages = {};
     this.mergeErrorMessages(messages);
   }
 
@@ -217,41 +216,45 @@ class Validator {
   addError(key, rule, args) {
     const { result, params, value } = args;
     const error = { rule, params };
+    const type = typeOf(value);
 
     if (isString(result)) {
       error.message = result;
 
-    } else if (hasProp(this.errorMessages, key)) {
-      if (hasProp(this.errorMessages[key], rule)) {
-        const msg = this.errorMessages[key][rule];
-
-        if (isString(msg)) {
-          error.message = template(msg, params);
-
-        } else if (isPlainObject(msg)) {
-          const type = typeOf(value);
-          error.message = hasProp(msg, type) ? template(msg[type], params) : "";
-
-        } else if (isFunction(msg)) {
-          error.message = msg(
-            Validator.getErrorMessage(rule, typeOf(value)),
-            key,
-            value,
-            params,
-            this
-          );
-        }
-      }
-
     } else {
-      const tmpl = Validator.getErrorMessage(rule, typeOf(value));
-      error.message = template(tmpl, params);
+      const msg = this.getErrorMessage(rule, key, type);
+
+      error.message = isString(msg) ? template(msg, params) : msg(
+        key,
+        value,
+        params,
+        this
+      );
     }
 
     this.setErrors(key, [
       ...(!this.hasErrors(key) ? [] : this.getErrors(key)),
       error
     ]);
+  }
+
+  getErrorMessage(rule, key, typeString = "") {
+    const messages = this.errorMessages;
+
+    if (hasProp(messages, key) && hasProp(messages[key], rule)) {
+      const msg = messages[key][rule];
+
+      if (isString(msg)) {
+        return msg;
+
+      } else if (isPlainObject(msg)) {
+        return dot.get(msg, typeString, dot.get(msg, "defaultMessage", ""));
+      }
+
+      return msg;
+    }
+
+    return Validator.getErrorMessage(rule, typeString);
   }
 
   removeError(key, rule) {
@@ -305,7 +308,7 @@ class Validator {
     return this.validating;
   }
 
-  normalizeRules(rules, values) {
+  expandRules(rules, values) {
     const result = {};
     const flat = dot.flatten(values);
 
@@ -328,7 +331,7 @@ class Validator {
     this.validating = true;
     this.clearAllErrors();
 
-    const rules = this.normalizeRules(this.rules, this.values);
+    const rules = this.expandRules(this.rules, this.values);
 
     forEach(rules, (validates, key) => {
       const value = this.getValue(key);
@@ -349,7 +352,7 @@ class Validator {
     this.validating = true;
     this.clearAllErrors();
 
-    const rules = this.normalizeRules(this.rules, this.values);
+    const rules = this.expandRules(this.rules, this.values);
 
     return Promise.all(map(rules, (validates, key) => {
       const value = this.getValue(key);

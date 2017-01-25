@@ -1357,9 +1357,9 @@ domain-browser@~1.1.0:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.1.7.tgz#867aa4b093faa05f1de08c06f4d7b21fdf8698bc"
 
-dot-wild@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/dot-wild/-/dot-wild-0.1.0.tgz#214931f5480770e34f1a831b8f4657fadebcdaef"
+dot-wild@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/dot-wild/-/dot-wild-0.2.0.tgz#fc958ba9b920b8f95ac9931ca2ef62cbe404ccfb"
   dependencies:
     is-obj "^1.0.1"
 

@@ -239,7 +239,7 @@ describe("Validator", () => {
 
       // Callback
       const t = sinon.stub();
-      t.withArgs("This field is required", "hoge", "", null, v).returns("callback");
+      t.withArgs("hoge", "", null, v).returns("callback");
       v.setErrorMessages({ hoge: { required: t } });
       addError();
       assert(t.called === true);
@@ -260,6 +260,16 @@ describe("Validator", () => {
       });
       addError([]);
       assert(getError() === "array message");
+
+      v.setErrorMessages({
+        hoge: {
+          required: {
+            defaultMessage: "default message"
+          }
+        }
+      });
+      addError("");
+      assert(getError() === "default message");
     });
 
 
