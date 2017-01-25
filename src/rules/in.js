@@ -1,5 +1,5 @@
 import Validator from "../validator";
 
-Validator.addRule("in", { required: true }, (value, { values }) => (
+Validator.addRule("in", (value, { values }) => (
   values.indexOf(value) > -1
 ));

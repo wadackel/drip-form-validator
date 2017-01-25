@@ -327,7 +327,7 @@ describe("Validator", () => {
       Validator.addRule(rule1, { returnTrue: true }, test1);
       Validator.addRule(rule2, { returnTrue: true, returnFalse: true }, test2);
 
-      assert(v.validate() === true);
+      assert(v.validate() === false);
       assert(returnTrue.callCount === 2);
       assert(returnFalse.callCount === 1);
       assert(test1.called === true);

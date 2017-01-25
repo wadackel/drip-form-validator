@@ -1,4 +1,3 @@
-/* eslint-disable no-undefined */
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
@@ -10,9 +9,6 @@ describe("Rules#min", () => {
     tester([
       null,
       undefined,
-      {},
-      [[]],
-      [""],
       [10, { min: 10 }],
       [2, { min: 1 }],
       [0.82, { min: 0.82 }],
@@ -26,6 +22,9 @@ describe("Rules#min", () => {
 
   it("Should be return false", () => {
     tester([
+      [{}, { min: 1 }],
+      [[], { min: 1 }],
+      ["", { min: 1 }],
       [10, { min: 11 }],
       [3, { min: 4 }],
       ["Hello", { min: 6 }],

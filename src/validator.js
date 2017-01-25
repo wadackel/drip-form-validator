@@ -6,6 +6,7 @@ import dot from "dot-wild";
 import {
   hasProp,
   typeOf,
+  isBoolean,
   isString,
   isFunction,
   isPromise,
@@ -18,7 +19,7 @@ class Validator {
   static errorMessages = {};
   static rules = {};
 
-  static addRule(name, depends, test) {
+  static addRule(name, depends, test, implicit) {
     if (Validator.hasRule(name)) {
       invariant(false, `"${name}" rule already exists`);
       return;
@@ -36,12 +37,18 @@ class Validator {
       if (!res) return;
     }
 
+    /* eslint-disable no-nested-ternary */
     const finalDepends = isDependsObj ? depends : [];
     const finalTest = isDependsObj ? test : depends;
+    const finalImplicit = isDependsObj
+      ? isBoolean(implicit) ? implicit : true
+      : isBoolean(test) ? test : true;
+    /* eslint-enable no-nested-ternary */
 
     Validator.rules[name] = {
       depends: finalDepends,
-      test: finalTest
+      test: finalTest,
+      implicit: finalImplicit
     };
   }
 
@@ -402,8 +409,12 @@ class Validator {
   }
 
   performBuiltInTest(rule, key, value, params, values) {
-    const { test, depends } = Validator.getRule(rule);
+    const { test, depends, implicit } = Validator.getRule(rule);
     let passDepends = true;
+
+    if (implicit && (!hasProp(values, key) || value == null)) {
+      return true;
+    }
 
     forEach(depends, (p, k) => {
       if (!this.performTest(k, key, value, p, values)) {
@@ -412,7 +423,7 @@ class Validator {
       }
     });
 
-    return passDepends ? test(value, params, key, values, this) : true;
+    return passDepends ? test(value, params, key, values, this) : false;
   }
 
   performInlineTest(test, key, value, values) {

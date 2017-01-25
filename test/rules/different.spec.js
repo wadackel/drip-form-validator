@@ -1,4 +1,3 @@
-/* eslint-disable no-undefined */
 import assert from "power-assert";
 import Validator, { makeRuleTester } from "../../src/";
 
@@ -9,8 +8,7 @@ describe("Rules#different", () => {
   it("Should be return true", () => {
     tester([
       null,
-      undefined,
-      ""
+      undefined
     ], true);
 
     let v = new Validator({ k1: "v1", k2: "v2" }, {

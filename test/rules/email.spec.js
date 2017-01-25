@@ -1,4 +1,3 @@
-/* eslint-disable no-undefined */
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
@@ -10,7 +9,6 @@ describe("Rules#email", () => {
     tester([
       null,
       undefined,
-      "",
       "test@mail.com",
       ["Hoge <test@mail.com>", { allow_display_name: true }]
     ], true);
@@ -20,6 +18,7 @@ describe("Rules#email", () => {
     tester([
       0,
       1,
+      "",
       "string",
       ["test@mail.com", { require_display_name: true }],
       "Hoge <test@mail.com>"

@@ -1,7 +1,7 @@
 import Validator from "../validator";
 import { isString, isNumber, isArray } from "../utils";
 
-Validator.addRule("between", { required: true }, (value, { min, max }) => {
+Validator.addRule("between", (value, { min, max }) => {
   if (isString(value) || isArray(value)) {
     return value.length >= min && value.length <= max;
   } else if (isNumber(value)) {

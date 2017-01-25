@@ -1,4 +1,3 @@
-/* eslint-disable no-undefined */
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
@@ -10,12 +9,6 @@ describe("Rules#upperCase", () => {
     tester([
       null,
       undefined,
-      0,
-      true,
-      false,
-      [[], true],
-      {},
-      new Date(),
       "UPPERCASE",
       "UPPER_CASE",
       "UPPER-CASE",
@@ -25,6 +18,12 @@ describe("Rules#upperCase", () => {
 
   it("Should be return false", () => {
     tester([
+      0,
+      true,
+      false,
+      [[], true],
+      {},
+      new Date(),
       "Upper",
       "lower"
     ], false);

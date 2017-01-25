@@ -1,4 +1,3 @@
-/* eslint-disable no-undefined */
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
@@ -8,6 +7,8 @@ const tester = makeRuleTester(assert, "numeric");
 describe("Rules#numeric", () => {
   it("Should be return true", () => {
     tester([
+      null,
+      undefined,
       0,
       0.0,
       0.82,
@@ -23,8 +24,6 @@ describe("Rules#numeric", () => {
 
   it("Should be return false", () => {
     tester([
-      null,
-      undefined,
       "",
       "-",
       "+",

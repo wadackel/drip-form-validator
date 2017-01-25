@@ -1,4 +1,3 @@
-/* eslint-disable no-undefined */
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
@@ -10,7 +9,6 @@ describe("Rules#match", () => {
     tester([
       null,
       undefined,
-      "",
       [10110, { regex: /^\d+$/ }],
       ["CONST_CASE", { regex: /^[A-Z_]+$/ }]
     ], true);
@@ -18,6 +16,7 @@ describe("Rules#match", () => {
 
   it("Should be return false", () => {
     tester([
+      ["", { regex: /^.+/ }],
       ["CONST_CASE", { regex: /^[A-Z]+$/ }],
       ["hoge", { regex: /^fuga/ }]
     ], false);

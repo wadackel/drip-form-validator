@@ -1,4 +1,3 @@
-/* eslint-disable no-undefined */
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
@@ -10,8 +9,6 @@ describe("Rules#max", () => {
     tester([
       null,
       undefined,
-      {},
-      [[]],
       [10, { max: 10 }],
       [2, { max: 3 }],
       ["str", { max: 3 }],
@@ -24,6 +21,7 @@ describe("Rules#max", () => {
 
   it("Should be return false", () => {
     tester([
+      [{}, { max: 1 }],
       [10, { max: 9 }],
       [3, { max: 2 }],
       ["str", { max: 2 }],

@@ -1,4 +1,4 @@
-/* eslint-disable no-undefined, quotes */
+/* eslint-disable quotes */
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
@@ -10,7 +10,6 @@ describe("Rules#json", () => {
     tester([
       null,
       undefined,
-      0,
       '{"key": "value"}',
       '{"arr": [{"key": "value", "key2": "val2"}]}'
     ], true);
@@ -18,6 +17,7 @@ describe("Rules#json", () => {
 
   it("Should be return false", () => {
     tester([
+      0,
       "",
       'key: value',
       "{key: value}",

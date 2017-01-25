@@ -1,4 +1,3 @@
-/* eslint-disable no-undefined */
 import assert from "power-assert";
 import { makeRuleTester } from "../../src/";
 
@@ -10,7 +9,6 @@ describe("Rules#in", () => {
     tester([
       null,
       undefined,
-      "",
       ["react", { values: ["vanilla", "angular", "react"] }],
       [0, { values: [10, 8, 6, 4, 2, 0] }]
     ], true);
@@ -18,6 +16,7 @@ describe("Rules#in", () => {
 
   it("Should be return false", () => {
     tester([
+      ["", { values: ["hoge"] }],
       ["vue", { values: ["vanilla", "angular", "react"] }],
       [3, { values: [10, 8, 6, 4, 2, 0] }]
     ], false);
