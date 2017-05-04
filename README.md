@@ -1,12 +1,11 @@
-drip-form-validator
-===================
+# drip-form-validator
 
 [![Build Status](http://img.shields.io/travis/tsuyoshiwada/drip-form-validator.svg?style=flat-square)](https://travis-ci.org/tsuyoshiwada/drip-form-validator)
 [![npm version](https://img.shields.io/npm/v/drip-form-validator.svg?style=flat-square)](http://badge.fury.io/js/drip-form-validator)
 
 :zap: **WIP PROJECT**
 
-> Simple form validation logic for JavaScript.
+> Simple and Powerful and Customizable validation library for JavaScript.
 
 
 
@@ -14,7 +13,6 @@ drip-form-validator
 
 - [Install](#install)
 - [Usage](#usage)
-- [API](#api)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -31,55 +29,118 @@ $ npm install drip-form-validator
 ## Usage
 
 ```javascript
-import Validator from "drip-form-validator";
+import { Validator } from 'drip-form-validator';
 
 const data = {
   firstName: null,
-  lastName: "wada",
-  phone: "hoge",
-  age: "fuga",
-  email: "mail-address",
-  website: null,
-  confirmed: true
+  lastName: 'wada',
+  age: 18,
+  email: 'email-address',
+  website: 'foobarbaz',
+  confirmed: null,
+  token: '123456789',
+  projects: [
+    { title: 'Project 1', tags: [1] },
+    { title: 'Project 2', tags: [4, 8] },
+    { title: 'Project 3', tags: ['foo', 'bar', 3] },
+  ],
 };
 
-const validator = new Validator(data, {
-  firstName: ["required"],
-  lastName: ["required"],
-  phone: ["phone"],
-  age: ["required", "numeric"],
-  email: ["email"],
-  website: ["url"],
-  confirmed: ["truthy"]
+const v = new Validator(data, {
+  firstName: {
+    required: true,
+  },
+  lastName: {
+    required: true,
+  },
+  age: {
+    required: true,
+    min: { min: 22 },
+  },
+  email: {
+    required: true,
+    email: true,
+  },
+  website: {
+    url: true,
+  },
+  confirmed: {
+    required: true,
+    truthy: true,
+  },
+  token: {
+    checkToken: (value) => value === YOUR_SECRET_TOKEN,
+  },
+  'projects.*.tags.*': {
+    numeric: true,
+  },
 });
 
-if (validator.validate()) {
-  console.error(validator.getErrors());
-  // TODO
+if (v.validate()) {
+  // `data` is valid.
 
 } else {
-  // data is valid
+  console.log(v.getAllErrors());
+  // {
+  //   firstName: [{
+  //     rule: 'required',
+  //     params: true,
+  //     message: 'The firstName field is required.'
+  //   }],
+  //   age: [{
+  //     rule: 'min',
+  //     params: [Object],
+  //     message: 'The age must be at least 22.'
+  //   }],
+  //   email: [{
+  //     rule: 'email',
+  //     params: true,
+  //     message: 'The email must be a valid email address.'
+  //   }],
+  //   website: [{
+  //     rule: 'url',
+  //     params: true,
+  //     message: 'The website format is invalid.'
+  //   }],
+  //   confirmed: [{
+  //     rule: 'required',
+  //     params: true,
+  //     message: 'The confirmed field is required.'
+  //   }],
+  //   token: [{
+  //     rule: 'checkToken',
+  //     params: [Function: checkToken],
+  //     message: 'The token field is invalid.'
+  //   }],
+  //   'projects.2.tags.0': [{
+  //     rule: 'numeric',
+  //     params: true,
+  //     message: 'The projects.2.tags.0 must be a number.'
+  //   }],
+  //   'projects.2.tags.1': [{
+  //     rule: 'numeric',
+  //     params: true,
+  //     message: 'The projects.2.tags.1 must be a number.'
+  //   }]
+  // }
 }
-```
-
-
-
-## API
-
-### Validation rules
-
-```javascript
-// TODO
 ```
 
 
 
 ## Contribute
 
-PRs accepted.
+1. Fork it!
+1. Create your feature branch: git checkout -b my-new-feature
+1. Commit your changes: git commit -am 'Add some feature'
+1. Push to the branch: git push origin my-new-feature
+1. Submit a pull request :D
+
+Bugs, feature requests and comments are more than welcome in the [issues](https://github.com/tsuyoshiwada/drip-form-validator/issues).
 
 
 
 ## License
 
 [MIT © tsuyoshiwada](./LICENSE)
+
