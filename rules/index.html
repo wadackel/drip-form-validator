@@ -1,0 +1,927 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Builtin Rules · drip-form-validator</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-advanced-emoji/emoji-website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../normalizers/" />
+    
+    
+    <link rel="prev" href="../usage/l18n.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../usage/">
+            
+                <a href="../usage/">
+            
+                    
+                    Usage
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../usage/basic.html">
+            
+                <a href="../usage/basic.html">
+            
+                    
+                    Basic
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../usage/error-manipulate.html">
+            
+                <a href="../usage/error-manipulate.html">
+            
+                    
+                    Error manipulate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../usage/array.html">
+            
+                <a href="../usage/array.html">
+            
+                    
+                    Validating Array
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../usage/inline-validation.html">
+            
+                <a href="../usage/inline-validation.html">
+            
+                    
+                    Inline validation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../usage/async-validation.html">
+            
+                <a href="../usage/async-validation.html">
+            
+                    
+                    Asynchronous validation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../usage/custom-error-messages.html">
+            
+                <a href="../usage/custom-error-messages.html">
+            
+                    
+                    Custom Error Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../usage/normalize.html">
+            
+                <a href="../usage/normalize.html">
+            
+                    
+                    Normalize values
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../usage/events.html">
+            
+                <a href="../usage/events.html">
+            
+                    
+                    Events
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../usage/custom-rules.html">
+            
+                <a href="../usage/custom-rules.html">
+            
+                    
+                    Custom Validation Rules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="../usage/custom-normalizers.html">
+            
+                <a href="../usage/custom-normalizers.html">
+            
+                    
+                    Custom Normalizers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="../usage/l18n.html">
+            
+                <a href="../usage/l18n.html">
+            
+                    
+                    l18n
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Builtin Rules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../normalizers/">
+            
+                <a href="../normalizers/">
+            
+                    
+                    Builtin Normalizers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="divider"></li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" >
+            
+                <a target="_blank" href="https://tsuyoshiwada.github.io/drip-form-validator/api/">
+            
+                    
+                    API Document
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" >
+            
+                <a target="_blank" href="https://github.com/tsuyoshiwada/drip-form-validator/blob/master/CHANGELOG.md">
+            
+                    
+                    CHANGELOG
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Builtin Rules</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="builtin-rules">Builtin Rules</h1>
+<ul>
+<li><a href="#after"><code>after</code></a></li>
+<li><a href="#alpha"><code>alpha</code></a></li>
+<li><a href="#alphadash"><code>alphaDash</code></a></li>
+<li><a href="#alphanumeric"><code>alphaNumeric</code></a></li>
+<li><a href="#array"><code>array</code></a></li>
+<li><a href="#before"><code>before</code></a></li>
+<li><a href="#between"><code>between</code></a></li>
+<li><a href="#date"><code>date</code></a></li>
+<li><a href="#dateformat"><code>dateFormat</code></a></li>
+<li><a href="#different"><code>different</code></a></li>
+<li><a href="#email"><code>email</code></a></li>
+<li><a href="#equals"><code>equals</code></a></li>
+<li><a href="#falsy"><code>falsy</code></a></li>
+<li><a href="#float"><code>float</code></a></li>
+<li><a href="#format"><code>format</code></a></li>
+<li><a href="#in"><code>in</code></a></li>
+<li><a href="#integer"><code>integer</code></a></li>
+<li><a href="#lowercase"><code>lowercase</code></a></li>
+<li><a href="#max"><code>max</code></a></li>
+<li><a href="#min"><code>min</code></a></li>
+<li><a href="#natural"><code>natural</code></a></li>
+<li><a href="#notin"><code>notIn</code></a></li>
+<li><a href="#number"><code>number</code></a></li>
+<li><a href="#numeric"><code>numeric</code></a></li>
+<li><a href="#object"><code>object</code></a></li>
+<li><a href="#present"><code>present</code></a></li>
+<li><a href="#required"><code>required</code></a></li>
+<li><a href="#same"><code>same</code></a></li>
+<li><a href="#size"><code>size</code></a></li>
+<li><a href="#string"><code>string</code></a></li>
+<li><a href="#time"><code>time</code></a></li>
+<li><a href="#truthy"><code>truthy</code></a></li>
+<li><a href="#uppercase"><code>uppercase</code></a></li>
+<li><a href="#url"><code>url</code></a></li>
+</ul>
+<h2 id="after"><code>after</code></h2>
+<p>It checks that it is after the specified date.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>date</code>: <code>string | number | Date</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  after<span class="token punctuation">:</span> <span class="token punctuation">{</span> date<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="alpha"><code>alpha</code></h2>
+<p>Must be entirely alphabetic characters.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  alpha<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="alphadash"><code>alphaDash</code></h2>
+<p>Must be alphabetic characters and dashes and underscores.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  alphaDash<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="alphanumeric"><code>alphaNumeric</code></h2>
+<p>Must be alphanumeric and underscore and dash.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  alphaNumeric<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="array"><code>array</code></h2>
+<p>Check if the value is Array.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  array<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="before"><code>before</code></h2>
+<p>It checks that it is before the specified date.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>date</code>: <code>string | number | Date</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  before<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="between"><code>between</code></h2>
+<p>For character strings and arrays, check the <code>length</code> attribute, if it is a number, check that the value is within the specified range.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>min</code>: <code>number</code></li>
+<li><code>max</code>: <code>number</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  between<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    min<span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+    max<span class="token punctuation">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="date"><code>date</code></h2>
+<p>Check if the value is Date.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  date<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="dateformat"><code>dateFormat</code></h2>
+<p>It checks whether the value matches the specified date format.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>format</code>: <code>string</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  date<span class="token punctuation">:</span> <span class="token punctuation">{</span> format<span class="token punctuation">:</span> <span class="token string">&apos;YYYY-MM-DD HH:mm:ss&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>Reference:</strong></p>
+<ul>
+<li><a href="https://date-fns.org/docs/format" target="_blank">https://date-fns.org/docs/format</a></li>
+</ul>
+<h2 id="different"><code>different</code></h2>
+<p>It checks whether the specified field and value are different.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>key</code>: <code>string</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  different<span class="token punctuation">:</span> <span class="token punctuation">{</span> key<span class="token punctuation">:</span> <span class="token string">&apos;otherField&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="email"><code>email</code></h2>
+<p>Check that the email address format.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  email<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="equals"><code>equals</code></h2>
+<p>It checks whether it matches the specified value.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>value</code>: <code>any</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  equals<span class="token punctuation">:</span> <span class="token punctuation">{</span> value<span class="token punctuation">:</span> <span class="token string">&apos;Foo&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="falsy"><code>falsy</code></h2>
+<p>Check if the value is falsy.</p>
+<p><strong>Valid:</strong></p>
+<ul>
+<li><code>false</code></li>
+<li><code>&quot;false&quot;</code></li>
+<li><code>0</code></li>
+<li><code>&quot;0&quot;</code></li>
+<li><code>&quot;NO&quot;</code> (<code>&quot;No&quot;</code>, <code>&quot;no&quot;</code>)</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  falsy<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="float"><code>float</code></h2>
+<p>Check if the value is a float number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  float<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="format"><code>format</code></h2>
+<p>It checks whether it conforms to the specified format.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>regex</code>: <code>RegExp</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  format<span class="token punctuation">:</span> <span class="token punctuation">{</span> regex<span class="token punctuation">:</span> <span class="token regex">/^foo.*bar$/</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="in"><code>in</code></h2>
+<p>It checks whether the same value exists in the specified array.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>values</code>: <code>any[]</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  <span class="token keyword">in</span><span class="token punctuation">:</span> <span class="token punctuation">{</span> values<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;foo&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;bar&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;baz&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="integer"><code>integer</code></h2>
+<p>Check if the value is a integer.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  integer<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="lowercase"><code>lowercase</code></h2>
+<p>Check if the value is a lowercase.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  lowercase<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="max"><code>max</code></h2>
+<p>For character strings and arrays, check the <code>length</code> attribute, for numeric values, check that the value does not exceed the specified number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>max</code>: <code>number</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  max<span class="token punctuation">:</span> <span class="token punctuation">{</span> max<span class="token punctuation">:</span> <span class="token number">120</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="min"><code>min</code></h2>
+<p>For character strings and arrays, check the length attribute, and for numeric values, check that the value exceeds the specified number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>min</code>: <code>number</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  min<span class="token punctuation">:</span> <span class="token punctuation">{</span> min<span class="token punctuation">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="natural"><code>natural</code></h2>
+<p>Check if the value is a natural number.<br>By default <code>0</code> returns <code>true</code>, but invalidates <code>0</code> by passing <code>false</code> to <code>disallowZero</code>.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>disallowZero?</code>: <code>boolean</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  natural<span class="token punctuation">:</span> <span class="token punctuation">{</span> disallowZero<span class="token punctuation">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="notin"><code>notIn</code></h2>
+<p>It checks whether the same value not exists in the specified array.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>values</code>: <code>any[]</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  notIn<span class="token punctuation">:</span> <span class="token punctuation">{</span> values<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;foo&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;bar&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;baz&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="number"><code>number</code></h2>
+<p>Check if the value is number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  number<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="numeric"><code>numeric</code></h2>
+<p>Check if the value is numeric.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  numeric<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="object"><code>object</code></h2>
+<p>Check if the value is plain object.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  object<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="present"><code>present</code></h2>
+<p>It checks whether the field exists, but it pass even if the value is empty.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  present<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="required"><code>required</code></h2>
+<p>Check the field exists and the value is not empty.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  required<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="same"><code>same</code></h2>
+<p>It checks whether the specified field and value are same.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>key</code>: <code>string</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  same<span class="token punctuation">:</span> <span class="token punctuation">{</span> key<span class="token punctuation">:</span> <span class="token string">&apos;otherField&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="size"><code>size</code></h2>
+<p>For character strings and arrays, check the <code>length</code> attribute, if it is a number, check that the value is match the specified number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>value</code>: <code>number</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  size<span class="token punctuation">:</span> <span class="token punctuation">{</span> value<span class="token punctuation">:</span> <span class="token number">48</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="string"><code>string</code></h2>
+<p>Check if the value is string.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  string<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="time"><code>time</code></h2>
+<p>Check if the time is in the correct format. (Format: &quot;HH:mm:ss&quot;)</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  time<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="truthy"><code>truthy</code></h2>
+<p>Check if the value is truthy.</p>
+<p><strong>Valid:</strong></p>
+<ul>
+<li><code>true</code></li>
+<li><code>&quot;true&quot;</code></li>
+<li><code>&quot;YES&quot;</code> (<code>&quot;Yes&quot;</code>, <code>&quot;yes&quot;</code>)</li>
+<li><code>1</code></li>
+<li><code>&quot;1&quot;</code></li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  truthy<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="uppercase"><code>uppercase</code></h2>
+<p>Check if the value is a uppercase.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  uppercase<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="url"><code>url</code></h2>
+<p>Check if the value is valid URL format.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>protocols</code>: <code>string[]</code></li>
+<li><code>require_protocol</code>: <code>boolean</code></li>
+<li><code>require_tld</code>: <code>boolean</code></li>
+<li><code>require_host</code>: <code>boolean</code></li>
+<li><code>require_valid_protocol</code>: <code>boolean</code></li>
+<li><code>allow_underscores</code>: <code>boolean</code></li>
+<li><code>host_whitelist</code>: <code>boolean</code></li>
+<li><code>host_blacklist</code>: <code>boolean</code></li>
+<li><code>allow_trailing_dot</code>: <code>boolean</code></li>
+<li><code>allow_protocol_relative_urls</code>: <code>boolean</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  url<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// -- or --</span>
+
+<span class="token punctuation">{</span>
+  url<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    protocols<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;http&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;https&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;ftp&apos;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    require_protocol<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    require_tld<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    require_host<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    require_valid_protocol<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    allow_underscores<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    host_whitelist<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    host_blacklist<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    allow_trailing_dot<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    allow_protocol_relative_urls<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>Reference:</strong></p>
+<ul>
+<li><a href="https://github.com/chriso/validator.js" target="_blank">validator.js - <code>isURL()</code></a></li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../usage/l18n.html" class="navigation navigation-prev " aria-label="Previous page: l18n">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../normalizers/" class="navigation navigation-next " aria-label="Next page: Builtin Normalizers">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Builtin Rules","level":"1.3","depth":1,"next":{"title":"Builtin Normalizers","level":"1.4","depth":1,"path":"normalizers/README.md","ref":"normalizers/README.md","articles":[]},"previous":{"title":"l18n","level":"1.2.11","depth":2,"path":"usage/l18n.md","ref":"usage/l18n.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"rules/README.md","mtime":"2017-05-07T16:28:51.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-05-08T13:29:43.863Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-hide-published-with/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

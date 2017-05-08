@@ -1,0 +1,669 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Builtin Normalizers · drip-form-validator</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-advanced-emoji/emoji-website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="../rules/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../usage/">
+            
+                <a href="../usage/">
+            
+                    
+                    Usage
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../usage/basic.html">
+            
+                <a href="../usage/basic.html">
+            
+                    
+                    Basic
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../usage/error-manipulate.html">
+            
+                <a href="../usage/error-manipulate.html">
+            
+                    
+                    Error manipulate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../usage/array.html">
+            
+                <a href="../usage/array.html">
+            
+                    
+                    Validating Array
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../usage/inline-validation.html">
+            
+                <a href="../usage/inline-validation.html">
+            
+                    
+                    Inline validation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../usage/async-validation.html">
+            
+                <a href="../usage/async-validation.html">
+            
+                    
+                    Asynchronous validation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../usage/custom-error-messages.html">
+            
+                <a href="../usage/custom-error-messages.html">
+            
+                    
+                    Custom Error Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../usage/normalize.html">
+            
+                <a href="../usage/normalize.html">
+            
+                    
+                    Normalize values
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../usage/events.html">
+            
+                <a href="../usage/events.html">
+            
+                    
+                    Events
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../usage/custom-rules.html">
+            
+                <a href="../usage/custom-rules.html">
+            
+                    
+                    Custom Validation Rules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="../usage/custom-normalizers.html">
+            
+                <a href="../usage/custom-normalizers.html">
+            
+                    
+                    Custom Normalizers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="../usage/l18n.html">
+            
+                <a href="../usage/l18n.html">
+            
+                    
+                    l18n
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../rules/">
+            
+                <a href="../rules/">
+            
+                    
+                    Builtin Rules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Builtin Normalizers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="divider"></li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" >
+            
+                <a target="_blank" href="https://tsuyoshiwada.github.io/drip-form-validator/api/">
+            
+                    
+                    API Document
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" >
+            
+                <a target="_blank" href="https://github.com/tsuyoshiwada/drip-form-validator/blob/master/CHANGELOG.md">
+            
+                    
+                    CHANGELOG
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Builtin Normalizers</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="builtin-normalizers">Builtin Normalizers</h1>
+<ul>
+<li><a href="#between"><code>between</code></a></li>
+<li><a href="#escape"><code>escape</code></a></li>
+<li><a href="#lowercase"><code>lowercase</code></a></li>
+<li><a href="#ltrim"><code>ltrim</code></a></li>
+<li><a href="#max"><code>max</code></a></li>
+<li><a href="#min"><code>min</code></a></li>
+<li><a href="#numberwithcommas"><code>numberWithCommas</code></a></li>
+<li><a href="#rtrim"><code>rtrim</code></a></li>
+<li><a href="#toboolean"><code>toBoolean</code></a></li>
+<li><a href="#todate"><code>toDate</code></a></li>
+<li><a href="#tofloat"><code>toFloat</code></a></li>
+<li><a href="#toint"><code>toInt</code></a></li>
+<li><a href="#tostring"><code>toString</code></a></li>
+<li><a href="#unescape"><code>unescape</code></a></li>
+<li><a href="#uppercase"><code>uppercase</code></a></li>
+</ul>
+<h2 id="between"><code>between</code></h2>
+<p>Normalize the value to the specified range.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>min</code>: <code>number</code></li>
+<li><code>max</code>: <code>number</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  between<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    min<span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+    max<span class="token punctuation">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="escape"><code>escape</code></h2>
+<p>Replace <code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>, <code>&apos;</code>, <code>&quot;</code> and <code>/</code> with HTML entities.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  escape<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>Reference:</strong></p>
+<ul>
+<li><a href="https://github.com/chriso/validator.js" target="_blank">validator.js - <code>escape()</code></a></li>
+</ul>
+<h2 id="lowercase"><code>lowercase</code></h2>
+<p>Replace the character string with lowercase letters.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  lowercase<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="ltrim"><code>ltrim</code></h2>
+<p>Trim characters from the left-side of the input.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>chars?</code>: <code>string</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  ltrim<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+
+  <span class="token comment" spellcheck="true">// -- or --</span>
+
+  ltrim<span class="token punctuation">:</span> <span class="token punctuation">{</span> chars<span class="token punctuation">:</span> <span class="token string">&apos;@&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="max"><code>max</code></h2>
+<p>Normalize the value to less than or equal to the specified number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>max</code>: <code>number</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  max<span class="token punctuation">:</span> <span class="token punctuation">{</span> max<span class="token punctuation">:</span> <span class="token number">100</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="min"><code>min</code></h2>
+<p>Normalize the value to greater than or equal to the specified number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>min</code>: <code>number</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  min<span class="token punctuation">:</span> <span class="token punctuation">{</span> min<span class="token punctuation">:</span> <span class="token number">100</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="numberwithcommas"><code>numberWithCommas</code></h2>
+<p>Normalize to comma-separated numbers. (Example: <code>1,000,000</code>)</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  numberWithCommas<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="rtrim"><code>rtrim</code></h2>
+<p>Trim characters from the right-side of the input.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>chars?</code>: <code>string</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  rtrim<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+
+  <span class="token comment" spellcheck="true">// -- or --</span>
+
+  rtrim<span class="token punctuation">:</span> <span class="token punctuation">{</span> chars<span class="token punctuation">:</span> <span class="token string">&apos;/&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="toboolean"><code>toBoolean</code></h2>
+<p>Converts a value to a Boolean.</p>
+<p><strong>false:</strong></p>
+<ul>
+<li><code>&quot;0&quot;</code></li>
+<li><code>&quot;false&quot;</code></li>
+<li>falsy</li>
+</ul>
+<p><strong>true:</strong></p>
+<ul>
+<li>truthy</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  toBoolean<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="todate"><code>toDate</code></h2>
+<p>Converts a value to a Date.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  toDate<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="tofloat"><code>toFloat</code></h2>
+<p>Converts a value to a float number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  toFloat<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="toint"><code>toInt</code></h2>
+<p>Converts a value to a integer.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>radix?</code>: <code>number</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  toInt<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+
+  <span class="token comment" spellcheck="true">// -- or --</span>
+
+  toInt<span class="token punctuation">:</span> <span class="token punctuation">{</span> radix<span class="token punctuation">:</span> <span class="token number">16</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="tostring"><code>toString</code></h2>
+<p>Converts a value to a string.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  toString<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="unescape"><code>unescape</code></h2>
+<p>Replaces HTML encoded entities with <code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>, <code>&apos;</code>, <code>&quot;</code> and <code>/</code>.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  unescape<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="uppercase"><code>uppercase</code></h2>
+<p>Replace the character string with uppercase letters.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>None</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  uppercase<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../rules/" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Builtin Rules">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Builtin Normalizers","level":"1.4","depth":1,"next":{"title":"API Document","level":"2.1","depth":1,"url":"https://tsuyoshiwada.github.io/drip-form-validator/api/","ref":"https://tsuyoshiwada.github.io/drip-form-validator/api/","articles":[]},"previous":{"title":"Builtin Rules","level":"1.3","depth":1,"path":"rules/README.md","ref":"rules/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"normalizers/README.md","mtime":"2017-05-08T13:21:34.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-05-08T13:29:43.863Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-hide-published-with/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
