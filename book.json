@@ -1,0 +1,10 @@
+{
+  "root": "./docs",
+  "title": "drip-form-validator",
+  "plugins" : ["hide-published-with", "prism", "-highlight", "github", "advanced-emoji"],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/tsuyoshiwada/drip-form-validator"
+    }
+  }
+}

@@ -31,7 +31,7 @@ export interface RuleObjectParams {
 }
 
 export interface ValidationTester {
-  (value: any, params: RuleObjectParams, field: string, values: Values): boolean | Promise<any>;
+  (value: any, params: RuleObjectParams, field: string, values: Values): boolean | string | Promise<any>;
 }
 
 export type RuleParams = boolean | ValidationTester | RuleObjectParams;
