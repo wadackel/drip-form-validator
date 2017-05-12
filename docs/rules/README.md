@@ -188,7 +188,7 @@ It checks whether the value matches the specified date format.
 
 ```javascript
 {
-  date: { format: 'YYYY-MM-DD HH:mm:ss' },
+  dateFormat: { format: 'YYYY-MM-DD HH:mm:ss' },
 }
 ```
 
