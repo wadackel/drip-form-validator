@@ -1390,7 +1390,7 @@ describe('Validator', () => {
             done();
           });
 
-        clock.tick(100);
+        clock.tick(200);
       });
 
 

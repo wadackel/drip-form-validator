@@ -763,7 +763,9 @@ class Validator extends EventEmitter {
 
       return Promise.all(map(fieldRules, (params: RuleParams, rule: string) =>
         this.asyncExecuteTest(rule, field, value, params),
-      ));
+      ))
+        .then(() => Promise.resolve())
+        .catch(() => Promise.reject(null));
     }))
       .then(() => {
         this.afterValidate();
