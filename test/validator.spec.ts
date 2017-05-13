@@ -522,10 +522,7 @@ describe('Validator', () => {
 
       beforeEach(() => {
         v = new Validator();
-      });
 
-
-      it('Should be return error message', () => {
         v.setErrors('foo', [
           { rule: 'bar1', message: 'foo1', params: true },
           { rule: 'bar2', message: 'foo2', params: true },
@@ -534,7 +531,22 @@ describe('Validator', () => {
         v.setErrors('bar', [
           { rule: 'baz1', message: 'bar1', params: true },
         ]);
+      });
 
+
+      it('Should be return all error messages', () => {
+        assert.deepStrictEqual(v.getAllErrorMessages(), {
+          foo: ['foo1', 'foo2'],
+          bar: ['bar1'],
+        });
+
+        v.clearAllErrors();
+
+        assert.deepStrictEqual(v.getAllErrorMessages(), {});
+      });
+
+
+      it('Should be return error message', () => {
         assert(v.getErrorMessages('notfound') === null);
         assert.deepStrictEqual(v.getErrorMessages('foo'), ['foo1', 'foo2']);
         assert.deepStrictEqual(v.getErrorMessages('bar'), ['bar1']);
@@ -1421,59 +1433,5 @@ describe('Validator', () => {
         ]);
       });
     });
-  });
-
-
-  it.only('', () => {
-    const YOUR_SECRET_TOKEN = '987654321';
-
-    const data = {
-      firstName: null,
-      lastName: 'wada',
-      age: 18,
-      email: 'email-address',
-      website: 'foobarbaz',
-      confirmed: null,
-      token: '123456789',
-      projects: [
-        { title: 'Project 1', tags: [1] },
-        { title: 'Project 2', tags: [4, 8] },
-        { title: 'Project 3', tags: ['foo', 'bar', 3] },
-      ],
-    };
-
-    const v = new Validator(data, {
-      firstName: {
-        required: true,
-      },
-      lastName: {
-        required: true,
-      },
-      age: {
-        required: true,
-        min: { min: 22 },
-      },
-      email: {
-        required: true,
-        email: true,
-      },
-      website: {
-        url: true,
-      },
-      confirmed: {
-        required: true,
-        truthy: true,
-      },
-      token: {
-        checkToken: (value) => value === YOUR_SECRET_TOKEN,
-      },
-      'projects.*.tags.*': {
-        numeric: true,
-      },
-    });
-
-    v.validate();
-
-    console.log(v.getAllErrors());
   });
 });

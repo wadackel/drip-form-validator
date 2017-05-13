@@ -79,6 +79,12 @@ export interface ValidateErrorList {
   [index: string]: ValidateError[];
 }
 
+export type FieldErrorMessageList = string[];
+
+export interface ErrorMessageList {
+  [index: string]: FieldErrorMessageList;
+}
+
 
 // Fields
 export interface CustomFields {
@@ -452,6 +458,17 @@ class Validator extends EventEmitter {
 
   getAllErrors(): ValidateErrorList {
     return { ...this._errors };
+  }
+
+  getAllErrorMessages(): ErrorMessageList {
+    const errors = this.getAllErrors();
+    const results: ErrorMessageList = {};
+
+    forEach(errors, (obj, field) => {
+      results[<string>field] = obj.map(error => error.message);
+    });
+
+    return results;
   }
 
   clearAllErrors(): void {
