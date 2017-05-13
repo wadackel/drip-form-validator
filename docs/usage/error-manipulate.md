@@ -5,6 +5,7 @@ The drip-form-validator can manipulate the error flexibly according to the purpo
 
 Errors are kept in the instance after the verification is done.
 
+
 ## Get all errors
 
 Returns an object with field name as key.  
@@ -45,6 +46,30 @@ if (v.isValid()) {
   // invalid
 }
 ```
+
+
+## Get all error messages
+
+`getAllErrorMessages()` is useful to retrieve messages with fields as keys.  
+Information on parameters and rules is omitted.
+
+```javascript
+v.getAllErrorMessages();
+
+// =>
+// {
+//   field1: [
+//     'Error Message',
+//     'Error Message',
+//   ],
+//   field2: [
+//     'Error Message',
+//   ],
+//   ...
+// }
+```
+
+Like `getAllErrors()`, if there is no error, it returns an empty object.
 
 
 ## Get field errors
