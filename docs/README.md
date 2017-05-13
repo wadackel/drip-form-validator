@@ -15,7 +15,11 @@ drip-form-validator has the following features.
 To install the stable version.
 
 ```bash
-$ npm install drip-form-validator
+$ npm install --save drip-form-validator
+
+# or
+
+$ yarn add drip-form-validator
 ```
 
 
@@ -26,9 +30,99 @@ Usage is very simple !
 ```javascript
 import { Validator } from 'drip-form-validator';
 
-const v = new Validator(/* ... */);
+const data = {
+  firstName: null,
+  lastName: 'wada',
+  age: 18,
+  email: 'email-address',
+  website: 'foobarbaz',
+  confirmed: null,
+  token: '123456789',
+  projects: [
+    { title: 'Project 1', tags: [1] },
+    { title: 'Project 2', tags: [4, 8] },
+    { title: 'Project 3', tags: ['foo', 'bar', 3] },
+  ],
+};
 
-v.validate();
+const v = new Validator(data, {
+  firstName: {
+    required: true,
+  },
+  lastName: {
+    required: true,
+  },
+  age: {
+    required: true,
+    min: { min: 22 },
+  },
+  email: {
+    required: true,
+    email: true,
+  },
+  website: {
+    url: true,
+  },
+  confirmed: {
+    required: true,
+    truthy: true,
+  },
+  token: {
+    checkToken: (value) => value === YOUR_SECRET_TOKEN,
+  },
+  'projects.*.tags.*': {
+    numeric: true,
+  },
+});
+
+if (v.validate()) {
+  // `data` is valid.
+
+} else {
+  console.log(v.getAllErrors());
+  // {
+  //   firstName: [{
+  //     rule: 'required',
+  //     params: true,
+  //     message: 'The firstName field is required.'
+  //   }],
+  //   age: [{
+  //     rule: 'min',
+  //     params: [Object],
+  //     message: 'The age must be at least 22.'
+  //   }],
+  //   email: [{
+  //     rule: 'email',
+  //     params: true,
+  //     message: 'The email must be a valid email address.'
+  //   }],
+  //   website: [{
+  //     rule: 'url',
+  //     params: true,
+  //     message: 'The website format is invalid.'
+  //   }],
+  //   confirmed: [{
+  //     rule: 'required',
+  //     params: true,
+  //     message: 'The confirmed field is required.'
+  //   }],
+  //   token: [{
+  //     rule: 'checkToken',
+  //     params: [Function: checkToken],
+  //     message: 'The token field is invalid.'
+  //   }],
+  //   'projects.2.tags.0': [{
+  //     rule: 'numeric',
+  //     params: true,
+  //     message: 'The projects.2.tags.0 must be a number.'
+  //   }],
+  //   'projects.2.tags.1': [{
+  //     rule: 'numeric',
+  //     params: true,
+  //     message: 'The projects.2.tags.1 must be a number.'
+  //   }]
+  // }
+}
 ```
 
 

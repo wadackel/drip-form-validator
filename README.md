@@ -21,13 +21,21 @@
 
 ## Install
 
+To install the stable version.
+
 ```bash
-$ npm install drip-form-validator
+$ npm install --save drip-form-validator
+
+# or
+
+$ yarn add drip-form-validator
 ```
 
 
 
 ## Usage
+
+Usage is very simple !
 
 ```javascript
 import { Validator } from 'drip-form-validator';
