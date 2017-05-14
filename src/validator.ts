@@ -86,8 +86,8 @@ export interface ErrorMessageList {
 }
 
 
-// Fields
-export interface CustomFields {
+// Field names
+export interface FieldNames {
   [index: string]: string;
 }
 
@@ -152,7 +152,7 @@ export interface BuiltinNormalizerList {
  */
 export interface ValidatorOptions {
   messages?: InstanceMessages;
-  fields?: CustomFields;
+  fieldNames?: FieldNames;
   normalizers?: NormalizerList;
 }
 
@@ -319,7 +319,7 @@ class Validator extends EventEmitter {
   protected _rules: RuleList;
   protected _normalizers: NormalizerList = {};
   protected _messages: InstanceMessages = {};
-  protected _fields: CustomFields = {};
+  protected _fieldNames: FieldNames = {};
 
   constructor(
     values: Values = {},
@@ -335,7 +335,7 @@ class Validator extends EventEmitter {
 
     if (opts.normalizers) this.setNormalizers(opts.normalizers);
     if (opts.messages) this.setMessages(opts.messages);
-    if (opts.fields) this.setCustomFields(opts.fields);
+    if (opts.fieldNames) this.setFieldNames(opts.fieldNames);
   }
 
 
@@ -404,26 +404,26 @@ class Validator extends EventEmitter {
 
 
   /**
-   * Fields
+   * Field names
    */
-  getCustomFields(): CustomFields {
-    return { ...this._fields };
+  getFieldNames(): FieldNames {
+    return { ...this._fieldNames };
   }
 
-  setCustomFields(fields: CustomFields): void {
-    this._fields = {};
-    this.mergeCustomFields(fields);
+  setFieldNames(fieldNames: FieldNames): void {
+    this._fieldNames = {};
+    this.mergeFieldNames(fieldNames);
   }
 
-  mergeCustomFields(fields: CustomFields): void {
-    invariant(isPlainObject(fields), '"fields" must be plain object.');
-    this._fields = { ...this._fields, ...fields };
+  mergeFieldNames(fieldNames: FieldNames): void {
+    invariant(isPlainObject(fieldNames), '"fieldNames" must be plain object.');
+    this._fieldNames = { ...this._fieldNames, ...fieldNames };
   }
 
-  getFieldTitle(field: string): string {
+  getFieldName(field: string): string {
     let result = field;
 
-    forEach(this._fields, (title: string, key: string) => {
+    forEach(this._fieldNames, (title: string, key: string) => {
       if (dot.matchPath(key, field)) {
         result = title;
         return false;
@@ -484,15 +484,15 @@ class Validator extends EventEmitter {
       error.message = result;
 
     } else {
-      const fieldTitle = this.getFieldTitle(field);
+      const fieldName = this.getFieldName(field);
       const objParams = {
-        field: fieldTitle,
+        field: fieldName,
         ...(isPlainObject(params) ? <RuleObjectParams>params : {}),
       };
 
       const msg = this.getPrecompileErrorMessage(field, rule, type === 'null' ? null : type);
       error.message = isString(msg) ? template(msg, objParams) : msg(
-        fieldTitle,
+        fieldName,
         value,
         objParams,
       );

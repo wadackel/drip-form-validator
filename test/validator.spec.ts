@@ -640,7 +640,7 @@ describe('Validator', () => {
     });
 
 
-    describe('Custom fields', () => {
+    describe('Field names', () => {
       let v: Validator;
 
       beforeEach(() => {
@@ -648,54 +648,54 @@ describe('Validator', () => {
       });
 
 
-      it('Should be get/set custom fields', () => {
-        assert.deepStrictEqual(v.getCustomFields(), {});
-        v.setCustomFields({ key: 'Custom Key' });
-        assert.deepStrictEqual(v.getCustomFields(), { key: 'Custom Key' });
-        v.setCustomFields({ foo: 'Foo Key', bar: 'Bar Key' });
-        assert.deepStrictEqual(v.getCustomFields(), { foo: 'Foo Key', bar: 'Bar Key' });
+      it('Should be get/set field names', () => {
+        assert.deepStrictEqual(v.getFieldNames(), {});
+        v.setFieldNames({ key: 'Custom Key' });
+        assert.deepStrictEqual(v.getFieldNames(), { key: 'Custom Key' });
+        v.setFieldNames({ foo: 'Foo Key', bar: 'Bar Key' });
+        assert.deepStrictEqual(v.getFieldNames(), { foo: 'Foo Key', bar: 'Bar Key' });
 
-        assert.throws(() => v.setCustomFields(<any>null));
-        assert.throws(() => v.setCustomFields(<any>13));
+        assert.throws(() => v.setFieldNames(<any>null));
+        assert.throws(() => v.setFieldNames(<any>13));
       });
 
 
-      it('Should be set custom fields with constructor', () => {
-        const fields = { foo: 'Foo123', bar: 'Bar456' };
-        const vv = new Validator({}, {}, { fields });
-        assert.deepStrictEqual(vv.getCustomFields(), fields);
+      it('Should be set field names with constructor', () => {
+        const fieldNames = { foo: 'Foo123', bar: 'Bar456' };
+        const vv = new Validator({}, {}, { fieldNames });
+        assert.deepStrictEqual(vv.getFieldNames(), fieldNames);
       });
 
 
-      it('Should be merge custom fields', () => {
-        v.setCustomFields({ k1: 'Key1' });
-        v.mergeCustomFields({ k2: 'Key2' });
-        assert.deepStrictEqual(v.getCustomFields(), {
+      it('Should be merge field names', () => {
+        v.setFieldNames({ k1: 'Key1' });
+        v.mergeFieldNames({ k2: 'Key2' });
+        assert.deepStrictEqual(v.getFieldNames(), {
           k1: 'Key1',
           k2: 'Key2',
         });
 
-        assert.throws(() => v.mergeCustomFields(<any>null));
+        assert.throws(() => v.mergeFieldNames(<any>null));
       });
 
 
-      it('Should be get field title', () => {
-        v.setCustomFields({
+      it('Should be get field name', () => {
+        v.setFieldNames({
           foo: 'Foo123',
           bar: 'Bar456',
           'has.dot.key': 'DotKey1',
           'has.wild.*.key.*': 'DotKey2',
         });
 
-        assert(v.getFieldTitle('foo') === 'Foo123');
-        assert(v.getFieldTitle('bar') === 'Bar456');
-        assert(v.getFieldTitle('has.dot.key') === 'DotKey1');
-        assert(v.getFieldTitle('has.wild.*.key.*') === 'DotKey2');
-        assert(v.getFieldTitle('has.wild.0.key.0') === 'DotKey2');
-        assert(v.getFieldTitle('has.wild.0.key.1') === 'DotKey2');
-        assert(v.getFieldTitle('has.wild.1.key.2') === 'DotKey2');
-        assert(v.getFieldTitle('has.wild.1.key.3') === 'DotKey2');
-        assert(v.getFieldTitle('notfound') === 'notfound');
+        assert(v.getFieldName('foo') === 'Foo123');
+        assert(v.getFieldName('bar') === 'Bar456');
+        assert(v.getFieldName('has.dot.key') === 'DotKey1');
+        assert(v.getFieldName('has.wild.*.key.*') === 'DotKey2');
+        assert(v.getFieldName('has.wild.0.key.0') === 'DotKey2');
+        assert(v.getFieldName('has.wild.0.key.1') === 'DotKey2');
+        assert(v.getFieldName('has.wild.1.key.2') === 'DotKey2');
+        assert(v.getFieldName('has.wild.1.key.3') === 'DotKey2');
+        assert(v.getFieldName('notfound') === 'notfound');
       });
     });
 
@@ -1119,7 +1119,7 @@ describe('Validator', () => {
               k2: { inline: 'inline message' },
               k3: { inline: '{{field}} message' },
             },
-            fields: {
+            fieldNames: {
               k3: 'Key3',
             },
           },

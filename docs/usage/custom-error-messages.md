@@ -9,13 +9,13 @@ There are two approaches to customizing error messages.
 
 ## Cusom field name
 
-Field names can be customized using the `fields` option. This is the simplest customization.
+Field names can be customized using the `fieldNames` option. This is the simplest customization.
 
 ```javascript
 const data = { email: 'foo' };
 const rules = { email: { email: true } };
 const options = {
-  fields: {
+  fieldNames: {
     email: 'Email-Address',
   },
 };
