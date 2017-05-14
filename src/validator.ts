@@ -139,7 +139,6 @@ export interface NormalizerList {
 export interface BuiltinNormalizer {
   depends: NormalizerDepends;
   normalizer: Normalizer;
-  before: boolean;
 }
 
 export interface BuiltinNormalizerList {
@@ -276,7 +275,7 @@ class Validator extends EventEmitter {
   /**
    * Builtin normalizer
    */
-  static registerNormalizer(name: string, depends: NormalizerDepends, normalizer: Normalizer, before: boolean = true): void {
+  static registerNormalizer(name: string, depends: NormalizerDepends, normalizer: Normalizer): void {
     if (Validator.hasNormalizer(name)) {
       invariant(false, `"${name}" normalizer already exists`);
       return;
@@ -297,7 +296,6 @@ class Validator extends EventEmitter {
     Validator._builtinNormalizers[name] = {
       depends,
       normalizer,
-      before,
     };
   }
 
@@ -609,12 +607,10 @@ class Validator extends EventEmitter {
   protected beforeValidate(): void {
     this.clearAllErrors();
     this.emit(EventTypes.BEFORE_VALIDATE, this);
-    this.normalize(true);
     this._validating = true;
   }
 
   protected afterValidate(): void {
-    this.normalize(false);
     this._validating = false;
     this.emit(EventTypes.AFTER_VALIDATE, this);
     this.emit(this.isValid() ? EventTypes.VALID : EventTypes.INVALID, this);
@@ -643,7 +639,7 @@ class Validator extends EventEmitter {
     return normalizers;
   }
 
-  protected normalize(before: boolean): void {
+  normalize(): void {
     const normalizers = this.expandNormalizers();
     const previousValues = this.getValues();
 
@@ -653,7 +649,6 @@ class Validator extends EventEmitter {
 
       forEach(list, (params: NormalizeParams | Normalizer, name: string) => {
         value = this.executeNormalize(
-          before,
           name,
           field,
           value,
@@ -668,7 +663,6 @@ class Validator extends EventEmitter {
   }
 
   protected executeNormalize(
-    before: boolean,
     name: string,
     field: string,
     value: any,
@@ -687,23 +681,19 @@ class Validator extends EventEmitter {
 
     if (isInline) {
       const inline = <Normalizer>params;
-      return !before ? value : inline(value, {}, previousValue, values, previousValues);
+      return inline(value, {}, previousValue, values, previousValues);
     }
 
     if (!Validator.hasNormalizer(name)) {
       return value;
     }
 
-    const { normalizer, depends, before: b } = <BuiltinNormalizer>Validator.getNormalizer(name);
-
-    if (b !== before) {
-      return value;
-    }
+    const { normalizer, depends } = <BuiltinNormalizer>Validator.getNormalizer(name);
 
     let result = value;
 
     forEach(depends, (p: NormalizeParams, n: string) => {
-      result = this.executeNormalize(before, n, field, result, p, previousValue, previousValues);
+      result = this.executeNormalize(n, field, result, p, previousValue, previousValues);
     });
 
     return normalizer(result, isObjParams ? params : {}, previousValue, values, previousValues);

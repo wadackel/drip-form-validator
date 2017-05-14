@@ -138,20 +138,18 @@ describe('Validator', () => {
         const name = 'testNormalizer';
         const d = {};
         const n = (value: any) => value;
-        const b = true;
-        Validator.registerNormalizer(name, d, n, b);
+        Validator.registerNormalizer(name, d, n);
 
         const o: any = Validator.getNormalizer(name);
         assert(o.depends === d);
         assert(o.normalizer === n);
-        assert(o.before === b);
       });
 
 
       it('Should be throw a error when specify duplicate field', () => {
-        Validator.registerNormalizer('fuga', {}, () => true, false);
+        Validator.registerNormalizer('fuga', {}, () => true);
         assert.throws(() => {
-          Validator.registerNormalizer('fuga', {}, () => true, false);
+          Validator.registerNormalizer('fuga', {}, () => true);
         });
       });
 
@@ -792,7 +790,7 @@ describe('Validator', () => {
       });
 
 
-      it('Should be called normalizer when before validation', () => {
+      it('Should be called normalizer', () => {
         const values = { k1: 'v1', k2: 'v2' };
 
         const func1 = sinon.stub().returns(null);
@@ -829,50 +827,7 @@ describe('Validator', () => {
           },
         );
 
-        assert(v.validate());
-        assert.deepStrictEqual(v.getValues(), {
-          k1: 'called func2',
-          k2: 'v2',
-        });
-      });
-
-
-      it('Should be called normalizer when after validation', () => {
-        const values = { k1: 'v1', k2: 'v2' };
-
-        const func1 = sinon.stub().returns(null);
-        func1.withArgs(
-          values.k1,
-          {},
-          values.k1,
-          values,
-          values,
-        ).returns('called func1');
-
-        const func2 = sinon.stub().returns(null);
-        func2.withArgs('called func1',
-          {},
-          values.k1,
-          { ...values, k1: 'called func1' },
-          values,
-        ).returns('called func2');
-
-        Validator.registerNormalizer('func1', {}, func1, false);
-        Validator.registerNormalizer('func2', {}, func2, false);
-
-        const v = new Validator(
-          values,
-          {
-            k1: {
-              inline: (value: any) => value === values.k1,
-            },
-          },
-          {
-            normalizers: {
-              k1: { func1: true, func2: true },
-            },
-          },
-        );
+        v.normalize();
 
         assert(v.validate());
         assert.deepStrictEqual(v.getValues(), {
@@ -895,13 +850,15 @@ describe('Validator', () => {
           values,
         ).returns('called');
 
-        Validator.registerNormalizer('example', {}, normalizer, true);
+        Validator.registerNormalizer('example', {}, normalizer);
 
         const v = new Validator(values, {}, {
           normalizers: {
             foo: { example: params },
           },
         });
+
+        v.normalize();
 
         assert(v.validate());
         assert(normalizer.callCount === 1);
@@ -930,6 +887,8 @@ describe('Validator', () => {
             },
           },
         );
+
+        v.normalize();
 
         assert(v.validate());
         assert(n1.callCount === 3);
@@ -1395,19 +1354,18 @@ describe('Validator', () => {
 
 
       it('Should be called normalizer', () => {
-        const toInt = (value: any) => parseInt(value);
-
-        Validator.registerNormalizer('nb', {}, toInt, true);
-        Validator.registerNormalizer('na', {}, toInt, false);
+        const n = (value: any) => parseInt(value);
 
         const v = new Validator(getValues(), {
           'data.users.*.profile.age': { num: true },
         }, {
           normalizers: {
-            'data.users.*.profile.age': { nb: true },
-            'data.users.*.followers.*': { na: true },
+            'data.users.*.profile.age': { n },
+            'data.users.*.followers.*': { n },
           },
         });
+
+        v.normalize();
 
         assert(v.validate());
 

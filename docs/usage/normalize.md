@@ -15,17 +15,7 @@ const data = {
   url: 'http://foobar.com/',
 };
 
-const v = new Validator(data, {
-  id: {
-    number: true,
-  },
-  email: {
-    email: true,
-  },
-  url: {
-    url: true,
-  },
-}, {
+const v = new Validator(data, {/* rules */}, {
   normalizers: {
     id: {
       toInt: true,
@@ -40,7 +30,7 @@ const v = new Validator(data, {
   }
 });
 
-v.validate();
+v.normalize();
 
 console.log(v.getValues());
 // {
@@ -69,7 +59,7 @@ It is also possible to specify it with Inline.
 ```javascript
 const v = new Validator({
   key: '123',
-}, {}, {
+}, {/* rules */}, {
   normalizers: {
     key: {
       inline: value => parseFloat(value) * 100,
@@ -77,7 +67,7 @@ const v = new Validator({
   },
 });
 
-v.validate();
+v.normalize();
 
 console.log(v.getValues());
 // {
