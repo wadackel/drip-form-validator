@@ -1,6 +1,7 @@
 lib
 tmp
 _book
+docs/api
 
 
 # Created by https://www.gitignore.io/api/macos,windows,node
