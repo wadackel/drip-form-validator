@@ -1,11 +1,14 @@
 # Builtin Normalizers
 
 * [`between`](#between)
+* [`betweenWith`](#betweenwith)
 * [`escape`](#escape)
 * [`lowercase`](#lowercase)
 * [`ltrim`](#ltrim)
 * [`max`](#max)
+* [`maxWith`](#maxwith)
 * [`min`](#min)
+* [`minWith`](#minwith)
 * [`numberWithCommas`](#numberwithcommas)
 * [`rtrim`](#rtrim)
 * [`toBoolean`](#toboolean)
@@ -33,6 +36,27 @@ Normalize the value to the specified range.
   between: {
     min: 10,
     max: 20,
+  },
+}
+```
+
+
+## `betweenWith`
+
+Normalize the value to the specified range with other field values.
+
+**Parameters:**
+
+* `min`: `string`
+* `max`: `string`
+
+**Example:**
+
+```javascript
+{
+  between: {
+    min: 'minKey',
+    max: 'maxKey',
   },
 }
 ```
@@ -114,6 +138,23 @@ Normalize the value to less than or equal to the specified number.
 ```
 
 
+## `maxWith`
+
+Normalize the value to less than or equal to the specified field value.
+
+**Parameters:**
+
+* `key`: `string`
+
+**Example:**
+
+```javascript
+{
+  max: { key: 'maxKey' },
+}
+```
+
+
 ## `min`
 
 Normalize the value to greater than or equal to the specified number.
@@ -127,6 +168,23 @@ Normalize the value to greater than or equal to the specified number.
 ```javascript
 {
   min: { min: 100 },
+}
+```
+
+
+## `minWith`
+
+Normalize the value to greater than or equal to the specified field value.
+
+**Parameters:**
+
+* `key`: `string`
+
+**Example:**
+
+```javascript
+{
+  min: { key: 'minKey' },
 }
 ```
 
