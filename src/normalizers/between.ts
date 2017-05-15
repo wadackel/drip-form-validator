@@ -1,10 +1,10 @@
 import Validator from '../validator';
-import { isNumber } from '../internal/utils';
+import { isNumeric } from '../internal/utils';
 
-Validator.registerNormalizer('between', { toFloat: { radix: 10 } }, (value: any, { min, max }: { min: number, max: number }) => {
-  if (!isNumber(value) || isNaN(value)) {
-    return value;
+Validator.registerNormalizer('between', {}, (value: any, { min, max }: { min: number, max: number }) => {
+  if (isNumeric(value)) {
+    return Math.min(Math.max(parseFloat(<any>value), min), max);
   }
 
-  return Math.min(Math.max(value, min), max);
+  return value;
 });
