@@ -9,10 +9,10 @@ Validator.registerNormalizer('numberWithCommas', {}, (value: any) => {
   const num = parseFloat(`${value}`.replace(/,/g, ''));
 
   if (isNaN(num)) {
-    return NaN;
+    return value;
   }
 
-  const tokens = `${value}`.split('.');
+  const tokens = `${num}`.split('.');
 
   tokens[0] = tokens[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 

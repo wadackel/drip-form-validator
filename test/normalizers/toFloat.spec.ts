@@ -16,6 +16,7 @@ describe(`Normalizers#${normalizer}`, () => {
       { value: '10.00', params: true, expect: 10.0 },
       { value: '+10.00', params: true, expect: 10.0 },
       { value: '-0.29', params: true, expect: -0.29 },
+      { value: 'foo', params: true, expect: NaN },
       { value: Infinity, params: true, expect: Infinity },
       { value: NaN, params: true, expect: NaN },
     ]);
