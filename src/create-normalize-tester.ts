@@ -27,7 +27,7 @@ const createNormalizeTester = (assert: any, normalizer: string) => ((tests: Norm
       prettyParams = `${params}`;
     }
 
-    v.validate();
+    v.normalize();
 
     const result = v.getValue('key');
     assert(isEqual(result, test.expect), `'${normalizer}' ${test.value} = ${test.expect} (${prettyParams}), result = ${result}`);

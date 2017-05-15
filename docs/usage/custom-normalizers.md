@@ -4,6 +4,7 @@
 
 Here is an example of registering a Normalizer called `"example"`.
 
+
 ### Register custom normalizer
 
 Registering Normalizer uses the `registerNormalizer()` method.
@@ -17,7 +18,7 @@ Validator.registerNormalizer('example', {}, (value, params, previousValue, value
 `registerNormalizer()` has the following structure.
 
 ```typescript
-registerNormalizer(name: string, depends: NormalizerDepends, normalizer: Normalizer, before: boolean = true): void
+registerNormalizer(name: string, depends: NormalizerDepends, normalizer: Normalizer): void
 ```
 
 `Normalizer` has the following structure. It takes the same arguments as [Inline normalizer](normalize.html#inline-normalizer).
@@ -78,22 +79,6 @@ Validator.registerNormalizer('example', { trim: true }, (value, params, previous
   return parseInt(value, params.radix || 10);
 });
 ```
-
-
-### Execution timing
-
-By default Normalize is executed just before validation.  
-However, there may be cases where you want to execute after validation.
-
-It can be executed after validation by passing `false` as the last argument of `registerNormalizer()`.
-
-```javascript
-Validator.registerNormalizer('example', { trim: true }, (value, params, previousValue, values, previousValues) => {
-  return parseInt(value, params.radix || 10);
-}, false);
-```
-
-By the way, Inline normalizer is always executed before validation.
 
 
 ## Written test for Custom normalizers

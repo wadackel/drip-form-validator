@@ -1,10 +1,10 @@
 import Validator from '../validator';
-import { isNumber } from '../internal/utils';
+import { isNumeric } from '../internal/utils';
 
-Validator.registerNormalizer('min', { toFloat: { radix: 10 } }, (value: any, { min }: { min: number }) => {
-  if (!isNumber(value) || isNaN(value)) {
-    return value;
+Validator.registerNormalizer('min', {}, (value: any, { min }: { min: number }) => {
+  if (isNumeric(value)) {
+    return Math.max(parseFloat(<any>value), min);
   }
 
-  return Math.max(value, min);
+  return value;
 });

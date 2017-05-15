@@ -1,10 +1,10 @@
 import Validator from '../validator';
-import { isString } from '../internal/utils';
+import { isString, isNumber } from '../internal/utils';
 
 Validator.registerNormalizer('toInt', {}, (value: any, params: { radix?: number }) => {
-  if (!isString(value)) {
-    return value;
+  if (isString(value) || (isNumber(value) && value !== Infinity)) {
+    return parseInt(`${value}`, params.radix || 10);
   }
 
-  return parseInt(value, params.radix || 10);
+  return value;
 });

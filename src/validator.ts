@@ -86,8 +86,8 @@ export interface ErrorMessageList {
 }
 
 
-// Fields
-export interface CustomFields {
+// Field names
+export interface FieldNames {
   [index: string]: string;
 }
 
@@ -139,7 +139,6 @@ export interface NormalizerList {
 export interface BuiltinNormalizer {
   depends: NormalizerDepends;
   normalizer: Normalizer;
-  before: boolean;
 }
 
 export interface BuiltinNormalizerList {
@@ -152,7 +151,7 @@ export interface BuiltinNormalizerList {
  */
 export interface ValidatorOptions {
   messages?: InstanceMessages;
-  fields?: CustomFields;
+  fieldNames?: FieldNames;
   normalizers?: NormalizerList;
 }
 
@@ -276,7 +275,7 @@ class Validator extends EventEmitter {
   /**
    * Builtin normalizer
    */
-  static registerNormalizer(name: string, depends: NormalizerDepends, normalizer: Normalizer, before: boolean = true): void {
+  static registerNormalizer(name: string, depends: NormalizerDepends, normalizer: Normalizer): void {
     if (Validator.hasNormalizer(name)) {
       invariant(false, `"${name}" normalizer already exists`);
       return;
@@ -297,7 +296,6 @@ class Validator extends EventEmitter {
     Validator._builtinNormalizers[name] = {
       depends,
       normalizer,
-      before,
     };
   }
 
@@ -319,7 +317,7 @@ class Validator extends EventEmitter {
   protected _rules: RuleList;
   protected _normalizers: NormalizerList = {};
   protected _messages: InstanceMessages = {};
-  protected _fields: CustomFields = {};
+  protected _fieldNames: FieldNames = {};
 
   constructor(
     values: Values = {},
@@ -335,7 +333,7 @@ class Validator extends EventEmitter {
 
     if (opts.normalizers) this.setNormalizers(opts.normalizers);
     if (opts.messages) this.setMessages(opts.messages);
-    if (opts.fields) this.setCustomFields(opts.fields);
+    if (opts.fieldNames) this.setFieldNames(opts.fieldNames);
   }
 
 
@@ -404,26 +402,26 @@ class Validator extends EventEmitter {
 
 
   /**
-   * Fields
+   * Field names
    */
-  getCustomFields(): CustomFields {
-    return { ...this._fields };
+  getFieldNames(): FieldNames {
+    return { ...this._fieldNames };
   }
 
-  setCustomFields(fields: CustomFields): void {
-    this._fields = {};
-    this.mergeCustomFields(fields);
+  setFieldNames(fieldNames: FieldNames): void {
+    this._fieldNames = {};
+    this.mergeFieldNames(fieldNames);
   }
 
-  mergeCustomFields(fields: CustomFields): void {
-    invariant(isPlainObject(fields), '"fields" must be plain object.');
-    this._fields = { ...this._fields, ...fields };
+  mergeFieldNames(fieldNames: FieldNames): void {
+    invariant(isPlainObject(fieldNames), '"fieldNames" must be plain object.');
+    this._fieldNames = { ...this._fieldNames, ...fieldNames };
   }
 
-  getFieldTitle(field: string): string {
+  getFieldName(field: string): string {
     let result = field;
 
-    forEach(this._fields, (title: string, key: string) => {
+    forEach(this._fieldNames, (title: string, key: string) => {
       if (dot.matchPath(key, field)) {
         result = title;
         return false;
@@ -484,15 +482,15 @@ class Validator extends EventEmitter {
       error.message = result;
 
     } else {
-      const fieldTitle = this.getFieldTitle(field);
+      const fieldName = this.getFieldName(field);
       const objParams = {
-        field: fieldTitle,
+        field: fieldName,
         ...(isPlainObject(params) ? <RuleObjectParams>params : {}),
       };
 
       const msg = this.getPrecompileErrorMessage(field, rule, type === 'null' ? null : type);
       error.message = isString(msg) ? template(msg, objParams) : msg(
-        fieldTitle,
+        fieldName,
         value,
         objParams,
       );
@@ -609,12 +607,10 @@ class Validator extends EventEmitter {
   protected beforeValidate(): void {
     this.clearAllErrors();
     this.emit(EventTypes.BEFORE_VALIDATE, this);
-    this.normalize(true);
     this._validating = true;
   }
 
   protected afterValidate(): void {
-    this.normalize(false);
     this._validating = false;
     this.emit(EventTypes.AFTER_VALIDATE, this);
     this.emit(this.isValid() ? EventTypes.VALID : EventTypes.INVALID, this);
@@ -643,7 +639,7 @@ class Validator extends EventEmitter {
     return normalizers;
   }
 
-  protected normalize(before: boolean): void {
+  normalize(): void {
     const normalizers = this.expandNormalizers();
     const previousValues = this.getValues();
 
@@ -653,7 +649,6 @@ class Validator extends EventEmitter {
 
       forEach(list, (params: NormalizeParams | Normalizer, name: string) => {
         value = this.executeNormalize(
-          before,
           name,
           field,
           value,
@@ -668,7 +663,6 @@ class Validator extends EventEmitter {
   }
 
   protected executeNormalize(
-    before: boolean,
     name: string,
     field: string,
     value: any,
@@ -687,23 +681,19 @@ class Validator extends EventEmitter {
 
     if (isInline) {
       const inline = <Normalizer>params;
-      return !before ? value : inline(value, {}, previousValue, values, previousValues);
+      return inline(value, {}, previousValue, values, previousValues);
     }
 
     if (!Validator.hasNormalizer(name)) {
       return value;
     }
 
-    const { normalizer, depends, before: b } = <BuiltinNormalizer>Validator.getNormalizer(name);
-
-    if (b !== before) {
-      return value;
-    }
+    const { normalizer, depends } = <BuiltinNormalizer>Validator.getNormalizer(name);
 
     let result = value;
 
     forEach(depends, (p: NormalizeParams, n: string) => {
-      result = this.executeNormalize(before, n, field, result, p, previousValue, previousValues);
+      result = this.executeNormalize(n, field, result, p, previousValue, previousValues);
     });
 
     return normalizer(result, isObjParams ? params : {}, previousValue, values, previousValues);
