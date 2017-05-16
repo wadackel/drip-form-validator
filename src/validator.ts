@@ -496,6 +496,8 @@ class Validator extends EventEmitter {
       );
     }
 
+    this.removeError(field, rule);
+
     const errors = this.getErrors(field);
 
     this.setErrors(field, [
@@ -755,15 +757,14 @@ class Validator extends EventEmitter {
         this.asyncExecuteTest(rule, field, value, params),
       ))
         .then(() => Promise.resolve())
-        .catch(() => Promise.reject(null));
+        .catch(() => Promise.resolve());
     }))
       .then(() => {
         this.afterValidate();
-        return Promise.resolve(this.getValues());
-      })
-      .catch(() => {
-        this.afterValidate();
-        return Promise.reject(this.getAllErrors());
+
+        return this.isValid()
+          ? Promise.resolve(this.getValues())
+          : Promise.reject(this.getAllErrors());
       });
   }
 
