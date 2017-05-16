@@ -369,6 +369,15 @@ describe('Validator', () => {
 
         clear();
 
+        v.setValue(key, '10'); // numeric
+        v.addError(key, rule, false, {});
+
+        assert.deepStrictEqual(v.getErrors(key), [
+          { rule, message: 'number', params: {} },
+        ]);
+
+        clear();
+
         v.setValue(key, []);
         v.addError(key, rule, false, {});
 

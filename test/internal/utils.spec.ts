@@ -19,12 +19,35 @@ describe('Internal#Utilities', () => {
     assert(utils.typeOf(undefined) === 'undefined');
     assert(utils.typeOf('str') === 'string');
     assert(utils.typeOf(0) === 'number');
+    assert(utils.weakTypeOf(0xff) === 'number');
     assert(utils.typeOf(NaN) === 'number');
     assert(utils.typeOf({}) === 'object');
     assert(utils.typeOf([]) === 'array');
     assert(utils.typeOf(() => {}) === 'function');
     assert(utils.typeOf(new Date()) === 'date');
     assert(utils.typeOf(new Hoge()) === 'hoge');
+  });
+
+
+  it('weakTypeOf()', () => {
+    class Hoge { fuga() { return 'value'; } }
+
+    assert(utils.weakTypeOf(null) === 'null');
+    assert(utils.weakTypeOf(undefined) === 'undefined');
+    assert(utils.weakTypeOf('str') === 'string');
+    assert(utils.weakTypeOf('foo') === 'string');
+    assert(utils.weakTypeOf(0) === 'number');
+    assert(utils.weakTypeOf(0xff) === 'number');
+    assert(utils.weakTypeOf('123') === 'number');
+    assert(utils.weakTypeOf('+123') === 'number');
+    assert(utils.weakTypeOf('-123') === 'number');
+    assert(utils.weakTypeOf('0xff') === 'number');
+    assert(utils.weakTypeOf(NaN) === 'number');
+    assert(utils.weakTypeOf({}) === 'object');
+    assert(utils.weakTypeOf([]) === 'array');
+    assert(utils.weakTypeOf(() => {}) === 'function');
+    assert(utils.weakTypeOf(new Date()) === 'date');
+    assert(utils.weakTypeOf(new Hoge()) === 'hoge');
   });
 
 

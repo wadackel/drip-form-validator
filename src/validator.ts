@@ -8,7 +8,7 @@ import * as dot from 'dot-wild';
 import * as EventTypes from './event-types';
 import {
   hasProp,
-  typeOf,
+  weakTypeOf,
   isString,
   isFunction,
   isPromise,
@@ -476,7 +476,7 @@ class Validator extends EventEmitter {
   addError(field: string, rule: string, result: string | boolean, params: RuleParams): void {
     const error: ValidateError = { rule, params, message: '' };
     const value = this.getValue(field);
-    const type = typeOf(value);
+    const type = weakTypeOf(value);
 
     if (isString(result)) {
       error.message = result;

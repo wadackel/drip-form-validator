@@ -22,6 +22,14 @@ export const isNumeric = (val: any): boolean => !isArray(val) && (val - parseFlo
 export const isInteger = (val: any): boolean => Number(val) === val && val % 1 === 0;
 export const isFloat = (val: any): boolean => Number(val) === val && val % 1 !== 0;
 
+export const weakTypeOf = (val: any): string => {
+  if (isNumeric(val)) {
+    return 'number';
+  }
+
+  return typeOf(val);
+};
+
 export const isEmpty = (val: any): boolean => {
   if (isDate(val)) return false;
   if (isBoolean(val)) return !val;
