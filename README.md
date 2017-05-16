@@ -139,9 +139,9 @@ if (v.validate()) {
 
 ## Documentation
 
-* [Usage](https://tsuyoshiwada.github.io/drip-form-validator/usage/README.md)
-* [Builtin Rules](https://tsuyoshiwada.github.io/drip-form-validator/rules/README.md)
-* [Builtin Normalizers](https://tsuyoshiwada.github.io/drip-form-validator/normalizers/README.md)
+* [Usage](https://tsuyoshiwada.github.io/drip-form-validator/usage/)
+* [Builtin Rules](https://tsuyoshiwada.github.io/drip-form-validator/rules/)
+* [Builtin Normalizers](https://tsuyoshiwada.github.io/drip-form-validator/normalizers/)
 * [API Document](https://tsuyoshiwada.github.io/drip-form-validator/api/)
 * [CHANGELOG](https://github.com/tsuyoshiwada/drip-form-validator/blob/master/CHANGELOG.md)
 
