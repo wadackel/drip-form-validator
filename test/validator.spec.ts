@@ -832,6 +832,8 @@ describe('Validator', () => {
           {
             normalizers: {
               k1: { func1: true, func2: true },
+              notfound1: { func2: true },
+              notfound2: { func2: true },
             },
           },
         );

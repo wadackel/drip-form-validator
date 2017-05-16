@@ -631,7 +631,7 @@ class Validator extends EventEmitter {
             normalizers[k] = normalizer;
           }
         });
-      } else {
+      } else if (this.hasValue(field)) {
         normalizers[field] = normalizer;
       }
     });
