@@ -86,8 +86,8 @@ export interface ErrorMessageList {
 }
 
 
-// Field names
-export interface FieldNames {
+// Field labels
+export interface Labels {
   [index: string]: string;
 }
 
@@ -151,7 +151,7 @@ export interface BuiltinNormalizerList {
  */
 export interface ValidatorOptions {
   messages?: InstanceMessages;
-  fieldNames?: FieldNames;
+  labels?: Labels;
   normalizers?: NormalizerList;
 }
 
@@ -317,7 +317,7 @@ class Validator extends EventEmitter {
   protected _rules: RuleList;
   protected _normalizers: NormalizerList = {};
   protected _messages: InstanceMessages = {};
-  protected _fieldNames: FieldNames = {};
+  protected _labels: Labels = {};
 
   constructor(
     values: Values = {},
@@ -333,7 +333,7 @@ class Validator extends EventEmitter {
 
     if (opts.normalizers) this.setNormalizers(opts.normalizers);
     if (opts.messages) this.setMessages(opts.messages);
-    if (opts.fieldNames) this.setFieldNames(opts.fieldNames);
+    if (opts.labels) this.setLabels(opts.labels);
   }
 
 
@@ -402,26 +402,26 @@ class Validator extends EventEmitter {
 
 
   /**
-   * Field names
+   * Field labels
    */
-  getFieldNames(): FieldNames {
-    return { ...this._fieldNames };
+  getLabels(): Labels {
+    return { ...this._labels };
   }
 
-  setFieldNames(fieldNames: FieldNames): void {
-    this._fieldNames = {};
-    this.mergeFieldNames(fieldNames);
+  setLabels(labels: Labels): void {
+    this._labels = {};
+    this.mergeLabels(labels);
   }
 
-  mergeFieldNames(fieldNames: FieldNames): void {
-    invariant(isPlainObject(fieldNames), '"fieldNames" must be plain object.');
-    this._fieldNames = { ...this._fieldNames, ...fieldNames };
+  mergeLabels(labels: Labels): void {
+    invariant(isPlainObject(labels), '"labels" must be plain object.');
+    this._labels = { ...this._labels, ...labels };
   }
 
-  getFieldName(field: string): string {
+  getLabel(field: string): string {
     let result = field;
 
-    forEach(this._fieldNames, (title: string, key: string) => {
+    forEach(this._labels, (title: string, key: string) => {
       if (dot.matchPath(key, field)) {
         result = title;
         return false;
@@ -482,15 +482,15 @@ class Validator extends EventEmitter {
       error.message = result;
 
     } else {
-      const fieldName = this.getFieldName(field);
+      const label = this.getLabel(field);
       const objParams = {
-        field: fieldName,
+        field: label,
         ...(isPlainObject(params) ? <RuleObjectParams>params : {}),
       };
 
       const msg = this.getPrecompileErrorMessage(field, rule, type === 'null' ? null : type);
       error.message = isString(msg) ? template(msg, objParams) : msg(
-        fieldName,
+        label,
         value,
         objParams,
       );
@@ -627,7 +627,7 @@ class Validator extends EventEmitter {
     const flat = dot.flatten(this._values);
 
     forEach(this._normalizers, (normalizer: Normalizers, field: string) => {
-      if (/\*/.test(field)) {
+      if (dot.containWildcardToken(field)) {
         forEach(flat, (_: any, k: string) => {
           if (dot.matchPath(field, k)) {
             normalizers[k] = normalizer;
@@ -710,7 +710,7 @@ class Validator extends EventEmitter {
     const flat = dot.flatten(this._values);
 
     forEach(this._rules, (rule: Rule, field: string): void => {
-      if (/\*/.test(field)) {
+      if (dot.containWildcardToken(field)) {
         forEach(flat, (_: any, k: string) => {
           if (dot.matchPath(field, k)) {
             rules[k] = rule;

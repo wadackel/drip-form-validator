@@ -647,7 +647,7 @@ describe('Validator', () => {
     });
 
 
-    describe('Field names', () => {
+    describe('Field labels', () => {
       let v: Validator;
 
       beforeEach(() => {
@@ -655,54 +655,54 @@ describe('Validator', () => {
       });
 
 
-      it('Should be get/set field names', () => {
-        assert.deepStrictEqual(v.getFieldNames(), {});
-        v.setFieldNames({ key: 'Custom Key' });
-        assert.deepStrictEqual(v.getFieldNames(), { key: 'Custom Key' });
-        v.setFieldNames({ foo: 'Foo Key', bar: 'Bar Key' });
-        assert.deepStrictEqual(v.getFieldNames(), { foo: 'Foo Key', bar: 'Bar Key' });
+      it('Should be get/set field labels', () => {
+        assert.deepStrictEqual(v.getLabels(), {});
+        v.setLabels({ key: 'Custom Key' });
+        assert.deepStrictEqual(v.getLabels(), { key: 'Custom Key' });
+        v.setLabels({ foo: 'Foo Key', bar: 'Bar Key' });
+        assert.deepStrictEqual(v.getLabels(), { foo: 'Foo Key', bar: 'Bar Key' });
 
-        assert.throws(() => v.setFieldNames(<any>null));
-        assert.throws(() => v.setFieldNames(<any>13));
+        assert.throws(() => v.setLabels(<any>null));
+        assert.throws(() => v.setLabels(<any>13));
       });
 
 
-      it('Should be set field names with constructor', () => {
-        const fieldNames = { foo: 'Foo123', bar: 'Bar456' };
-        const vv = new Validator({}, {}, { fieldNames });
-        assert.deepStrictEqual(vv.getFieldNames(), fieldNames);
+      it('Should be set field labels with constructor', () => {
+        const labels = { foo: 'Foo123', bar: 'Bar456' };
+        const vv = new Validator({}, {}, { labels });
+        assert.deepStrictEqual(vv.getLabels(), labels);
       });
 
 
-      it('Should be merge field names', () => {
-        v.setFieldNames({ k1: 'Key1' });
-        v.mergeFieldNames({ k2: 'Key2' });
-        assert.deepStrictEqual(v.getFieldNames(), {
+      it('Should be merge field labels', () => {
+        v.setLabels({ k1: 'Key1' });
+        v.mergeLabels({ k2: 'Key2' });
+        assert.deepStrictEqual(v.getLabels(), {
           k1: 'Key1',
           k2: 'Key2',
         });
 
-        assert.throws(() => v.mergeFieldNames(<any>null));
+        assert.throws(() => v.mergeLabels(<any>null));
       });
 
 
-      it('Should be get field name', () => {
-        v.setFieldNames({
+      it('Should be get field label', () => {
+        v.setLabels({
           foo: 'Foo123',
           bar: 'Bar456',
           'has.dot.key': 'DotKey1',
           'has.wild.*.key.*': 'DotKey2',
         });
 
-        assert(v.getFieldName('foo') === 'Foo123');
-        assert(v.getFieldName('bar') === 'Bar456');
-        assert(v.getFieldName('has.dot.key') === 'DotKey1');
-        assert(v.getFieldName('has.wild.*.key.*') === 'DotKey2');
-        assert(v.getFieldName('has.wild.0.key.0') === 'DotKey2');
-        assert(v.getFieldName('has.wild.0.key.1') === 'DotKey2');
-        assert(v.getFieldName('has.wild.1.key.2') === 'DotKey2');
-        assert(v.getFieldName('has.wild.1.key.3') === 'DotKey2');
-        assert(v.getFieldName('notfound') === 'notfound');
+        assert(v.getLabel('foo') === 'Foo123');
+        assert(v.getLabel('bar') === 'Bar456');
+        assert(v.getLabel('has.dot.key') === 'DotKey1');
+        assert(v.getLabel('has.wild.*.key.*') === 'DotKey2');
+        assert(v.getLabel('has.wild.0.key.0') === 'DotKey2');
+        assert(v.getLabel('has.wild.0.key.1') === 'DotKey2');
+        assert(v.getLabel('has.wild.1.key.2') === 'DotKey2');
+        assert(v.getLabel('has.wild.1.key.3') === 'DotKey2');
+        assert(v.getLabel('notfound') === 'notfound');
       });
     });
 
@@ -1089,7 +1089,7 @@ describe('Validator', () => {
               k2: { inline: 'inline message' },
               k3: { inline: '{{field}} message' },
             },
-            fieldNames: {
+            labels: {
               k3: 'Key3',
             },
           },

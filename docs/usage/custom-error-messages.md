@@ -7,15 +7,15 @@ There are two approaches to customizing error messages.
 (Of course you can use it together with two.)
 
 
-## Cusom field name
+## Cusom field label
 
-Field names can be customized using the `fieldNames` option. This is the simplest customization.
+Field labels can be customized using the `labels` option. This is the simplest customization.
 
 ```javascript
 const data = { email: 'foo' };
 const rules = { email: { email: true } };
 const options = {
-  fieldNames: {
+  labels: {
     email: 'Email-Address',
   },
 };
