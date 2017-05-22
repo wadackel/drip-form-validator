@@ -9,8 +9,11 @@ describe(`Rules#${ruleName}`, () => {
     tester(true, [
       { value: 10, params: { min: 10, max: 10 } },
       { value: 2, params: { min: 1, max: 3 } },
+      { value: -5, params: { min: -5, max: -2 } },
+      { value: '5', params: { min: 4, max: 5 } },
+      { value: '0.2', params: { min: 0, max: 1 } },
+      { value: '1234567890', params: { min: 1234567890, max: 1234567890 } },
       { value: 'hoge', params: { min: 4, max: 4 } },
-      { value: '1234567890', params: { min: 0, max: 10 } },
       { value: '日本語', params: { min: 3, max: 3 } },
       { value: [1, 2, 3], params: { min: 3, max: 3 } },
     ]);
@@ -25,8 +28,9 @@ describe(`Rules#${ruleName}`, () => {
       { value: '', params: { min: 1, max: 10 } },
       { value: 10, params: { min: 11, max: 11 } },
       { value: 3, params: { min: 1, max: 2 } },
+      { value: '3', params: { min: 4, max: 5 } },
+      { value: '1234567890', params: { min: 0, max: 1234567889 } },
       { value: 'foo', params: { min: 4, max: 30 } },
-      { value: '1234567890', params: { min: 0, max: 9 } },
       { value: [1, 2, 3], params: { min: 4, max: 6 } },
       { value: [1, 2, 3], params: { min: 1, max: 2 } },
     ]);
