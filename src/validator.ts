@@ -624,16 +624,16 @@ class Validator extends EventEmitter {
    */
   protected expandNormalizers(): NormalizerList {
     const normalizers: NormalizerList = {};
-    const flat = dot.flatten(this._values);
 
-    forEach(this._normalizers, (normalizer: Normalizers, field: string) => {
-      if (dot.containWildcardToken(field)) {
-        forEach(flat, (_: any, k: string) => {
-          if (dot.matchPath(field, k)) {
-            normalizers[k] = normalizer;
-          }
+    forEach(this._normalizers, (normalizer: any, field: string) => {
+      if (!dot.has(this._values, field)) {
+        return;
+      } else if (dot.containWildcardToken(field)) {
+        dot.forEach(this._values, field, (_: any, __: any, ___: any, path: string) => {
+          normalizers[path] = normalizer;
         });
-      } else if (this.hasValue(field)) {
+
+      } else if (dot.has(this._values, field)) {
         normalizers[field] = normalizer;
       }
     });
@@ -707,17 +707,14 @@ class Validator extends EventEmitter {
    */
   protected expandRules(): RuleList {
     const rules: RuleList = {};
-    const flat = dot.flatten(this._values);
 
-    forEach(this._rules, (rule: Rule, field: string): void => {
-      if (dot.containWildcardToken(field)) {
-        forEach(flat, (_: any, k: string) => {
-          if (dot.matchPath(field, k)) {
-            rules[k] = rule;
-          }
-        });
-      } else {
+    forEach(this._rules, (rule: Rule, field: string) => {
+      if (!dot.has(this._values, field) || !dot.containWildcardToken(field)) {
         rules[field] = rule;
+      } else {
+        dot.forEach(this._values, field, (_: any, __: any, ___: any, path: string): void => {
+          rules[path] = rule;
+        });
       }
     });
 
