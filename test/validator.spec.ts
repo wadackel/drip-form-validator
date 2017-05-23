@@ -253,6 +253,50 @@ describe('Validator', () => {
         assert(v.hasValue('hoge.fuga.piyo') === false);
         assert(v.hasValue('notfound') === false);
       });
+
+
+      it('Should be get filtered values', () => {
+        assert.deepStrictEqual(v.getFilteredValues(['foo', 'bar']), {});
+
+        v.setValues({
+          foo: 1,
+        });
+
+        assert.deepStrictEqual(v.getFilteredValues(['foo', 'bar']), { foo: 1 });
+
+        v.setValues({
+          foo: 1,
+          bar: 2,
+        });
+
+        assert.deepStrictEqual(v.getFilteredValues(['foo', 'bar']), { foo: 1, bar: 2 });
+
+        v.setValues({
+          foo: {
+            bar: [
+              { id: 1, title: 1 },
+              { id: 2, title: 2 },
+              { id: 3, title: 3 },
+            ],
+          },
+          hoge: {
+            fuga: 'test',
+          },
+        });
+
+        assert.deepStrictEqual(v.getFilteredValues(['foo.bar.*.id', 'hoge', 'fuga']), {
+          foo: {
+            bar: [
+              { id: 1 },
+              { id: 2 },
+              { id: 3 },
+            ],
+          },
+          hoge: {
+            fuga: 'test',
+          },
+        });
+      });
     });
 
 

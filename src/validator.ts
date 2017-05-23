@@ -382,6 +382,18 @@ class Validator extends EventEmitter {
     return dot.has(this._values, field);
   }
 
+  getFilteredValues(filters: string[] = []): Values {
+    let values = {};
+
+    filters.forEach(filter => {
+      dot.forEach(this._values, filter, (value: any, _: any, __: any, path: string) => {
+        values = dot.set(values, path, value);
+      });
+    });
+
+    return values;
+  }
+
 
   /**
    * Messages
