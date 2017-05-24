@@ -81,3 +81,28 @@ The structure of the function is as follows.
 (value: any, params: NormalizeParams, previousValue: any, values: Values, previousValues: Values): any;
 ```
 
+
+## Field filters
+
+To execute the normalizer only for a specific field, pass the field name to `normalize()`.
+
+```javascript
+const v = new Validator(data, {}, {
+  normalizers: {
+    id: {
+      toInt: true,
+    },
+    email: {
+      trim: true,
+    },
+    url: {
+      trim: true,
+      rtrim: { chars: '/' },
+    },
+  }
+});
+
+v.normalize('email');
+// or
+v.normalize(['id', 'url']);
+```

@@ -54,6 +54,30 @@ const v = new Validation(data, {
 });
 ```
 
+
+## Field filters
+
+To validate only a specific field, pass the field name to `validate()`.
+
+```javascript
+const v = new Validator(data, {
+  title: {
+    required: true,
+    max: { max: 255 },
+  },
+  body: {
+    required: true,
+  },
+});
+
+v.validate('title');
+// or
+v.validate(['title', 'body']);
+```
+
+Useful if you only want to run specific tests in the UI layer.
+
+
 ---
 
 For API details of the constructor, please see [API Document](https://tsuyoshiwada.github.io/drip-form-validator/api/classes/_validator_.validator.html#constructor).
