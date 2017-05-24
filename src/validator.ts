@@ -618,15 +618,21 @@ class Validator extends EventEmitter {
   /**
    * Events
    */
-  protected beforeValidate(): void {
-    this.clearAllErrors();
-    this.emit(EventTypes.BEFORE_VALIDATE, this);
+  protected beforeValidate(filters: string[] | null): void {
+    if (filters) {
+      filters.forEach(filter => {
+        this.clearErrors(filter);
+      });
+    } else {
+      this.clearAllErrors();
+    }
+    this.emit(EventTypes.BEFORE_VALIDATE, this, filters);
     this._validating = true;
   }
 
-  protected afterValidate(): void {
+  protected afterValidate(filters: string[] | null): void {
     this._validating = false;
-    this.emit(EventTypes.AFTER_VALIDATE, this);
+    this.emit(EventTypes.AFTER_VALIDATE, this, filters);
     this.emit(this.isValid() ? EventTypes.VALID : EventTypes.INVALID, this);
   }
 
@@ -718,7 +724,7 @@ class Validator extends EventEmitter {
   /**
    * Validate
    */
-  protected expandRules(filters?: string[]): RuleList {
+  protected expandRules(filters: string[] | null): RuleList {
     const values = filters ? this.getFilteredValues(filters) : this._values;
     const rules: RuleList = {};
     const matchField = (field: string): boolean => (
@@ -742,30 +748,38 @@ class Validator extends EventEmitter {
     return rules;
   }
 
-  validate(filters?: string | string[]): boolean {
-    this.beforeValidate();
-    const rules = this.expandRules(isString(filters) ? [filters] : filters);
+  validate(filter?: string | string[]): boolean {
+    const filters = (isString(filter) ? [filter] : filter) || null;
+
+    this.beforeValidate(filters);
+
+    const rules = this.expandRules(filters);
 
     forEach(rules, (fieldRules: Rule, field: string) => {
       const value = this.getValue(field);
 
       forEach(fieldRules, (params: RuleParams, rule: string) => {
         const result = this.syncExecuteTest(rule, field, value, params);
-        if (result === true) return;
 
-        this.addError(field, rule, result, params);
+        if (result === true) {
+          this.removeError(field, rule);
+        } else {
+          this.addError(field, rule, result, params);
+        }
       });
     });
 
-    this.afterValidate();
+    this.afterValidate(filters);
 
     return this.isValid();
   }
 
-  asyncValidate(filters?: string[]): Promise<Values> {
-    this.beforeValidate();
+  asyncValidate(filter?: string[]): Promise<Values> {
+    const filters = (isString(filter) ? [filter] : filter) || null;
 
-    const rules = this.expandRules(isString(filters) ? [filters] : filters);
+    this.beforeValidate(filters);
+
+    const rules = this.expandRules(filters);
 
     return Promise.all(map(rules, (fieldRules: Rule, field: string) => {
       const value = this.getValue(field);
@@ -777,7 +791,7 @@ class Validator extends EventEmitter {
         .catch(() => Promise.resolve());
     }))
       .then(() => {
-        this.afterValidate();
+        this.afterValidate(filters);
 
         return this.isValid()
           ? Promise.resolve(this.getValues())
@@ -795,6 +809,7 @@ class Validator extends EventEmitter {
     let result = this.executeTest(rule, field, value, params);
 
     if (result === true) {
+      this.removeError(field, rule);
       return Promise.resolve();
     }
 
@@ -805,10 +820,15 @@ class Validator extends EventEmitter {
 
     result = <Promise<string | void>>result;
 
-    return result.catch(message => {
-      this.addError(field, rule, isString(message) ? message : false, params);
-      return Promise.reject(null);
-    });
+    return result
+      .then(() => {
+        this.removeError(field, rule);
+        return Promise.resolve();
+      })
+      .catch(message => {
+        this.addError(field, rule, isString(message) ? message : false, params);
+        return Promise.reject(null);
+      });
   }
 
   protected executeTest(rule: string, field: string, value: any, params: RuleParams): boolean | string | Promise<string | void> {
