@@ -382,6 +382,18 @@ class Validator extends EventEmitter {
     return dot.has(this._values, field);
   }
 
+  getFilteredValues(filters: string[] = []): Values {
+    let values = {};
+
+    filters.forEach(filter => {
+      dot.forEach(this._values, filter, (value: any, _: any, __: any, path: string) => {
+        values = dot.set(values, path, value);
+      });
+    });
+
+    return values;
+  }
+
 
   /**
    * Messages
@@ -622,18 +634,19 @@ class Validator extends EventEmitter {
   /**
    * Normalize
    */
-  protected expandNormalizers(): NormalizerList {
+  protected expandNormalizers(filters?: string[]): NormalizerList {
+    const values = filters ? this.getFilteredValues(filters) : this._values;
     const normalizers: NormalizerList = {};
-    const flat = dot.flatten(this._values);
 
-    forEach(this._normalizers, (normalizer: Normalizers, field: string) => {
-      if (dot.containWildcardToken(field)) {
-        forEach(flat, (_: any, k: string) => {
-          if (dot.matchPath(field, k)) {
-            normalizers[k] = normalizer;
-          }
+    forEach(this._normalizers, (normalizer: any, field: string) => {
+      if (!dot.has(values, field)) {
+        return;
+      } else if (dot.containWildcardToken(field)) {
+        dot.forEach(values, field, (_: any, __: any, ___: any, path: string) => {
+          normalizers[path] = normalizer;
         });
-      } else if (this.hasValue(field)) {
+
+      } else {
         normalizers[field] = normalizer;
       }
     });
@@ -641,8 +654,8 @@ class Validator extends EventEmitter {
     return normalizers;
   }
 
-  normalize(): void {
-    const normalizers = this.expandNormalizers();
+  normalize(filters?: string | string[]): void {
+    const normalizers = this.expandNormalizers(isString(filters) ? [filters] : filters);
     const previousValues = this.getValues();
 
     forEach(normalizers, (list: Normalizers, field: string) => {
@@ -705,29 +718,33 @@ class Validator extends EventEmitter {
   /**
    * Validate
    */
-  protected expandRules(): RuleList {
+  protected expandRules(filters?: string[]): RuleList {
+    const values = filters ? this.getFilteredValues(filters) : this._values;
     const rules: RuleList = {};
-    const flat = dot.flatten(this._values);
+    const matchField = (field: string): boolean => (
+      !filters ? true : filters.some(filter => dot.matchPath(field, filter))
+    );
 
-    forEach(this._rules, (rule: Rule, field: string): void => {
-      if (dot.containWildcardToken(field)) {
-        forEach(flat, (_: any, k: string) => {
-          if (dot.matchPath(field, k)) {
-            rules[k] = rule;
+    forEach(this._rules, (rule: Rule, field: string) => {
+      if (!dot.has(values, field) || !dot.containWildcardToken(field)) {
+        if (matchField(field)) {
+          rules[field] = rule;
+        }
+      } else {
+        dot.forEach(values, field, (_: any, __: any, ___: any, path: string): void => {
+          if (matchField(path)) {
+            rules[path] = rule;
           }
         });
-      } else {
-        rules[field] = rule;
       }
     });
 
     return rules;
   }
 
-  validate(): boolean {
+  validate(filters?: string | string[]): boolean {
     this.beforeValidate();
-
-    const rules = this.expandRules();
+    const rules = this.expandRules(isString(filters) ? [filters] : filters);
 
     forEach(rules, (fieldRules: Rule, field: string) => {
       const value = this.getValue(field);
@@ -745,10 +762,10 @@ class Validator extends EventEmitter {
     return this.isValid();
   }
 
-  asyncValidate(): Promise<Values> {
+  asyncValidate(filters?: string[]): Promise<Values> {
     this.beforeValidate();
 
-    const rules = this.expandRules();
+    const rules = this.expandRules(isString(filters) ? [filters] : filters);
 
     return Promise.all(map(rules, (fieldRules: Rule, field: string) => {
       const value = this.getValue(field);

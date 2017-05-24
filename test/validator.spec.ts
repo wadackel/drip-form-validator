@@ -3,6 +3,12 @@ import * as assert from 'power-assert';
 import { Validator, EventTypes } from '../src/';
 
 
+// import { inspect } from 'util';
+//
+// const echo = (...args: any[]) => (
+//   args.forEach(val => console.log(inspect(val, { showHidden: false, depth: Infinity, colors: true })))
+// );
+
 let clock: any = null;
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -252,6 +258,50 @@ describe('Validator', () => {
         assert(v.hasValue('hoge.fuga'));
         assert(v.hasValue('hoge.fuga.piyo') === false);
         assert(v.hasValue('notfound') === false);
+      });
+
+
+      it('Should be get filtered values', () => {
+        assert.deepStrictEqual(v.getFilteredValues(['foo', 'bar']), {});
+
+        v.setValues({
+          foo: 1,
+        });
+
+        assert.deepStrictEqual(v.getFilteredValues(['foo', 'bar']), { foo: 1 });
+
+        v.setValues({
+          foo: 1,
+          bar: 2,
+        });
+
+        assert.deepStrictEqual(v.getFilteredValues(['foo', 'bar']), { foo: 1, bar: 2 });
+
+        v.setValues({
+          foo: {
+            bar: [
+              { id: 1, title: 1 },
+              { id: 2, title: 2 },
+              { id: 3, title: 3 },
+            ],
+          },
+          hoge: {
+            fuga: 'test',
+          },
+        });
+
+        assert.deepStrictEqual(v.getFilteredValues(['foo.bar.*.id', 'hoge', 'fuga']), {
+          foo: {
+            bar: [
+              { id: 1 },
+              { id: 2 },
+              { id: 3 },
+            ],
+          },
+          hoge: {
+            fuga: 'test',
+          },
+        });
       });
     });
 
@@ -1400,6 +1450,152 @@ describe('Validator', () => {
             followers: [1, 2],
           },
         ]);
+      });
+
+
+      it('Should be called test only for specified field', () => {
+        const values = {
+          k1: 'v1',
+          k2: 'v2',
+          k3: {
+            foo: [
+              { key: 'v1' },
+              { key: 'v2' },
+              { key: 'v3' },
+            ],
+            bar: [
+              { key: 'v1' },
+              { key: 'v2' },
+              { key: 'v3' },
+            ],
+            baz: [
+              { key: 'v1' },
+              { key: 'v2' },
+              { key: 'v3' },
+            ],
+          },
+        };
+
+        const test1 = sinon.stub().returns(true);
+        const test2 = sinon.stub().returns(true);
+        const test3 = sinon.stub().returns(true);
+
+        Validator.registerRule('test1', {}, test1);
+        Validator.registerRule('test2', {}, test2);
+        Validator.registerRule('test3', {}, test3);
+
+        const v = new Validator(values, {
+          k1: {
+            test1: true,
+            test2: true,
+            test3: true,
+          },
+          k2: {
+            test1: true,
+            test2: true,
+          },
+          'k3.*.*.key': {
+            test1: true,
+          },
+        });
+
+        v.validate('k1');
+
+        assert(test1.callCount === 1);
+        assert(test2.callCount === 1);
+        assert(test3.callCount === 1);
+
+        v.validate('k2');
+
+        assert(test1.callCount === 2);
+        assert(test2.callCount === 2);
+        assert(test3.callCount === 1);
+
+        v.validate(['k1', 'k2']);
+
+        assert(test1.callCount === 4);
+        assert(test2.callCount === 4);
+        assert(test3.callCount === 2);
+
+        v.validate('k3.*.*.key');
+
+        assert(test1.callCount === 13);
+        assert(test2.callCount === 4);
+        assert(test3.callCount === 2);
+      });
+
+
+      it('Should be called normalize only for specified field', () => {
+        const values = {
+          k1: 'v1',
+          k2: 'v2',
+          k3: {
+            foo: [
+              { key: 'v1' },
+              { key: 'v2' },
+              { key: 'v3' },
+            ],
+            bar: [
+              { key: 'v1' },
+              { key: 'v2' },
+              { key: 'v3' },
+            ],
+            baz: [
+              { key: 'v1' },
+              { key: 'v2' },
+              { key: 'v3' },
+            ],
+          },
+        };
+
+        const normalizer1 = sinon.stub().returns(true);
+        const normalizer2 = sinon.stub().returns(true);
+        const normalizer3 = sinon.stub().returns(true);
+
+        Validator.registerNormalizer('normalizer1', {}, normalizer1);
+        Validator.registerNormalizer('normalizer2', {}, normalizer2);
+        Validator.registerNormalizer('normalizer3', {}, normalizer3);
+
+        const v = new Validator(values, {}, {
+          normalizers: {
+            k1: {
+              normalizer1: true,
+              normalizer2: true,
+              normalizer3: true,
+            },
+            k2: {
+              normalizer1: true,
+              normalizer2: true,
+            },
+            'k3.*.*.key': {
+              normalizer1: true,
+            },
+          },
+        });
+
+        v.normalize('k1');
+
+        assert(normalizer1.callCount === 1);
+        assert(normalizer2.callCount === 1);
+        assert(normalizer3.callCount === 1);
+
+        v.normalize('k2');
+
+        assert(normalizer1.callCount === 2);
+        assert(normalizer2.callCount === 2);
+        assert(normalizer3.callCount === 1);
+
+        v.normalize(['k1', 'k2']);
+
+        assert(normalizer1.callCount === 4);
+        assert(normalizer2.callCount === 4);
+        assert(normalizer3.callCount === 2);
+
+        v.normalize('k3.*.*.key');
+
+        assert(normalizer1.callCount === 13);
+        assert(normalizer2.callCount === 4);
+        assert(normalizer3.callCount === 2);
       });
     });
   });
