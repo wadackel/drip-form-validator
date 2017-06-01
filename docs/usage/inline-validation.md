@@ -46,13 +46,12 @@ It is almost the same as specifying a rule name.
 The structure of the function that can be passed to InlineValidation is as follows.
 
 ```typescript
-(value: any, params: RuleObjectParams, field: string, values: Values): boolean | string | Promise<any>;
+(value: any, params: RuleObjectParams, field: string, values: Values): boolean | string;
 ```
 
 You can customize the error message by returning a `string` rather than a `boolean`.
 
 ```javascript
-// const isValidToken = token => token === process.env.TOKEN;
 const isValidToken = token => token === process.env.TOKEN ? true : 'Token is invalid!';
 
 // ...

@@ -19,16 +19,18 @@ Validator.registerRule('example', {}, (value, params, field, values) => {
 `registerRule()` has the following structure.
 
 ```typescript
-registerRule(rule: string, depends: RuleDepends, test: ValidationTester, implicit: boolean = true): void
+registerRule(rule: string, depends: RuleDepends, test: SyncValidationTester, implicit: boolean = true): void
 ```
 
-`ValidationTester` has the following structure. It takes the same arguments as [Inline Validation](inline-validation.md).
+`SyncValidationTester` has the following structure. It takes the same arguments as [Inline Validation](inline-validation.md).
 
 ```typescript
-(value: any, params: RuleObjectParams, field: string, values: Values): boolean | string | Promise<any>;
+(value: any, params: RuleObjectParams, field: string, values: Values): boolean | string;
 ```
 
 > **Tips:** Since all the built-in rules are defined using this `registerRule` method, it may be an implementation reference.
+
+Please refer to [Asynchronous validation](./async-validation.md) for registration of asynchronous validations.
 
 
 ### Custom rule usage
