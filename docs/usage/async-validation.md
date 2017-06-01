@@ -1,17 +1,21 @@
 # Asynchronous validation
 
 drip-form-validator is asynchronous validation can be implemented easily.  
-Asynchronous correspondence can be realized in two steps.
+Asynchronous correspondence can be realized next steps.
 
-1. Use `asyncValidate()` instead of `validate()`.
-2. Return `Promise` with validation rule.
+1. Register a test that returns Promise using the `registerAsync()` method.
+2. Use `asyncValidate()` instead of `validate()`.
 
 ```javascript
 import { Validator } from 'drip-form-validator';
 
-const checkAccountExists = email => new Promise((resolve, reject) => (
-  // valid   => resolve();
-  // invalid => reject('Account does not exist!'); // message is optional.
+// Simulate the API call
+Validator.registerAsyncRule('checkAccountExists', {}, email => (
+  new Promise((resolve, reject) => (
+    setTimeout(() => (
+      email === 'example@mail.com' ? resolve() : reject('Account does not exist!')
+    ), 1000)
+  ))
 ));
 
 const data = {
@@ -20,9 +24,7 @@ const data = {
 
 const v = new Validator(data, {
   email: {
-    required: true,
-    email: true,
-    checkAccountExists, // asynchronous validation
+    checkAccountExists: true,
   },
 });
 
@@ -36,10 +38,20 @@ v.asyncValidate()
     console.log(errors);
     // { email:
     //    [ { rule: 'checkAccountExists',
-    //        params: [Function: checkAccountExists],
+    //        params: true,
     //        message: 'Account does not exist!' } ] }
   });
 ```
+
+**Note:**
+
+The `asyncValidate()` method only performs asynchronous testing.  
+The following tests will not be executed.
+
+* Synchronization validations
+* Inline validation
+
+Let's use the `validate()` method as necessary.
 
 
 ## Get status
