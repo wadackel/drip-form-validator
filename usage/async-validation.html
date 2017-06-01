@@ -373,16 +373,20 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="asynchronous-validation">Asynchronous validation</h1>
-<p>drip-form-validator is asynchronous validation can be implemented easily.<br>Asynchronous correspondence can be realized in two steps.</p>
+<p>drip-form-validator is asynchronous validation can be implemented easily.<br>Asynchronous correspondence can be realized next steps.</p>
 <ol>
+<li>Register a test that returns Promise using the <code>registerAsync()</code> method.</li>
 <li>Use <code>asyncValidate()</code> instead of <code>validate()</code>.</li>
-<li>Return <code>Promise</code> with validation rule.</li>
 </ol>
 <pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> Validator <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;drip-form-validator&apos;</span><span class="token punctuation">;</span>
 
-<span class="token keyword">const</span> checkAccountExists <span class="token operator">=</span> email <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">(</span>
-  <span class="token comment" spellcheck="true">// valid   =&gt; resolve();</span>
-  <span class="token comment" spellcheck="true">// invalid =&gt; reject(&apos;Account does not exist!&apos;); // message is optional.</span>
+<span class="token comment" spellcheck="true">// Simulate the API call</span>
+Validator<span class="token punctuation">.</span><span class="token function">registerAsyncRule</span><span class="token punctuation">(</span><span class="token string">&apos;checkAccountExists&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> email <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">(</span>
+  <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">(</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">(</span>
+      email <span class="token operator">===</span> <span class="token string">&apos;example@mail.com&apos;</span> <span class="token operator">?</span> <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token function">reject</span><span class="token punctuation">(</span><span class="token string">&apos;Account does not exist!&apos;</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token keyword">const</span> data <span class="token operator">=</span> <span class="token punctuation">{</span>
@@ -391,9 +395,7 @@
 
 <span class="token keyword">const</span> v <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Validator</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token punctuation">{</span>
   email<span class="token punctuation">:</span> <span class="token punctuation">{</span>
-    required<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-    email<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-    checkAccountExists<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">// asynchronous validation</span>
+    checkAccountExists<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -407,10 +409,17 @@ v<span class="token punctuation">.</span><span class="token function">asyncValid
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>errors<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">// { email:</span>
     <span class="token comment" spellcheck="true">//    [ { rule: &apos;checkAccountExists&apos;,</span>
-    <span class="token comment" spellcheck="true">//        params: [Function: checkAccountExists],</span>
+    <span class="token comment" spellcheck="true">//        params: true,</span>
     <span class="token comment" spellcheck="true">//        message: &apos;Account does not exist!&apos; } ] }</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
+<p><strong>Note:</strong></p>
+<p>The <code>asyncValidate()</code> method only performs asynchronous testing.<br>The following tests will not be executed.</p>
+<ul>
+<li>Synchronization validations</li>
+<li>Inline validation</li>
+</ul>
+<p>Let&apos;s use the <code>validate()</code> method as necessary.</p>
 <h2 id="get-status">Get status</h2>
 <p>In some cases, it may be necessary to decide whether or not it is being verified by performing asynchronous verification.<br>You can judge whether it is being verified by using <code>isValidating()</code>.</p>
 <pre class="language-"><code class="lang-javascript"><span class="token keyword">if</span> <span class="token punctuation">(</span>v<span class="token punctuation">.</span><span class="token function">isValidating</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -460,7 +469,7 @@ v<span class="token punctuation">.</span><span class="token function">asyncValid
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Asynchronous validation","level":"1.2.5","depth":2,"next":{"title":"Custom Error Messages","level":"1.2.6","depth":2,"path":"usage/custom-error-messages.md","ref":"usage/custom-error-messages.md","articles":[]},"previous":{"title":"Inline validation","level":"1.2.4","depth":2,"path":"usage/inline-validation.md","ref":"usage/inline-validation.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"usage/async-validation.md","mtime":"2017-05-08T13:48:20.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-05-24T13:44:34.258Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Asynchronous validation","level":"1.2.5","depth":2,"next":{"title":"Custom Error Messages","level":"1.2.6","depth":2,"path":"usage/custom-error-messages.md","ref":"usage/custom-error-messages.md","articles":[]},"previous":{"title":"Inline validation","level":"1.2.4","depth":2,"path":"usage/inline-validation.md","ref":"usage/inline-validation.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"usage/async-validation.md","mtime":"2017-06-01T13:48:06.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-01T13:49:16.384Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

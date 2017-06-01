@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ValidationTester | drip-form-validator</title>
+	<title>InternalValidationTester | drip-form-validator</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,34 +57,42 @@
 					<a href="../modules/_validator_.html">&quot;validator&quot;</a>
 				</li>
 				<li>
-					<a href="_validator_.validationtester.html">ValidationTester</a>
+					<a href="_validator_.internalvalidationtester.html">InternalValidationTester</a>
 				</li>
 			</ul>
-			<h1>Interface ValidationTester</h1>
+			<h1>Interface InternalValidationTester&lt;T&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>T</h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ValidationTester</span>
+						<span class="target">InternalValidationTester</span>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel">
 				<h3 class="tsd-before-signature">Callable</h3>
-				<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-external-module">
-					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, params<span class="tsd-signature-symbol">: </span><a href="_validator_.ruleobjectparams.html" class="tsd-signature-type">RuleObjectParams</a>, field<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, values<span class="tsd-signature-symbol">: </span><a href="_validator_.values.html" class="tsd-signature-type">Values</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, params<span class="tsd-signature-symbol">: </span><a href="_validator_.ruleobjectparams.html" class="tsd-signature-type">RuleObjectParams</a>, field<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, values<span class="tsd-signature-symbol">: </span><a href="_validator_.values.html" class="tsd-signature-type">Values</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tsuyoshiwada/drip-form-validator/blob/7d132ce/src/validator.ts#L33">validator.ts:33</a></li>
+								<li>Defined in <a href="https://github.com/tsuyoshiwada/drip-form-validator/blob/c63aa9d/src/validator.ts#L33">validator.ts:33</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -102,12 +110,7 @@
 								<h5>values: <a href="_validator_.values.html" class="tsd-signature-type">Values</a></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span>
-							<span class="tsd-signature-symbol"> | </span>
-							<span class="tsd-signature-type">string</span>
-							<span class="tsd-signature-symbol"> | </span>
-							<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
-						</h4>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
 					</li>
 				</ul>
 			</section>
@@ -164,6 +167,13 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_validator_.instancemessages.html" class="tsd-kind-icon">Instance<wbr>Messages</a>
 					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="_validator_.internalvalidationtester.html" class="tsd-kind-icon">Internal<wbr>Validation<wbr>Tester</a>
+					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_validator_.labels.html" class="tsd-kind-icon">Labels</a>
 					</li>
@@ -209,18 +219,14 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_validator_.validateerrorlist.html" class="tsd-kind-icon">Validate<wbr>Error<wbr>List</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_validator_.validationtester.html" class="tsd-kind-icon">Validation<wbr>Tester</a>
-					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_validator_.validatoroptions.html" class="tsd-kind-icon">Validator<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_validator_.values.html" class="tsd-kind-icon">Values</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_validator_.html#asyncvalidationtester" class="tsd-kind-icon">Async<wbr>Validation<wbr>Tester</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_validator_.html#fielderrormessagelist" class="tsd-kind-icon">Field<wbr>Error<wbr>Message<wbr>List</a>
@@ -236,6 +242,12 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_validator_.html#ruleparams" class="tsd-kind-icon">Rule<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_validator_.html#syncvalidationtester" class="tsd-kind-icon">Sync<wbr>Validation<wbr>Tester</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_validator_.html#validationtester" class="tsd-kind-icon">Validation<wbr>Tester</a>
 					</li>
 					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_validator_.html#defaultoptions" class="tsd-kind-icon">default<wbr>Options</a>
