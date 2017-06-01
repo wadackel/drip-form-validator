@@ -3,33 +3,17 @@ import * as assert from 'power-assert';
 import { Validator, EventTypes } from '../src/';
 
 
-// import { inspect } from 'util';
-//
-// const echo = (...args: any[]) => (
-//   args.forEach(val => console.log(inspect(val, { showHidden: false, depth: Infinity, colors: true })))
-// );
-
-let clock: any = null;
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-const defaultLocale = Validator._locale;
-const defaultRules = { ...Validator._builtinRules };
-const defaultNormalizers = { ...Validator._builtinNormalizers };
-
-
 describe('Validator', () => {
-  beforeEach(() => {
-    clock = sinon.useFakeTimers();
+  const defaultLocale = Validator._locale;
+  const defaultRules = { ...Validator._builtinRules };
+  const defaultNormalizers = { ...Validator._builtinNormalizers };
 
+
+  beforeEach(() => {
     Validator._locale = defaultLocale;
     Validator._localeMessages = { [defaultLocale]: Validator._localeMessages[defaultLocale] };
     Validator._builtinRules = { ...defaultRules };
     Validator._builtinNormalizers = { ...defaultNormalizers };
-  });
-
-
-  afterEach(() => {
-    clock.restore();
   });
 
 
@@ -117,6 +101,7 @@ describe('Validator', () => {
         Validator.registerRule(rule, d, t, b);
 
         const o: any = Validator.getRule(rule);
+        assert(o.sync === true);
         assert(o.depends === d);
         assert(o.test === t);
         assert(o.implicit === b);
@@ -134,6 +119,38 @@ describe('Validator', () => {
       it('Should be throw a error when call rule does not exist', () => {
         assert.throws(() => {
           Validator.registerRule('fuga', { notfound: true }, () => false);
+        });
+      });
+    });
+
+
+    describe('Asynchronous rules manipulation', () => {
+      it('Should be registered', () => {
+        const rule = 'asyncRule';
+        const d = {};
+        const t = () => Promise.reject('hoge');
+        const b = false;
+        Validator.registerAsyncRule(rule, d, t, b);
+
+        const o: any = Validator.getRule(rule);
+        assert(o.sync === false);
+        assert(o.depends === d);
+        assert(o.test === t);
+        assert(o.implicit === b);
+      });
+
+
+      it('Should be throw a error when specify duplicate field', () => {
+        Validator.registerAsyncRule('hoge', {}, () => Promise.reject(null), true);
+        assert.throws(() => {
+          Validator.registerAsyncRule('hoge', {}, () => Promise.reject(null), true);
+        });
+      });
+
+
+      it('Should be throw a error when call rule does not exist', () => {
+        assert.throws(() => {
+          Validator.registerAsyncRule('fuga', { notfound: true }, () => Promise.reject(null));
         });
       });
     });
@@ -757,98 +774,7 @@ describe('Validator', () => {
     });
 
 
-    describe('Validate', () => {
-      it('Should be called test when validation', () => {
-        const values = {
-          username: 'tsuyoshiwada',
-          password: 'hogefuga',
-          notcall: 'test',
-        };
-
-        const pass1 = sinon.stub().returns(false);
-        pass1.withArgs(values.username, {}, 'username', values).returns(true);
-        pass1.withArgs(values.password, {}, 'password', values).returns(true);
-
-        const pass2 = sinon.stub().returns(false);
-
-        Validator.registerRule('pass1', {}, pass1);
-        Validator.registerRule('pass2', {}, pass2);
-
-        const v = new Validator(values, {
-          username: { pass1: true },
-          password: { pass1: true },
-          notcall: { pass2: false },
-        });
-
-        assert(v.validate());
-        assert(pass1.callCount === 2);
-        assert(pass2.callCount === 0);
-      });
-
-
-      it('Should be arguments passed to test', () => {
-        const values = { foo: 'bar', hoge: 'fuga' };
-        const params = { k1: 'v1', k2: 'v2' };
-
-        const test = sinon.stub().returns(false);
-        test.withArgs(values.foo, params, 'foo', values).returns(true);
-
-        const v = new Validator(values, {
-          foo: { rule: params },
-        });
-
-        Validator.registerRule('rule', {}, test);
-
-        assert(v.validate());
-        assert(test.callCount === 1);
-      });
-
-
-      it('Should be called rules dependent on validation', () => {
-        const returnTrue = sinon.stub().returns(true);
-        const returnFalse = sinon.stub().returns(false);
-        const test1 = sinon.stub().returns(true);
-        const test2 = sinon.stub().returns(true);
-
-        const v = new Validator(
-          { k1: 'v1', k2: 'v2' },
-          { k1: { rule1: true }, k2: { rule2: true } },
-        );
-
-        Validator.registerRule('returnTrue', {}, returnTrue);
-        Validator.registerRule('returnFalse', {}, returnFalse);
-        Validator.registerRule('rule1', { returnTrue: true }, test1);
-        Validator.registerRule('rule2', { returnTrue: true, returnFalse: true }, test2);
-
-        assert(v.validate() === false);
-        assert(returnTrue.callCount === 2);
-        assert(returnFalse.callCount === 1);
-        assert(test1.callCount === 1);
-        assert(test2.callCount === 0);
-      });
-
-
-      it('Should be call inline rule', () => {
-        const values = { key: 'val' };
-        const other = sinon.stub().returns(true);
-        const inline = sinon.stub().returns(false);
-        inline.withArgs(values.key, {}, 'key', values).returns(true);
-
-        Validator.registerRule('other', {}, other);
-
-        const v = new Validator(values, {
-          key: {
-            other: true,
-            inline,
-          },
-        });
-
-        assert(v.validate());
-        assert(other.callCount === 1);
-        assert(inline.callCount === 1);
-      });
-
-
+    describe('Normalize', () => {
       it('Should be called normalizer', () => {
         const values = { k1: 'v1', k2: 'v2' };
 
@@ -960,12 +886,147 @@ describe('Validator', () => {
     });
 
 
+    describe('Validation', () => {
+      it('Should be called test when validation', () => {
+        const values = {
+          username: 'tsuyoshiwada',
+          password: 'hogefuga',
+          notcall: 'test',
+        };
+
+        const pass1 = sinon.stub().returns(false);
+        pass1.withArgs(values.username, {}, 'username', values).returns(true);
+        pass1.withArgs(values.password, {}, 'password', values).returns(true);
+
+        const pass2 = sinon.stub().returns(false);
+
+        Validator.registerRule('pass1', {}, pass1);
+        Validator.registerRule('pass2', {}, pass2);
+
+        const v = new Validator(values, {
+          username: { pass1: true },
+          password: { pass1: true },
+          notcall: { pass2: false },
+        });
+
+        assert(v.validate());
+        assert(pass1.callCount === 2);
+        assert(pass2.callCount === 0);
+      });
+
+
+      it('Should be arguments passed to test', () => {
+        const values = { foo: 'bar', hoge: 'fuga' };
+        const params = { k1: 'v1', k2: 'v2' };
+
+        const test = sinon.stub().returns(false);
+        test.withArgs(values.foo, params, 'foo', values).returns(true);
+
+        const v = new Validator(values, {
+          foo: { rule: params },
+        });
+
+        Validator.registerRule('rule', {}, test);
+
+        assert(v.validate());
+        assert(test.callCount === 1);
+      });
+
+
+      it('Should be called rules dependent on validation', () => {
+        const returnTrue = sinon.stub().returns(true);
+        const returnFalse = sinon.stub().returns(false);
+        const test1 = sinon.stub().returns(true);
+        const test2 = sinon.stub().returns(true);
+
+        const v = new Validator(
+          { k1: 'v1', k2: 'v2' },
+          { k1: { rule1: true }, k2: { rule2: true } },
+        );
+
+        Validator.registerRule('returnTrue', {}, returnTrue);
+        Validator.registerRule('returnFalse', {}, returnFalse);
+        Validator.registerRule('rule1', { returnTrue: true }, test1);
+        Validator.registerRule('rule2', { returnTrue: true, returnFalse: true }, test2);
+
+        assert(v.validate() === false);
+        assert(returnTrue.callCount === 2);
+        assert(returnFalse.callCount === 1);
+        assert(test1.callCount === 1);
+        assert(test2.callCount === 0);
+      });
+
+
+      it('Should be call inline rule', () => {
+        const values = { key: 'val' };
+        const other = sinon.stub().returns(true);
+        const inline = sinon.stub().returns(false);
+        inline.withArgs(values.key, {}, 'key', values).returns(true);
+
+        Validator.registerRule('other', {}, other);
+
+        const v = new Validator(values, {
+          key: {
+            other: true,
+            inline,
+          },
+        });
+
+        assert(v.validate());
+        assert(other.callCount === 1);
+        assert(inline.callCount === 1);
+      });
+
+
+      it('Should not be call async validations', () => {
+        const test1 = sinon.stub().returns(Promise.reject(null));
+        const test2 = sinon.stub().returns(true);
+        Validator.registerAsyncRule('returnReject', {}, test1);
+        Validator.registerRule('returnTrue', {}, test2);
+
+        const v = new Validator({
+          key: 'value',
+        }, {
+          key: {
+            returnReject: true,
+            returnTrue: true,
+          },
+        });
+
+        assert(v.validate());
+        assert(test1.callCount === 0);
+        assert(test2.callCount === 1);
+      });
+
+
+      it('Should be always return true for inline async rules', () => {
+        const test1 = sinon.stub().returns(Promise.reject(null));
+        const test2 = sinon.stub().returns(true);
+
+        const v = new Validator({
+          key: 'value',
+        }, {
+          key: {
+            test1,
+            test2,
+          },
+        });
+
+        assert(v.validate());
+        assert(test1.callCount === 1);
+        assert(test2.callCount === 1);
+      });
+    });
+
+
     describe('Asynchronous validation', () => {
       it('Should be return resolve (success)', (done) => {
+        Validator.registerAsyncRule('returnPromise', {}, () => Promise.resolve());
+
         const values = { key: 'value' };
         const v = new Validator(values, {
           key: {
-            returnPromise: () => sleep(200),
+            returnPromise: true,
           },
         });
 
@@ -979,23 +1040,21 @@ describe('Validator', () => {
             done();
           })
           .catch(() => {
+            console.log(v.getAllErrors());
             assert(false);
             done();
           });
 
         assert(v.isValidating());
-        clock.tick(100);
-
-        assert(v.isValidating());
-        clock.tick(100);
       });
 
 
       it('Should be return reject (failure)', (done) => {
+        Validator.registerAsyncRule('test', {}, () => Promise.reject('Error!!'));
+
         const values = { key: 'value' };
-        const test = () => sleep(200).then(() => Promise.reject('Error!!'));
         const v = new Validator(values, {
-          key: { test },
+          key: { test: true },
         });
 
         v.asyncValidate()
@@ -1008,20 +1067,93 @@ describe('Validator', () => {
             assert.deepStrictEqual(errors, v.getAllErrors());
             assert.deepStrictEqual(errors, {
               key: [
-                { rule: 'test', message: 'Error!!', params: test },
+                { rule: 'test', message: 'Error!!', params: true },
               ],
             });
             done();
           });
 
         assert(v.isValidating());
-        clock.tick(200);
       });
 
 
-      it('Should be called sync and async test (success)', (done) => {
-        Validator.registerRule('returnFalse', {}, () => false);
-        Validator.registerRule('returnTrue', {}, () => true);
+      it('Should be called rules dependent on validation', (done) => {
+        const returnTrue = sinon.stub().returns(true);
+        const returnResolve = sinon.stub().returns(Promise.resolve());
+        const returnReject = sinon.stub().returns(Promise.reject(null));
+        const test1 = sinon.stub().returns(Promise.resolve());
+        const test2 = sinon.stub().returns(Promise.resolve());
+
+        Validator.registerRule('returnTrue', {}, returnTrue);
+        Validator.registerAsyncRule('returnResolve', {}, returnResolve);
+        Validator.registerAsyncRule('returnReject', {}, returnReject);
+        Validator.registerAsyncRule('rule1', { returnTrue: true, returnResolve: true }, test1);
+        Validator.registerAsyncRule('rule2', { returnTrue: true, returnReject: true }, test2);
+
+        const v = new Validator(
+          { k1: 'v1', k2: 'v2' },
+          { k1: { rule1: true }, k2: { rule2: true } },
+        );
+
+        v.asyncValidate()
+          .then(() => {
+            assert(false);
+            done();
+          })
+          .catch(() => {
+            assert(returnTrue.callCount === 2);
+            assert(returnResolve.callCount === 1);
+            assert(returnReject.callCount === 1);
+            assert(test1.callCount === 1);
+            assert(test2.callCount === 0);
+            done();
+          });
+
+        assert(v.isValidating() === true);
+      });
+
+
+      it('Should not be call inline rule', (done) => {
+        const test1 = sinon.stub().returns(true);
+        const test2 = sinon.stub().returns(false);
+        const test3 = sinon.stub().returns(Promise.resolve());
+
+        Validator.registerAsyncRule('returnResolve', {}, test3);
+
+        const v = new Validator({
+          key: 'value',
+        }, {
+          key: {
+            test1,
+            test2,
+            returnResolve: true,
+          },
+        });
+
+        v.asyncValidate()
+          .then(() => {
+            assert(test1.callCount === 0);
+            assert(test2.callCount === 0);
+            assert(test3.callCount === 1);
+            done();
+          })
+          .catch(() => {
+            assert(false);
+            done();
+          });
+      });
+    });
+
+
+    describe('Sync & Asynchronous validation', () => {
+      it('Should be return resolve', (done) => {
+        const test1 = sinon.stub().returns(true);
+        const test2 = sinon.stub().returns(false);
+        const test3 = sinon.stub().returns(Promise.resolve());
+
+        Validator.registerRule('returnTrue', {}, test1);
+        Validator.registerRule('returnFalse', {}, test2);
+        Validator.registerAsyncRule('checkAccount', { returnTrue: true }, test3);
 
         const values = {
           email: 'test@mail.com',
@@ -1031,21 +1163,26 @@ describe('Validator', () => {
         const v = new Validator(values, {
           email: {
             returnTrue: true,
-            returnFalse: false,
-            login: () => sleep(1000),
+            returnFalse: true,
+            checkAccount: true,
           },
           password: {
             returnTrue: true,
-            returnFalse: false,
+            returnFalse: true,
             passFormat: (value: any) => /^\d+$/.test(value),
           },
         });
 
+        assert(v.isValidating() === false);
+
         v.asyncValidate()
-          .then(resultValues => {
+          .then(returnValues => {
             assert(v.isValidating() === false);
-            assert.deepStrictEqual(resultValues, values);
-            assert.deepStrictEqual(resultValues, v.getValues());
+            assert.deepStrictEqual(returnValues, values);
+            assert.deepStrictEqual(returnValues, v.getValues());
+            assert(test1.callCount === 1);
+            assert(test2.callCount === 0);
+            assert(test3.callCount === 1);
             done();
           })
           .catch(() => {
@@ -1054,37 +1191,43 @@ describe('Validator', () => {
           });
 
         assert(v.isValidating());
-        clock.tick(1000);
       });
 
 
-      it('Should be called sync and async test (failure)', (done) => {
-        const returnFalse = () => false;
-        const returnTrue = () => true;
+      it('Should be return reject', (done) => {
+        const test1 = sinon.stub().returns(true);
+        const test2 = sinon.stub().returns(false);
+        const test3 = sinon.stub().returns(Promise.reject(null));
 
-        Validator.registerRule('returnFalse', {}, returnFalse);
-        Validator.registerRule('returnTrue', {}, returnTrue);
+        Validator.registerRule('returnTrue', {}, test1);
+        Validator.registerRule('returnFalse', {}, test2);
+        Validator.registerAsyncRule('checkAccount', { returnTrue: true }, test3);
 
         const values = {
           email: 'test@mail.com',
-          password: '',
+          password: '123456',
         };
 
-        const login = () => sleep(1000).then(() => Promise.reject('Error!!'));
-        const passFormat = (value: any) => /^\d+$/.test(value);
+        const expect = {
+          email: [
+            { rule: 'checkAccount', params: true, message: 'The email field is invalid.' },
+          ],
+        };
 
         const v = new Validator(values, {
           email: {
             returnTrue: true,
             returnFalse: true,
-            login,
+            checkAccount: true,
           },
           password: {
             returnTrue: true,
             returnFalse: true,
-            passFormat,
+            passFormat: (value: any) => /^\d+$/.test(value),
           },
         });
+
+        assert(v.isValidating() === false);
 
         v.asyncValidate()
           .then(() => {
@@ -1093,21 +1236,14 @@ describe('Validator', () => {
           })
           .catch(errors => {
             assert(v.isValidating() === false);
-            assert.deepStrictEqual(errors, v.getAllErrors());
-            assert.deepStrictEqual(errors, {
-              email: [
-                { rule: 'returnFalse', message: 'The email field is invalid.', params: true },
-                { rule: 'login', message: 'Error!!', params: login },
-              ],
-              password: [
-                { rule: 'returnFalse', message: 'The password field is invalid.', params: true },
-                { rule: 'passFormat', message: 'The password field is invalid.', params: passFormat },
-              ],
-            });
+            assert.deepStrictEqual(errors, expect);
+            assert(test1.callCount === 1);
+            assert(test2.callCount === 0);
+            assert(test3.callCount === 1);
             done();
           });
 
-        clock.tick(1100);
+        assert(v.isValidating());
       });
     });
 
@@ -1176,7 +1312,7 @@ describe('Validator', () => {
 
 
       it('Should be return custom error message from async rule', (done) => {
-        Validator.registerRule('asyncError', {}, () => sleep(200).then(() => Promise.reject(null)));
+        Validator.registerAsyncRule('asyncError', {}, () => Promise.reject(null));
         Validator.setMessage('asyncError', 'async message');
 
         const v = new Validator(values, {
@@ -1188,40 +1324,14 @@ describe('Validator', () => {
             assert(false);
             done();
           })
-          .catch(errors => {
-            assert.deepStrictEqual(errors, {
-              k1: [
-                { rule: 'asyncError', message: 'async message', params: true },
-              ],
+            .catch(errors => {
+              assert.deepStrictEqual(errors, {
+                k1: [
+                  { rule: 'asyncError', message: 'async message', params: true },
+                ],
+              });
+              done();
             });
-            done();
-          });
-
-        clock.tick(200);
-      });
-
-
-      it('Should be return custom error message from inline async test', (done) => {
-        const inline = () => sleep(100).then(() => Promise.reject('Inline async rule'));
-        const v = new Validator(values, {
-          k1: { inline },
-        });
-
-        v.asyncValidate()
-          .then(() => {
-            assert(false);
-            done();
-          })
-          .catch(errors => {
-            assert.deepStrictEqual(errors, {
-              k1: [
-                { rule: 'inline', message: 'Inline async rule', params: inline },
-              ],
-            });
-            done();
-          });
-
-        clock.tick(100);
       });
     });
 
@@ -1336,8 +1446,9 @@ describe('Validator', () => {
         Validator.registerRule('ok', {}, (value: any) => value === 'ok', false);
         Validator.registerRule('num', {}, isNumber, false);
         Validator.registerRule('str', {}, isString, false);
-        Validator.registerRule('resolve100', {}, () => sleep(100), false);
-        Validator.registerRule('reject100', {}, () => sleep(100).then(() => Promise.reject(null)), false);
+
+        Validator.registerAsyncRule('resolve', {}, () => Promise.resolve(), false);
+        Validator.registerAsyncRule('reject', {}, () => Promise.reject(null), false);
       });
 
 
@@ -1365,7 +1476,7 @@ describe('Validator', () => {
         });
 
         assert.deepStrictEqual(v.getErrors('data.users.1.profile.age'), [
-            { rule: 'num', message: 'The data.users.1.profile.age field is invalid.', params: true },
+          { rule: 'num', message: 'The data.users.1.profile.age field is invalid.', params: true },
         ]);
 
         assert(v.hasErrors('data.users.1.profile.age'));
@@ -1377,8 +1488,8 @@ describe('Validator', () => {
       it('Should be async validate', (done) => {
         const v = new Validator(getValues(), {
           code: { ok: true },
-          'data.users.*.username': { resolve100: true },
-          'data.users.*.followers.*': { reject100: true },
+          'data.users.*.username': { resolve: true },
+          'data.users.*.followers.*': { reject: true },
         });
 
         v.asyncValidate()
@@ -1386,31 +1497,26 @@ describe('Validator', () => {
             assert(false);
             done();
           })
-          .catch(errors => {
-            assert.deepStrictEqual(errors, {
-              code: [
-                { rule: 'ok', params: true, message: 'The code field is invalid.' },
-              ],
-              'data.users.0.followers.0': [
-                { rule: 'reject100', params: true, message: 'The data.users.0.followers.0 field is invalid.' },
-              ],
-              'data.users.0.followers.1': [
-                { rule: 'reject100', params: true, message: 'The data.users.0.followers.1 field is invalid.' },
-              ],
-              'data.users.1.followers.0': [
-                { rule: 'reject100', params: true, message: 'The data.users.1.followers.0 field is invalid.' },
-              ],
-              'data.users.2.followers.0': [
-                { rule: 'reject100', params: true, message: 'The data.users.2.followers.0 field is invalid.' },
-              ],
-              'data.users.2.followers.1': [
-                { rule: 'reject100', params: true, message: 'The data.users.2.followers.1 field is invalid.' },
-              ],
+            .catch(errors => {
+              assert.deepStrictEqual(errors, {
+                'data.users.0.followers.0': [
+                  { rule: 'reject', params: true, message: 'The data.users.0.followers.0 field is invalid.' },
+                ],
+                'data.users.0.followers.1': [
+                  { rule: 'reject', params: true, message: 'The data.users.0.followers.1 field is invalid.' },
+                ],
+                'data.users.1.followers.0': [
+                  { rule: 'reject', params: true, message: 'The data.users.1.followers.0 field is invalid.' },
+                ],
+                'data.users.2.followers.0': [
+                  { rule: 'reject', params: true, message: 'The data.users.2.followers.0 field is invalid.' },
+                ],
+                'data.users.2.followers.1': [
+                  { rule: 'reject', params: true, message: 'The data.users.2.followers.1 field is invalid.' },
+                ],
+              });
+              done();
             });
-            done();
-          });
-
-        clock.tick(200);
       });
 
 

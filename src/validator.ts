@@ -30,11 +30,15 @@ export interface RuleObjectParams {
   [index: string]: any;
 }
 
-export interface ValidationTester {
-  (value: any, params: RuleObjectParams, field: string, values: Values): boolean | string | Promise<any>;
+export interface InternalValidationTester<T> {
+  (value: any, params: RuleObjectParams, field: string, values: Values): T;
 }
 
-export type RuleParams = boolean | ValidationTester | RuleObjectParams;
+export type SyncValidationTester = InternalValidationTester<boolean | string>;
+export type AsyncValidationTester = InternalValidationTester<Promise<any>>;
+export type ValidationTester = SyncValidationTester | AsyncValidationTester;
+
+export type RuleParams = boolean | SyncValidationTester | RuleObjectParams;
 
 export interface NormalizeObjectParams {
   [index: string]: any;
@@ -114,6 +118,7 @@ export interface RuleList {
 }
 
 export interface BuiltinRule {
+  sync: boolean;
   depends: RuleDepends;
   test: ValidationTester;
   implicit: boolean;
@@ -238,7 +243,7 @@ class Validator extends EventEmitter {
   /**
    * Builtin rules
    */
-  static registerRule(rule: string, depends: RuleDepends, test: ValidationTester, implicit: boolean = true): void {
+  private static internalRegisterRule(sync: boolean, rule: string, depends: RuleDepends, test: ValidationTester, implicit: boolean = true): void {
     if (Validator.hasRule(rule)) {
       invariant(false, `"${rule}" rule already exists`);
       return;
@@ -257,10 +262,19 @@ class Validator extends EventEmitter {
     if (!res) return;
 
     Validator._builtinRules[rule] = {
+      sync,
       depends,
       test,
       implicit,
     };
+  }
+
+  static registerRule(rule: string, depends: RuleDepends, test: SyncValidationTester, implicit: boolean = true): void {
+    this.internalRegisterRule(true, rule, depends, test, implicit);
+  }
+
+  static registerAsyncRule(rule: string, depends: RuleDepends, test: AsyncValidationTester, implicit: boolean = true): void {
+    this.internalRegisterRule(false, rule, depends, test, implicit);
   }
 
   static hasRule(rule: string): boolean {
@@ -800,46 +814,46 @@ class Validator extends EventEmitter {
   }
 
   protected syncExecuteTest(rule: string, field: string, value: any, params: RuleParams): boolean | string {
-    const result = this.executeTest(rule, field, value, params);
+    const result = this.executeTest(true, rule, field, value, params);
 
     return isPromise(result) ? true : <boolean | string>result;
   }
 
   protected asyncExecuteTest(rule: string, field: string, value: any, params: RuleParams): Promise<void> {
-    let result = this.executeTest(rule, field, value, params);
+    const result = this.executeTest(false, rule, field, value, params);
 
-    if (result === true) {
+    const resolve = () => {
       this.removeError(field, rule);
       return Promise.resolve();
+    };
+
+    const reject = (res: string | boolean) => {
+      this.addError(field, rule, res, params);
+      return Promise.reject(null);
+    };
+
+    if (result === true) {
+      return resolve();
     }
 
     if (!isPromise(result)) {
-      this.addError(field, rule, <string | boolean>result, params);
-      return Promise.reject(null);
+      return reject(<string | boolean>result);
     }
 
-    result = <Promise<string | void>>result;
-
-    return result
-      .then(() => {
-        this.removeError(field, rule);
-        return Promise.resolve();
-      })
-      .catch(message => {
-        this.addError(field, rule, isString(message) ? message : false, params);
-        return Promise.reject(null);
-      });
+    return (<Promise<string | void>>result)
+      .then(() => resolve())
+      .catch(message => reject(isString(message) ? message : false));
   }
 
-  protected executeTest(rule: string, field: string, value: any, params: RuleParams): boolean | string | Promise<string | void> {
+  protected executeTest(sync: boolean, rule: string, field: string, value: any, params: RuleParams, force: boolean = false): boolean | string | Promise<string | void> {
     const isObjParams = isPlainObject(params);
     const isInline = isFunction(params);
     if (!isObjParams && !isInline && params !== true) return true;
 
     // inline test
     if (isInline) {
-      const inline = <ValidationTester>params;
-      return inline(value, {}, field, this._values);
+      const inline = <SyncValidationTester>params;
+      return sync ? inline(value, {}, field, this._values) : true;
 
     // search rule
     } else if (!Validator.hasRule(rule)) {
@@ -847,27 +861,52 @@ class Validator extends EventEmitter {
     }
 
     // registered rule
-    const { test, depends, implicit } = <BuiltinRule>Validator.getRule(rule);
-    let passDepends = true;
+    const {
+      sync: syncRule,
+      test,
+      depends,
+      implicit,
+    } = <BuiltinRule>Validator.getRule(rule);
+
+    if (sync !== syncRule && !force) {
+      return true;
+    }
 
     if (implicit && (!dot.has(this._values, field) || value === null)) {
       return true;
     }
 
-    forEach(depends, (p: any, r: string) => {
-      const result = this.executeTest(r, field, value, p);
+    if (sync) {
+      let passDepends = true;
 
-      if (result !== true || isPromise(result)) {
-        passDepends = false;
-        return false;
-      }
+      forEach(depends, (p: any, r: string) => {
+        const result = this.syncExecuteTest(r, field, value, p);
 
-      return true;
-    });
+        if (result !== true) {
+          passDepends = false;
+          return false;
+        }
 
-    return !passDepends
-      ? false
-      : test(value, isObjParams ? <RuleObjectParams>params : {}, field, this._values);
+        return true;
+      });
+
+      return !passDepends
+        ? false
+        : test(value, isObjParams ? <RuleObjectParams>params : {}, field, this._values);
+    }
+
+    return Promise
+      .all(map(depends, (p: any, r: string): Promise<any> => {
+        const result = this.executeTest(sync, r, field, value, p, true);
+
+        if (isPromise(result)) {
+          return <Promise<any>>result;
+        }
+
+        return result === true ? Promise.resolve() : Promise.reject(null);
+      }))
+      .then(() => test(value, isObjParams ? <RuleObjectParams>params : {}, field, this._values))
+      .catch(message => Promise.reject(message));
   }
 }
 
