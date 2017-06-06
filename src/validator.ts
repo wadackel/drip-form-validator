@@ -358,8 +358,16 @@ class Validator extends EventEmitter {
     return this._validating;
   }
 
-  isValid(): boolean {
-    return Object.keys(this.getAllErrors()).length < 1;
+  isValid(filter?: string | string[] | null): boolean {
+    const filters = (isString(filter) ? [filter] : filter) || null;
+
+    if (!filters) {
+      return Object.keys(this.getAllErrors()).length < 1;
+    }
+
+    return filters.every(field => (
+      !this.getErrors(field)
+    ));
   }
 
 
@@ -785,10 +793,10 @@ class Validator extends EventEmitter {
 
     this.afterValidate(filters);
 
-    return this.isValid();
+    return this.isValid(filters);
   }
 
-  asyncValidate(filter?: string[]): Promise<Values> {
+  asyncValidate(filter?: string | string[]): Promise<Values> {
     const filters = (isString(filter) ? [filter] : filter) || null;
 
     this.beforeValidate(filters);
@@ -807,7 +815,7 @@ class Validator extends EventEmitter {
       .then(() => {
         this.afterValidate(filters);
 
-        return this.isValid()
+        return this.isValid(filters)
           ? Promise.resolve(this.getValues())
           : Promise.reject(this.getAllErrors());
       });

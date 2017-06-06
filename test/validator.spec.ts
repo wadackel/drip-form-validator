@@ -366,6 +366,12 @@ describe('Validator', () => {
     describe('Errors', () => {
       let v: Validator;
 
+      const clear = () => {
+        v.clearValues();
+        v.clearAllErrors();
+        assert.deepStrictEqual(v.getAllErrors(), {});
+      };
+
       beforeEach(() => {
         v = new Validator();
       });
@@ -374,11 +380,6 @@ describe('Validator', () => {
       it('Should be adding error from global messages.', () => {
         const key = 'testkey';
         const rule = 'foobar';
-        const clear = () => {
-          v.clearValues();
-          v.clearAllErrors();
-          assert.deepStrictEqual(v.getAllErrors(), {});
-        };
 
         // String
         Validator.setMessage(rule, 'global {{key}}');
@@ -457,11 +458,6 @@ describe('Validator', () => {
       it('Should be adding error from local messages.', () => {
         const key = 'testkey';
         const rule = 'foobar';
-        const clear = () => {
-          v.clearValues();
-          v.clearAllErrors();
-          assert.deepStrictEqual(v.getAllErrors(), {});
-        };
 
         v = new Validator({}, {}, {
           messages: {
@@ -587,6 +583,39 @@ describe('Validator', () => {
         v.clearAllErrors();
 
         assert.deepStrictEqual(v.getAllErrors(), {});
+      });
+
+
+      it('Should be return whether error exists', () => {
+        assert(v.isValid());
+        assert(v.isValid('k1'));
+        assert(v.isValid('k2'));
+        assert(v.isValid(['k1', 'k2']));
+        assert(v.isValid(['k1', 'notfound']));
+        assert(v.isValid('foo.bar'));
+        assert(v.isValid('array.0.key'));
+        assert(v.isValid('array.1.key'));
+        assert(v.isValid('array.2.key'));
+        assert(v.isValid('array.*.key'));
+        assert(v.isValid(['array.0.key', 'array.1.key', 'array.2.key']));
+
+        v.addError('k1', 'foo', false, {});
+        v.addError('k2', 'bar', false, {});
+        v.addError('foo.bar', 'baz', false, {});
+        v.addError('array.0.key', 'hoge', false, {});
+        v.addError('array.2.key', 'fuga', false, {});
+
+        assert(v.isValid() === false);
+        assert(v.isValid('k1') === false);
+        assert(v.isValid('k2') === false);
+        assert(v.isValid(['k1', 'k2']) === false);
+        assert(v.isValid(['k1', 'notfound']) === false);
+        assert(v.isValid('foo.bar') === false);
+        assert(v.isValid('array.0.key') === false);
+        assert(v.isValid('array.1.key'));
+        assert(v.isValid('array.2.key') === false);
+        assert(v.isValid('array.*.key') === false);
+        assert(v.isValid(['array.0.key', 'array.1.key', 'array.2.key']) === false);
       });
     });
 
