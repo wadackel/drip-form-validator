@@ -870,6 +870,43 @@ describe('Validator', () => {
           },
         });
       });
+
+
+      it('Should be get fields that specifies sync or async rules', () => {
+        Validator.registerRule('sync1', () => true);
+        Validator.registerRule('sync2', () => true);
+        Validator.registerRule('sync3', () => true);
+        Validator.registerAsyncRule('async1', () => Promise.resolve());
+        Validator.registerAsyncRule('async2', () => Promise.resolve());
+        Validator.registerAsyncRule('async3', () => Promise.resolve());
+
+        v.setRules({
+          onlySync1: { sync1: true, sync2: true },
+          onlySync2: { sync1: true, sync2: false },
+          onlySync3: { sync1: false, sync2: false },
+          onlyAsync1: { async1: true, async2: true },
+          onlyAsync2: { async1: true, async2: false },
+          onlyAsync3: { async1: false, async2: false },
+          mixed1: { sync1: true, async1: true },
+          mixed2: { sync1: true, async1: false },
+          mixed3: { sync1: false, async1: true },
+          mixed4: { sync1: false, async1: false },
+        });
+
+        assert.deepStrictEqual(v.getSyncRuleKeys(), [
+          'onlySync1',
+          'onlySync2',
+          'mixed1',
+          'mixed2',
+        ]);
+
+        assert.deepStrictEqual(v.getAsyncRuleKeys(), [
+          'onlyAsync1',
+          'onlyAsync2',
+          'mixed1',
+          'mixed3',
+        ]);
+      });
     });
 
 

@@ -673,6 +673,41 @@ class Validator extends EventEmitter {
     this._rules = results;
   }
 
+  private getRuleKeysWith(callback: InternalRuleKeysCallback): string[] {
+    const keys: string[] = [];
+
+    forEach(this._rules, (list: Rule, field: string) => {
+      forEach(list, (params: RuleParams | ValidationTester, ruleName: string): boolean => {
+        const rule = Validator.getRule(ruleName);
+
+        if (callback(field, ruleName, rule, params)) {
+          keys.push(field);
+          return false;
+        }
+
+        return true;
+      });
+    });
+
+    return keys;
+  }
+
+  getSyncRuleKeys(): string[] {
+    return this.getRuleKeysWith((_, __, rule, params) => {
+      return (
+        isFunction(params) ||
+        !!(rule && rule.sync && Validator.isValidParams(params))
+      );
+    });
+  }
+
+  getAsyncRuleKeys(): string[] {
+    return this.getRuleKeysWith((_, __, rule, params) => {
+      return (
+        isFunction(params) ||
+        !!(rule && !rule.sync && Validator.isValidParams(params))
+      );
+    });
   }
 
 
