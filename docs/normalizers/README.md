@@ -106,7 +106,7 @@ Trim characters from the left-side of the input.
 
 **Parameters:**
 
-* `chars?`: `string`
+* `string`
 
 **Example:**
 
@@ -116,7 +116,7 @@ Trim characters from the left-side of the input.
 
   // -- or --
 
-  ltrim: { chars: '@' },
+  ltrim: '@',
 }
 ```
 
@@ -127,13 +127,13 @@ Normalize the value to less than or equal to the specified number.
 
 **Parameters:**
 
-* `max`: `number`
+* `number`
 
 **Example:**
 
 ```javascript
 {
-  max: { max: 100 },
+  max: 100,
 }
 ```
 
@@ -144,13 +144,13 @@ Normalize the value to less than or equal to the specified field value.
 
 **Parameters:**
 
-* `key`: `string`
+* `string`
 
 **Example:**
 
 ```javascript
 {
-  max: { key: 'maxKey' },
+  max: 'maxKey',
 }
 ```
 
@@ -161,13 +161,13 @@ Normalize the value to greater than or equal to the specified number.
 
 **Parameters:**
 
-* `min`: `number`
+* `number`
 
 **Example:**
 
 ```javascript
 {
-  min: { min: 100 },
+  min: 100,
 }
 ```
 
@@ -178,13 +178,13 @@ Normalize the value to greater than or equal to the specified field value.
 
 **Parameters:**
 
-* `key`: `string`
+* `string`
 
 **Example:**
 
 ```javascript
 {
-  min: { key: 'minKey' },
+  min: 'minKey',
 }
 ```
 
@@ -212,7 +212,7 @@ Trim characters from the right-side of the input.
 
 **Parameters:**
 
-* `chars?`: `string`
+* `string`
 
 **Example:**
 
@@ -222,7 +222,7 @@ Trim characters from the right-side of the input.
 
   // -- or --
 
-  rtrim: { chars: '/' },
+  rtrim: '/',
 }
 ```
 

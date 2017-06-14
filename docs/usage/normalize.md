@@ -25,7 +25,7 @@ const v = new Validator(data, {/* rules */}, {
     },
     url: {
       trim: true,
-      rtrim: { chars: '/' },
+      rtrim: '/',
     },
   }
 });
@@ -97,7 +97,7 @@ const v = new Validator(data, {}, {
     },
     url: {
       trim: true,
-      rtrim: { chars: '/' },
+      rtrim: '/',
     },
   }
 });

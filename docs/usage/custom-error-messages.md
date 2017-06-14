@@ -40,7 +40,7 @@ const data = { title: (new Array(257)).join('a') };
 const rules = {
   title: {
     required: true,
-    max: { max: 255 },
+    max: 255,
   },
 };
 
