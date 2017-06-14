@@ -379,12 +379,12 @@
 <p>Below is an example of registering the custom rule <code>&quot;example&quot;</code>.</p>
 <pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> Validator <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;drip-form-validator&apos;</span><span class="token punctuation">;</span>
 
-Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> params<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> params<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> value <span class="token operator">===</span> <span class="token string">&apos;foo&apos;</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p><code>registerRule()</code> has the following structure.</p>
-<pre class="language-"><code class="lang-typescript"><span class="token function">registerRule</span><span class="token punctuation">(</span>rule<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span> depends<span class="token punctuation">:</span> RuleDepends<span class="token punctuation">,</span> test<span class="token punctuation">:</span> SyncValidationTester<span class="token punctuation">,</span> implicit<span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span>
+<pre class="language-"><code class="lang-typescript"><span class="token function">registerRule</span><span class="token punctuation">(</span>rule<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span> test<span class="token punctuation">:</span> SyncValidationTester<span class="token punctuation">,</span> options<span class="token punctuation">:</span> BuiltinRuleOptions <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span>
 </code></pre>
 <p><code>SyncValidationTester</code> has the following structure. It takes the same arguments as <a href="inline-validation.html">Inline Validation</a>.</p>
 <pre class="language-"><code class="lang-typescript"><span class="token punctuation">(</span>value<span class="token punctuation">:</span> <span class="token keyword">any</span><span class="token punctuation">,</span> params<span class="token punctuation">:</span> RuleObjectParams<span class="token punctuation">,</span> field<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span> values<span class="token punctuation">:</span> Values<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token operator">|</span> <span class="token keyword">string</span><span class="token punctuation">;</span>
@@ -392,6 +392,14 @@ Validator<span class="token punctuation">.</span><span class="token function">re
 <blockquote>
 <p><strong>Tips:</strong> Since all the built-in rules are defined using this <code>registerRule</code> method, it may be an implementation reference.</p>
 </blockquote>
+<p><code>BuiltinRuleOptions</code> is an object with the following structure.</p>
+<pre class="language-"><code class="lang-typescript"><span class="token punctuation">{</span>
+  implicit<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span><span class="token punctuation">;</span>
+  depends<span class="token operator">?</span><span class="token punctuation">:</span> RuleDepends<span class="token punctuation">;</span>
+  override<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span><span class="token punctuation">;</span>
+  mapArgsToParams<span class="token operator">?</span><span class="token punctuation">:</span> MapArgsToParams<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>Please refer to <a href="async-validation.html">Asynchronous validation</a> for registration of asynchronous validations.</p>
 <h3 id="custom-rule-usage">Custom rule usage</h3>
 <p>Registered rules can be used like any other rule.</p>
@@ -410,13 +418,14 @@ Validator<span class="token punctuation">.</span><span class="token function">re
 <p>In such a case it is a good solution to pass the parameters as follows.</p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
   fieldName<span class="token punctuation">:</span> <span class="token punctuation">{</span>
-    example<span class="token punctuation">:</span> <span class="token punctuation">{</span> text<span class="token punctuation">:</span> <span class="token string">&apos;bar&apos;</span> <span class="token punctuation">}</span>
+    example<span class="token punctuation">:</span> <span class="token string">&apos;bar&apos;</span><span class="token punctuation">,</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <p>The passed parameters are passed to <code>params</code> of <code>registerRule()</code>.</p>
-<pre class="language-"><code class="lang-javascript">Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> params<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
-  <span class="token keyword">return</span> value <span class="token operator">===</span> params<span class="token punctuation">.</span>text<span class="token punctuation">;</span>
+<pre class="language-"><code class="lang-javascript">Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> text<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> value <span class="token operator">===</span> text<span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">//     value === &apos;bar&apos;;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p>With this, text comparison of various variations became possible.</p>
@@ -424,8 +433,10 @@ Validator<span class="token punctuation">.</span><span class="token function">re
 <p>For example, if you validate a form, I think that there will be more tests that premise character strings.<br>Therefore, it is in vain to verify &quot;whether it is a character string&quot; or not.</p>
 <p>There is already a built-in rule called <code>&quot;string&quot;</code>, so it is ideal to use it.<br>It is possible for drip-form-validator.</p>
 <p>Please pass a list of rules to the second argument of <code>registerRule()</code>.</p>
-<pre class="language-"><code class="lang-javascript">Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> string<span class="token punctuation">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> params<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
-  <span class="token keyword">return</span> value <span class="token operator">===</span> params<span class="token punctuation">.</span>text<span class="token punctuation">;</span>
+<pre class="language-"><code class="lang-javascript">Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> text<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> value <span class="token operator">===</span> text<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  depends<span class="token punctuation">:</span> <span class="token punctuation">{</span> string<span class="token punctuation">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p>By doing this, the custom rule is executed only when the specified rule passes.<br>If the specified rule does not pass, the custom rule is not executed and the test fails.</p>
@@ -437,12 +448,59 @@ Validator<span class="token punctuation">.</span><span class="token function">re
 <li>Value is <code>null</code>.</li>
 </ul>
 <p>This is due to the effect of <code>implicit</code>. It is specified in the last argument of <code>registerRule()</code>.<br><code>true</code> is specified by default.</p>
-<pre class="language-"><code class="lang-javascript">Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> string<span class="token punctuation">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> params<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
-  <span class="token keyword">return</span> value <span class="token operator">===</span> params<span class="token punctuation">.</span>text<span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-"><code class="lang-javascript">Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> text<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> value <span class="token operator">===</span> text<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  depends<span class="token punctuation">:</span> <span class="token punctuation">{</span> string<span class="token punctuation">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  implicit<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p>A rule that specifies <code>true</code> implicitly passes the test in the case mentioned above.<br>If <code>false</code>, the test is executed in all cases.</p>
 <p>For example, the existence of a key is used in uncertain rules etc. (<code>&quot;required&quot;</code> etc...)</p>
+<h3 id="override-builtin-rules">Override builtin rules</h3>
+<p>You may want to override the rules provided by <code>drip-form-validator</code>.<br>In such a case the <code>override</code> option is useful.</p>
+<pre class="language-"><code class="lang-javascript">Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;required&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> params<span class="token punctuation">,</span> field<span class="token punctuation">,</span> values<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">/* override rule specification */</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  override<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>An error will occur if you normally try to register a rule with the same name.<br>You can override built-in rules by enabling <code>override</code> option.</p>
+<h3 id="arguments-mapping">Arguments mapping</h3>
+<p>You can embed values using <code>{{keyword}}</code> in the error message template corresponding to the rule.</p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  ruleName<span class="token punctuation">:</span> <span class="token string">&apos;&quot;{{foo}}&quot; is parameter.&apos;</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Subscripts of object parameters are used for keywords.</p>
+<p>You can use the <code>mapArgsToParams</code> function to create this object.</p>
+<pre class="language-"><code class="lang-javascript"><span class="token comment" spellcheck="true">// Register rule</span>
+Validator<span class="token punctuation">.</span><span class="token function">registerRule</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>value<span class="token punctuation">,</span> params<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> value <span class="token operator">===</span> params<span class="token punctuation">.</span>text<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  mapArgsToParams<span class="token punctuation">:</span> text <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span> text <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// Define message</span>
+Validator<span class="token punctuation">.</span><span class="token function">setMessage</span><span class="token punctuation">(</span><span class="token string">&apos;example&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;{{field}} must be &quot;{{text}}&quot;.&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// Example</span>
+<span class="token keyword">const</span> v <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Validator</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  username<span class="token punctuation">:</span> <span class="token string">&apos;foo&apos;</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  username<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    example<span class="token punctuation">:</span> <span class="token string">&apos;bar&apos;</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+v<span class="token punctuation">.</span><span class="token function">validate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>v<span class="token punctuation">.</span><span class="token function">getAllErrors</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// { username:</span>
+<span class="token comment" spellcheck="true">//    [ { rule: &apos;example&apos;,</span>
+<span class="token comment" spellcheck="true">//        params: { text: &apos;bar&apos; },</span>
+<span class="token comment" spellcheck="true">//        message: &apos;username must be &quot;bar&quot;.&apos; } ] }</span>
+</code></pre>
 <h2 id="written-test-for-custom-rules">Written test for Custom rules</h2>
 <p>TODO</p>
 
@@ -488,7 +546,7 @@ Validator<span class="token punctuation">.</span><span class="token function">re
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Custom Validation Rules","level":"1.2.9","depth":2,"next":{"title":"Custom Normalizers","level":"1.2.10","depth":2,"path":"usage/custom-normalizers.md","ref":"usage/custom-normalizers.md","articles":[]},"previous":{"title":"Events","level":"1.2.8","depth":2,"path":"usage/events.md","ref":"usage/events.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"usage/custom-rules.md","mtime":"2017-06-01T13:48:06.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-01T13:49:16.384Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Custom Validation Rules","level":"1.2.9","depth":2,"next":{"title":"Custom Normalizers","level":"1.2.10","depth":2,"path":"usage/custom-normalizers.md","ref":"usage/custom-normalizers.md","articles":[]},"previous":{"title":"Events","level":"1.2.8","depth":2,"path":"usage/events.md","ref":"usage/events.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"usage/custom-rules.md","mtime":"2017-06-14T15:01:43.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-14T16:12:00.933Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

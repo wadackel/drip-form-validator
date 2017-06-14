@@ -413,11 +413,11 @@
 <p>It checks that it is after the specified date.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>date</code>: <code>string | number | Date</code></li>
+<li><code>string | number | Date</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  after<span class="token punctuation">:</span> <span class="token punctuation">{</span> date<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">}</span>
+  after<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="alpha"><code>alpha</code></h2>
@@ -468,7 +468,7 @@
 <p>It checks that it is before the specified date.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>date</code>: <code>string | number | Date</code></li>
+<li><code>string | number | Date</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
@@ -505,11 +505,11 @@
 <p>It checks whether the value matches the specified date format.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>format</code>: <code>string</code></li>
+<li><code>string</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  dateFormat<span class="token punctuation">:</span> <span class="token punctuation">{</span> format<span class="token punctuation">:</span> <span class="token string">&apos;YYYY-MM-DD HH:mm:ss&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  dateFormat<span class="token punctuation">:</span> <span class="token string">&apos;YYYY-MM-DD HH:mm:ss&apos;</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <p><strong>Reference:</strong></p>
@@ -520,11 +520,11 @@
 <p>It checks whether the specified field and value are different.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>key</code>: <code>string</code></li>
+<li><code>string</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  different<span class="token punctuation">:</span> <span class="token punctuation">{</span> key<span class="token punctuation">:</span> <span class="token string">&apos;otherField&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  different<span class="token punctuation">:</span> <span class="token string">&apos;otherField&apos;</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="email"><code>email</code></h2>
@@ -542,11 +542,11 @@
 <p>It checks whether it matches the specified value.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>value</code>: <code>any</code></li>
+<li><code>any</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  equals<span class="token punctuation">:</span> <span class="token punctuation">{</span> value<span class="token punctuation">:</span> <span class="token string">&apos;Foo&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  equals<span class="token punctuation">:</span> <span class="token string">&apos;Foo&apos;</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="falsy"><code>falsy</code></h2>
@@ -583,22 +583,22 @@
 <p>It checks whether it conforms to the specified format.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>regex</code>: <code>RegExp</code></li>
+<li><code>RegExp</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  format<span class="token punctuation">:</span> <span class="token punctuation">{</span> regex<span class="token punctuation">:</span> <span class="token regex">/^foo.*bar$/</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  format<span class="token punctuation">:</span> <span class="token regex">/^foo.*bar$/</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="in"><code>in</code></h2>
 <p>It checks whether the same value exists in the specified array.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>values</code>: <code>any[]</code></li>
+<li><code>any[]</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  <span class="token keyword">in</span><span class="token punctuation">:</span> <span class="token punctuation">{</span> values<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;foo&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;bar&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;baz&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token keyword">in</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;foo&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;bar&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;baz&apos;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="integer"><code>integer</code></h2>
@@ -627,22 +627,22 @@
 <p>For character strings and arrays, check the <code>length</code> attribute, for numeric values, check that the value does not exceed the specified number.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>max</code>: <code>number</code></li>
+<li><code>number</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  max<span class="token punctuation">:</span> <span class="token punctuation">{</span> max<span class="token punctuation">:</span> <span class="token number">120</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  max<span class="token punctuation">:</span> <span class="token number">120</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="min"><code>min</code></h2>
 <p>For character strings and arrays, check the length attribute, and for numeric values, check that the value exceeds the specified number.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>min</code>: <code>number</code></li>
+<li><code>number</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  min<span class="token punctuation">:</span> <span class="token punctuation">{</span> min<span class="token punctuation">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  min<span class="token punctuation">:</span> <span class="token number">24</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="natural"><code>natural</code></h2>
@@ -660,11 +660,11 @@
 <p>It checks whether the same value not exists in the specified array.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>values</code>: <code>any[]</code></li>
+<li><code>any[]</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  notIn<span class="token punctuation">:</span> <span class="token punctuation">{</span> values<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;foo&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;bar&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;baz&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  notIn<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;foo&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;bar&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;baz&apos;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="number"><code>number</code></h2>
@@ -726,22 +726,22 @@
 <p>It checks whether the specified field and value are same.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>key</code>: <code>string</code></li>
+<li><code>string</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  same<span class="token punctuation">:</span> <span class="token punctuation">{</span> key<span class="token punctuation">:</span> <span class="token string">&apos;otherField&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  same<span class="token punctuation">:</span> <span class="token string">&apos;otherField&apos;</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="size"><code>size</code></h2>
 <p>For character strings and arrays, check the <code>length</code> attribute, if it is a number, check that the value is match the specified number.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>value</code>: <code>number</code></li>
+<li><code>number</code></li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
-  size<span class="token punctuation">:</span> <span class="token punctuation">{</span> value<span class="token punctuation">:</span> <span class="token number">48</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  size<span class="token punctuation">:</span> <span class="token number">48</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="string"><code>string</code></h2>
@@ -880,7 +880,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Builtin Rules","level":"1.3","depth":1,"next":{"title":"Builtin Normalizers","level":"1.4","depth":1,"path":"normalizers/README.md","ref":"normalizers/README.md","articles":[]},"previous":{"title":"l18n","level":"1.2.11","depth":2,"path":"usage/l18n.md","ref":"usage/l18n.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"rules/README.md","mtime":"2017-05-13T15:26:18.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-01T13:49:16.384Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Builtin Rules","level":"1.3","depth":1,"next":{"title":"Builtin Normalizers","level":"1.4","depth":1,"path":"normalizers/README.md","ref":"normalizers/README.md","articles":[]},"previous":{"title":"l18n","level":"1.2.11","depth":2,"path":"usage/l18n.md","ref":"usage/l18n.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"rules/README.md","mtime":"2017-06-14T15:46:26.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-14T16:12:00.933Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
