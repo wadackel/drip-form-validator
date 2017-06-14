@@ -10,7 +10,7 @@ Asynchronous correspondence can be realized next steps.
 import { Validator } from 'drip-form-validator';
 
 // Simulate the API call
-Validator.registerAsyncRule('checkAccountExists', {}, email => (
+Validator.registerAsyncRule('checkAccountExists', email => (
   new Promise((resolve, reject) => (
     setTimeout(() => (
       email === 'example@mail.com' ? resolve() : reject('Account does not exist!')

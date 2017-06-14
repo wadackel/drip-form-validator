@@ -2,10 +2,10 @@ import trim = require('validator/lib/trim');
 import Validator from '../validator';
 import { isString, isNumber } from '../internal/utils';
 
-Validator.registerNormalizer('trim', {}, (value: any, params: { chars?: string }) => {
+Validator.registerNormalizer('trim', (value: any, chars: string | boolean) => {
   if (!isString(value) && !isNumber(value)) {
     return value;
   }
 
-  return trim(`${value}`, params.chars);
+  return trim(`${value}`, isString(chars) ? chars : undefined);
 });

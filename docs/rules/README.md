@@ -42,13 +42,13 @@ It checks that it is after the specified date.
 
 **Parameters:**
 
-* `date`: `string | number | Date`
+* `string | number | Date`
 
 **Example:**
 
 ```javascript
 {
-  after: { date: new Date() }
+  after: new Date(),
 }
 ```
 
@@ -127,7 +127,7 @@ It checks that it is before the specified date.
 
 **Parameters:**
 
-* `date`: `string | number | Date`
+* `string | number | Date`
 
 **Example:**
 
@@ -182,13 +182,13 @@ It checks whether the value matches the specified date format.
 
 **Parameters:**
 
-* `format`: `string`
+* `string`
 
 **Example:**
 
 ```javascript
 {
-  dateFormat: { format: 'YYYY-MM-DD HH:mm:ss' },
+  dateFormat: 'YYYY-MM-DD HH:mm:ss',
 }
 ```
 
@@ -203,13 +203,13 @@ It checks whether the specified field and value are different.
 
 **Parameters:**
 
-* `key`: `string`
+* `string`
 
 **Example:**
 
 ```javascript
 {
-  different: { key: 'otherField' },
+  different: 'otherField',
 }
 ```
 
@@ -237,13 +237,13 @@ It checks whether it matches the specified value.
 
 **Parameters:**
 
-* `value`: `any`
+* `any`
 
 **Example:**
 
 ```javascript
 {
-  equals: { value: 'Foo' },
+  equals: 'Foo',
 }
 ```
 
@@ -296,13 +296,13 @@ It checks whether it conforms to the specified format.
 
 **Parameters:**
 
-* `regex`: `RegExp`
+* `RegExp`
 
 **Example:**
 
 ```javascript
 {
-  format: { regex: /^foo.*bar$/ },
+  format: /^foo.*bar$/,
 }
 ```
 
@@ -313,13 +313,13 @@ It checks whether the same value exists in the specified array.
 
 **Parameters:**
 
-* `values`: `any[]`
+* `any[]`
 
 **Example:**
 
 ```javascript
 {
-  in: { values: ['foo', 'bar', 'baz'] },
+  in: ['foo', 'bar', 'baz'],
 }
 ```
 
@@ -364,13 +364,13 @@ For character strings and arrays, check the `length` attribute, for numeric valu
 
 **Parameters:**
 
-* `max`: `number`
+* `number`
 
 **Example:**
 
 ```javascript
 {
-  max: { max: 120 },
+  max: 120,
 }
 ```
 
@@ -381,13 +381,13 @@ For character strings and arrays, check the length attribute, and for numeric va
 
 **Parameters:**
 
-* `min`: `number`
+* `number`
 
 **Example:**
 
 ```javascript
 {
-  min: { min: 24 },
+  min: 24,
 }
 ```
 
@@ -416,13 +416,13 @@ It checks whether the same value not exists in the specified array.
 
 **Parameters:**
 
-* `values`: `any[]`
+* `any[]`
 
 **Example:**
 
 ```javascript
 {
-  notIn: { values: ['foo', 'bar', 'baz'] },
+  notIn: ['foo', 'bar', 'baz'],
 }
 ```
 
@@ -518,13 +518,13 @@ It checks whether the specified field and value are same.
 
 **Parameters:**
 
-* `key`: `string`
+* `string`
 
 **Example:**
 
 ```javascript
 {
-  same: { key: 'otherField' },
+  same: 'otherField',
 }
 ```
 
@@ -535,13 +535,13 @@ For character strings and arrays, check the `length` attribute, if it is a numbe
 
 **Parameters:**
 
-* `value`: `number`
+* `number`
 
 **Example:**
 
 ```javascript
 {
-  size: { value: 48 },
+  size: 48,
 }
 ```
 

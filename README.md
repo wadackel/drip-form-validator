@@ -64,7 +64,7 @@ const v = new Validator(data, {
   },
   age: {
     required: true,
-    min: { min: 22 },
+    min: 22,
   },
   email: {
     required: true,
@@ -98,7 +98,7 @@ if (v.validate()) {
   //   }],
   //   age: [{
   //     rule: 'min',
-  //     params: [Object],
+  //     params: true,
   //     message: 'The age must be at least 22.'
   //   }],
   //   email: [{

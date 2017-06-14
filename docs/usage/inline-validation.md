@@ -46,7 +46,7 @@ It is almost the same as specifying a rule name.
 The structure of the function that can be passed to InlineValidation is as follows.
 
 ```typescript
-(value: any, params: RuleObjectParams, field: string, values: Values): boolean | string;
+(value: any, params: RuleParams, field: string, values: Values): boolean | string;
 ```
 
 You can customize the error message by returning a `string` rather than a `boolean`.

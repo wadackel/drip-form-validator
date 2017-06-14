@@ -1,7 +1,7 @@
 import Validator from '../validator';
 
 // Based by: https://github.com/chriso/validator.js/blob/master/src/lib/util/toString.js
-Validator.registerNormalizer('toString', {}, (value: any) => {
+Validator.registerNormalizer('toString', (value: any) => {
   let result = value;
 
   if (typeof value === 'object' && value !== null) {

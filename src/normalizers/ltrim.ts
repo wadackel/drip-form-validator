@@ -2,10 +2,10 @@ import ltrim = require('validator/lib/ltrim');
 import Validator from '../validator';
 import { isString, isNumber } from '../internal/utils';
 
-Validator.registerNormalizer('ltrim', {}, (value: any, params: { chars?: string }) => {
+Validator.registerNormalizer('ltrim', (value: any, chars: string | boolean) => {
   if (!isString(value) && !isNumber(value)) {
     return value;
   }
 
-  return ltrim(`${value}`, params.chars);
+  return ltrim(`${value}`, isString(chars) ? chars : undefined);
 });

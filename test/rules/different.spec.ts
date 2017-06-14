@@ -5,7 +5,7 @@ const ruleName = 'different';
 
 describe(`Rules#${ruleName}`, () => {
   it('Should be return true', () => {
-    const v = new Validator({ k1: 'v1', k2: 'v2' }, { k1: { [ruleName]: { key: 'k2' } } });
+    const v = new Validator({ k1: 'v1', k2: 'v2' }, { k1: { [ruleName]: 'k2' } });
     assert(v.validate());
 
     v.setValues({ k1: [1, 2], k2: [2, 1] });
@@ -19,7 +19,7 @@ describe(`Rules#${ruleName}`, () => {
   });
 
   it('Should be return false', () => {
-    const v = new Validator({ k1: 'v1', k2: 'v1' }, { k1: { [ruleName]: { key: 'k2' } } });
+    const v = new Validator({ k1: 'v1', k2: 'v1' }, { k1: { [ruleName]: 'k2' } });
     assert(v.validate() === false);
 
     v.setValues({ k1: '' });

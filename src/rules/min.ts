@@ -1,7 +1,7 @@
 import Validator from '../validator';
 import { isNumeric, isString, isArray } from '../internal/utils';
 
-Validator.registerRule('min', {}, (value: any, { min }: { min: number }) => {
+Validator.registerRule('min', (value: any, { min }: { min: number }) => {
   if (isNumeric(value)) {
     return parseFloat(<any>value) >= min;
   } else if (isString(value) || isArray(value)) {
@@ -9,4 +9,6 @@ Validator.registerRule('min', {}, (value: any, { min }: { min: number }) => {
   } else {
     return false;
   }
+}, {
+  mapArgsToParams: (min: number) => ({ min }),
 });

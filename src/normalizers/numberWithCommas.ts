@@ -1,7 +1,7 @@
 import Validator from '../validator';
 import { isString, isNumber } from '../internal/utils';
 
-Validator.registerNormalizer('numberWithCommas', {}, (value: any) => {
+Validator.registerNormalizer('numberWithCommas', (value: any) => {
   if (!isString(value) && !isNumber(value)) {
     return value;
   }

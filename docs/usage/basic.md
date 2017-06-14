@@ -14,7 +14,7 @@ const data = {
 const v = new Validator(data, {
   title: {
     required: true,
-    max: { max: 255 },
+    max: 255,
   },
   body: {
     required: true,
@@ -63,7 +63,7 @@ To validate only a specific field, pass the field name to `validate()`.
 const v = new Validator(data, {
   title: {
     required: true,
-    max: { max: 255 },
+    max: 255,
   },
   body: {
     required: true,

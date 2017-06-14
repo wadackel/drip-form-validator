@@ -11,7 +11,7 @@ Below is an example of registering the custom rule `"example"`.
 ```javascript
 import { Validator } from 'drip-form-validator';
 
-Validator.registerRule('example', {}, (value, params, field, values) => {
+Validator.registerRule('example', (value, params, field, values) => {
   return value === 'foo';
 });
 ```
@@ -19,7 +19,7 @@ Validator.registerRule('example', {}, (value, params, field, values) => {
 `registerRule()` has the following structure.
 
 ```typescript
-registerRule(rule: string, depends: RuleDepends, test: SyncValidationTester, implicit: boolean = true): void
+registerRule(rule: string, test: SyncValidationTester, options: BuiltinRuleOptions = {}): void
 ```
 
 `SyncValidationTester` has the following structure. It takes the same arguments as [Inline Validation](inline-validation.md).
@@ -29,6 +29,17 @@ registerRule(rule: string, depends: RuleDepends, test: SyncValidationTester, imp
 ```
 
 > **Tips:** Since all the built-in rules are defined using this `registerRule` method, it may be an implementation reference.
+
+`BuiltinRuleOptions` is an object with the following structure.
+
+```typescript
+{
+  implicit?: boolean;
+  depends?: RuleDepends;
+  override?: boolean;
+  mapArgsToParams?: MapArgsToParams;
+}
+```
 
 Please refer to [Asynchronous validation](./async-validation.md) for registration of asynchronous validations.
 
@@ -65,7 +76,7 @@ In such a case it is a good solution to pass the parameters as follows.
 ```javascript
 {
   fieldName: {
-    example: { text: 'bar' }
+    example: 'bar',
   }
 }
 ```
@@ -73,8 +84,9 @@ In such a case it is a good solution to pass the parameters as follows.
 The passed parameters are passed to `params` of `registerRule()`.
 
 ```javascript
-Validator.registerRule('example', {}, (value, params, field, values) => {
-  return value === params.text;
+Validator.registerRule('example', (value, text, field, values) => {
+  return value === text;
+  //     value === 'bar';
 });
 ```
 
@@ -92,8 +104,10 @@ It is possible for drip-form-validator.
 Please pass a list of rules to the second argument of `registerRule()`.
 
 ```javascript
-Validator.registerRule('example', { string: true }, (value, params, field, values) => {
-  return value === params.text;
+Validator.registerRule('example', (value, text, field, values) => {
+  return value === text;
+}, {
+  depends: { string: true },
 });
 ```
 
@@ -114,15 +128,79 @@ This is due to the effect of `implicit`. It is specified in the last argument of
 `true` is specified by default.
 
 ```javascript
-Validator.registerRule('example', { string: true }, (value, params, field, values) => {
-  return value === params.text;
-}, true);
+Validator.registerRule('example', (value, text, field, values) => {
+  return value === text;
+}, {
+  depends: { string: true },
+  implicit: true,
+});
 ```
 
 A rule that specifies `true` implicitly passes the test in the case mentioned above.  
 If `false`, the test is executed in all cases.
 
 For example, the existence of a key is used in uncertain rules etc. (`"required"` etc...)
+
+
+### Override builtin rules
+
+You may want to override the rules provided by `drip-form-validator`.  
+In such a case the `override` option is useful.
+
+```javascript
+Validator.registerRule('required', (value, params, field, values) => {
+  /* override rule specification */
+}, {
+  override: true,
+});
+```
+
+An error will occur if you normally try to register a rule with the same name.  
+You can override built-in rules by enabling `override` option.
+
+
+### Arguments mapping
+
+You can embed values using `{{keyword}}` in the error message template corresponding to the rule.
+
+```javascript
+{
+  ruleName: '"{{foo}}" is parameter.',
+}
+```
+
+Subscripts of object parameters are used for keywords.
+
+You can use the `mapArgsToParams` function to create this object.
+
+```javascript
+// Register rule
+Validator.registerRule('example', (value, params) => {
+  return value === params.text;
+}, {
+  mapArgsToParams: text => ({ text }),
+});
+
+// Define message
+Validator.setMessage('example', '{{field}} must be "{{text}}".');
+
+// Example
+const v = new Validator({
+  username: 'foo',
+}, {
+  username: {
+    example: 'bar',
+  },
+});
+
+v.validate();
+
+console.log(v.getAllErrors());
+// { username:
+//    [ { rule: 'example',
+//        params: { text: 'bar' },
+//        message: 'username must be "bar".' } ] }
+```
 
 
 ## Written test for Custom rules
