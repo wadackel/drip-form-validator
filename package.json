@@ -8,6 +8,7 @@
     "build": "tsc",
     "watch": "npm run build -- -w & npm run test:unit -- -w",
     "test": "npm run test:lint && npm run test:unit",
+    "test:watch": "npm run test:unit -- -w",
     "test:lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "test:unit": "mocha --compilers ts:ts-node/register,tsx:ts-node/register 'test/**/*.spec.ts'",
     "docs": "npm run docs:clean && npm run docs:build",
