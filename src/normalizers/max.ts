@@ -1,7 +1,7 @@
 import Validator from '../validator';
 import { isNumeric } from '../internal/utils';
 
-Validator.registerNormalizer('max', {}, (value: any, { max }: { max: number }) => {
+Validator.registerNormalizer('max', (value: any, max: number) => {
   if (value === Infinity) {
     return max;
   } else if (isNumeric(value)) {

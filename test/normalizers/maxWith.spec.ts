@@ -8,7 +8,7 @@ describe(`Normalizers#${normalizer}`, () => {
     const v = new Validator();
 
     v.setValues({ k1: 20, k2: 10 });
-    v.setNormalizers({ k1: { [normalizer]: { key: 'k2' } } });
+    v.setNormalizers({ k1: { [normalizer]: 'k2' } });
     v.normalize();
     assert(v.getValue('k1') === 10);
 

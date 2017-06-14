@@ -3,7 +3,7 @@ import dateFormat = require('date-fns/format');
 import Validator from '../validator';
 import { isString, isNumeric } from '../internal/utils';
 
-Validator.registerRule('time', {}, (value: any) => {
+Validator.registerRule('time', (value: any) => {
   if (!isString(value) && !isNumeric(value)) {
     return false;
   }

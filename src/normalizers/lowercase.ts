@@ -1,5 +1,7 @@
 import Validator from '../validator';
 
-Validator.registerNormalizer('lowercase', { toString: true }, (value: any) => {
+Validator.registerNormalizer('lowercase', (value: any) => {
   return value.toLowerCase();
+}, {
+  depends: { toString: true },
 });
