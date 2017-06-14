@@ -38,7 +38,7 @@ export type SyncValidationTester = InternalValidationTester<boolean | string>;
 export type AsyncValidationTester = InternalValidationTester<Promise<any>>;
 export type ValidationTester = SyncValidationTester | AsyncValidationTester;
 
-export type RuleParams = boolean | SyncValidationTester | RuleObjectParams;
+export type RuleParams = SyncValidationTester | any;
 
 export interface NormalizeObjectParams {
   [index: string]: any;
@@ -48,7 +48,7 @@ export interface Normalizer {
   (value: any, params: NormalizeParams, previousValue: any, values: Values, previousValues: Values): any;
 }
 
-export type NormalizeParams = boolean | Normalizer | NormalizeObjectParams;
+export type NormalizeParams = Normalizer | any;
 
 
 
@@ -117,15 +117,31 @@ export interface RuleList {
   [index: string]: Rule;
 }
 
+export interface MapArgsToParams {
+  (args: any): any;
+}
+
+export interface BuiltinRuleOptions {
+  implicit?: boolean;
+  depends?: RuleDepends;
+  override?: boolean;
+  mapArgsToParams?: MapArgsToParams;
+}
+
 export interface BuiltinRule {
   sync: boolean;
   depends: RuleDepends;
   test: ValidationTester;
   implicit: boolean;
+  mapArgsToParams: MapArgsToParams;
 }
 
 export interface BuiltinRuleList {
   [index: string]: BuiltinRule;
+}
+
+export interface InternalRuleKeysCallback {
+  (field: string, ruleName: string, rule: Rule | null, params: RuleParams | ValidationTester): boolean;
 }
 
 
@@ -139,6 +155,11 @@ export interface NormalizerDepends extends Normalizers {
 
 export interface NormalizerList {
   [index: string]: Normalizers;
+}
+
+export interface BuiltinNormalizerOptions {
+  depends?: NormalizerDepends;
+  override?: boolean;
 }
 
 export interface BuiltinNormalizer {
@@ -164,6 +185,7 @@ const defaultOptions = {
   messages: {},
   normalizers: {},
 };
+
 
 class Validator extends EventEmitter {
   static _locale: string = 'en';
@@ -243,8 +265,15 @@ class Validator extends EventEmitter {
   /**
    * Builtin rules
    */
-  private static internalRegisterRule(sync: boolean, rule: string, depends: RuleDepends, test: ValidationTester, implicit: boolean = true): void {
-    if (Validator.hasRule(rule)) {
+  private static internalRegisterRule(sync: boolean, rule: string, test: ValidationTester, options: BuiltinRuleOptions): void {
+    const {
+      implicit = true,
+      depends = {},
+      mapArgsToParams = (arg: any) => arg,
+      override = false,
+    } = options;
+
+    if (!override && Validator.hasRule(rule)) {
       invariant(false, `"${rule}" rule already exists`);
       return;
     }
@@ -263,18 +292,19 @@ class Validator extends EventEmitter {
 
     Validator._builtinRules[rule] = {
       sync,
-      depends,
       test,
+      depends,
       implicit,
+      mapArgsToParams,
     };
   }
 
-  static registerRule(rule: string, depends: RuleDepends, test: SyncValidationTester, implicit: boolean = true): void {
-    this.internalRegisterRule(true, rule, depends, test, implicit);
+  static registerRule(rule: string, test: SyncValidationTester, options: BuiltinRuleOptions = {}): void {
+    this.internalRegisterRule(true, rule, test, options);
   }
 
-  static registerAsyncRule(rule: string, depends: RuleDepends, test: AsyncValidationTester, implicit: boolean = true): void {
-    this.internalRegisterRule(false, rule, depends, test, implicit);
+  static registerAsyncRule(rule: string, test: AsyncValidationTester, options: BuiltinRuleOptions = {}): void {
+    this.internalRegisterRule(false, rule, test, options);
   }
 
   static hasRule(rule: string): boolean {
@@ -285,12 +315,21 @@ class Validator extends EventEmitter {
     return Validator.hasRule(rule) ? Validator._builtinRules[rule] : null;
   }
 
+  static isValidParams(value: any): boolean {
+    return value !== undefined && value !== null && value !== false;
+  }
+
 
   /**
    * Builtin normalizer
    */
-  static registerNormalizer(name: string, depends: NormalizerDepends, normalizer: Normalizer): void {
-    if (Validator.hasNormalizer(name)) {
+  static registerNormalizer(name: string, normalizer: Normalizer, options: BuiltinNormalizerOptions = {}): void {
+    const {
+      depends = {},
+      override = false,
+    } = options;
+
+    if (!override && Validator.hasNormalizer(name)) {
       invariant(false, `"${name}" normalizer already exists`);
       return;
     }
@@ -615,7 +654,25 @@ class Validator extends EventEmitter {
 
   mergeRules(rules: RuleList): void {
     invariant(isPlainObject(rules), '"rules" must be plain object');
-    this._rules = { ...this._rules, ...rules };
+
+    const results: RuleList = { ...this._rules, ...rules };
+
+    forEach(rules, (list: Rule, field: string) => {
+      forEach(list, (params: RuleParams | ValidationTester, ruleName: string) => {
+        const rule = Validator.getRule(ruleName);
+
+        if (rule) {
+          results[field] = {
+            ...(results[field] || {}),
+            [ruleName]: rule.mapArgsToParams(params),
+          };
+        }
+      });
+    });
+
+    this._rules = results;
+  }
+
   }
 
 
@@ -713,10 +770,9 @@ class Validator extends EventEmitter {
     previousValue: any,
     previousValues: Values,
   ): any {
-    const isObjParams = isPlainObject(params);
     const isInline = isFunction(params);
 
-    if (!isObjParams && !isInline && params !== true) {
+    if (!isInline && !Validator.isValidParams(params)) {
       return value;
     }
 
@@ -739,7 +795,7 @@ class Validator extends EventEmitter {
       result = this.executeNormalize(n, field, result, p, previousValue, previousValues);
     });
 
-    return normalizer(result, isObjParams ? params : {}, previousValue, values, previousValues);
+    return normalizer(result, params, previousValue, values, previousValues);
   }
 
 
@@ -853,15 +909,21 @@ class Validator extends EventEmitter {
       .catch(message => reject(isString(message) ? message : false));
   }
 
-  protected executeTest(sync: boolean, rule: string, field: string, value: any, params: RuleParams, force: boolean = false): boolean | string | Promise<string | void> {
-    const isObjParams = isPlainObject(params);
+  protected executeTest(
+    sync: boolean,
+    rule: string,
+    field: string,
+    value: any,
+    params: RuleParams,
+    force: boolean = false,
+  ): boolean | string | Promise<string | void> {
     const isInline = isFunction(params);
-    if (!isObjParams && !isInline && params !== true) return true;
+    if (!Validator.isValidParams(params) && !isInline) return true;
 
     // inline test
     if (isInline) {
       const inline = <SyncValidationTester>params;
-      return sync ? inline(value, {}, field, this._values) : true;
+      return sync ? inline(value, <RuleParams>true, field, this._values) : true;
 
     // search rule
     } else if (!Validator.hasRule(rule)) {
@@ -900,7 +962,7 @@ class Validator extends EventEmitter {
 
       return !passDepends
         ? false
-        : test(value, isObjParams ? <RuleObjectParams>params : {}, field, this._values);
+        : test(value, params, field, this._values);
     }
 
     return Promise
@@ -913,7 +975,7 @@ class Validator extends EventEmitter {
 
         return result === true ? Promise.resolve() : Promise.reject(null);
       }))
-      .then(() => test(value, isObjParams ? <RuleObjectParams>params : {}, field, this._values))
+      .then(() => test(value, params, field, this._values))
       .catch(message => Promise.reject(message));
   }
 }
