@@ -53,8 +53,8 @@
     "mocha": "^3.4.1",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.1",
-    "sinon": "^2.3.4",
-    "ts-node": "^3.0.6",
+    "sinon": "^2.3.5",
+    "ts-node": "^3.1.0",
     "tslint": "^5.4.3",
     "typedoc": "^0.7.1",
     "typescript": "^2.3.4"
