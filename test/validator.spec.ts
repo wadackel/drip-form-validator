@@ -844,16 +844,22 @@ describe('Validator', () => {
           mapArgsToParams: bar => ({ bar }),
         });
 
+        Validator.registerAsyncRule('rule4', () => Promise.resolve(), {
+          mapArgsToParams: (baz: string, v: Validator) => ({ baz, v }),
+        });
+
         v.setRules({
           key1: {
             rule1: true,
             rule2: 10,
             rule3: 'key1-rule3',
+            rule4: 'key1-rule4',
           },
           key2: {
             rule1: true,
             rule2: 20,
             rule3: 'key2-rule3',
+            rule4: 'key2-rule4',
           },
         });
 
@@ -862,11 +868,13 @@ describe('Validator', () => {
             rule1: true,
             rule2: { foo: 10 },
             rule3: { bar: 'key1-rule3' },
+            rule4: { baz: 'key1-rule4', v },
           },
           key2: {
             rule1: true,
             rule2: { foo: 20 },
             rule3: { bar: 'key2-rule3' },
+            rule4: { baz: 'key2-rule4', v },
           },
         });
       });

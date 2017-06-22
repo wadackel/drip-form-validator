@@ -118,7 +118,7 @@ export interface RuleList {
 }
 
 export interface MapArgsToParams {
-  (args: any): any;
+  (args: any, validator: Validator): any;
 }
 
 export interface BuiltinRuleOptions {
@@ -187,7 +187,7 @@ const defaultOptions = {
 };
 
 
-class Validator extends EventEmitter {
+export default class Validator extends EventEmitter {
   static _locale: string = 'en';
   static _localeMessages: DefinedLocaleMessages = {};
   static _builtinRules: BuiltinRuleList = {};
@@ -381,12 +381,12 @@ class Validator extends EventEmitter {
 
     const opts = { ...defaultOptions, ...options };
 
-    this.setValues(values);
-    this.setRules(rules);
-
     if (opts.normalizers) this.setNormalizers(opts.normalizers);
     if (opts.messages) this.setMessages(opts.messages);
     if (opts.labels) this.setLabels(opts.labels);
+
+    this.setValues(values);
+    this.setRules(rules);
   }
 
 
@@ -664,7 +664,7 @@ class Validator extends EventEmitter {
         if (rule) {
           results[field] = {
             ...(results[field] || {}),
-            [ruleName]: rule.mapArgsToParams(params),
+            [ruleName]: rule.mapArgsToParams(params, this),
           };
         }
       });
@@ -1014,6 +1014,3 @@ class Validator extends EventEmitter {
       .catch(message => Promise.reject(message));
   }
 }
-
-
-export default Validator;
