@@ -25,7 +25,7 @@ Validator.defineLocale('en', {
   },
   date: 'The {{field}} is not a valid date.',
   dateFormat: 'The {{field}} does not matche the date format {{format}}.',
-  different: 'The {{field}} and {{key}} must be different.',
+  different: 'The {{field}} and {{label}} must be different.',
   email: 'The {{field}} must be a valid email address.',
   equals: 'The {{field}} must be "{{value}}".',
   falsy: 'The {{field}} must not be truthy.',
@@ -51,7 +51,7 @@ Validator.defineLocale('en', {
   object: 'The {{field}} must be a object.',
   present: 'The {{field}} field must be present.',
   required: 'The {{field}} field is required.',
-  same: 'The {{field}} and {{key}} must match.',
+  same: 'The {{field}} and {{label}} must match.',
   size: {
     defaultMessage: 'The {{field}} must be {{size}}.',
     string: 'The {{field}} must be {{size}} characters.',

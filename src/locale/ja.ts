@@ -25,7 +25,7 @@ Validator.defineLocale('ja', {
   },
   date: '{{field}}には有効な日付を指定してください。',
   dateFormat: '{{field}}には有効な日付を指定してください。',
-  different: '{{field}}は{{key}}には異なる内容を指定してください。',
+  different: '{{field}}は{{label}}には異なる内容を指定してください。',
   email: '{{field}}には有効なメールアドレスを指定してください。',
   equals: '{{field}}は"{{value}}"でなくてはなりません。',
   falsy: '{{field}}は無効な内容でなくてはなりません。',
@@ -51,7 +51,7 @@ Validator.defineLocale('ja', {
   object: '{{field}}はオブジェクトでなくてはなりません。',
   present: '{{field}}が存在する必要があります。',
   required: '{{field}}は必須項目です。',
-  same: '{{field}}と{{key}}は一致しなくてはなりません。',
+  same: '{{field}}と{{label}}は一致しなくてはなりません。',
   size: {
     defaultMessage: '{{field}}は{{size}}を指定してください。',
     string: '{{field}}は{{size}}文字で指定してください。',
