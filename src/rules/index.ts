@@ -16,6 +16,7 @@ import './alphaDash';
 import './alphaNumeric';
 import './before';
 import './between';
+import './betweenWith';
 import './dateFormat';
 import './different';
 import './email';
