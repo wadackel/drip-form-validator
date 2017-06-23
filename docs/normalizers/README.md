@@ -1,4 +1,4 @@
-# Builtin Normalizers
+# Built-in Normalizers
 
 * [`between`](#between)
 * [`betweenWith`](#betweenwith)
