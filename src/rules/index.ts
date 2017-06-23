@@ -25,6 +25,7 @@ import './format';
 import './in';
 import './lowercase';
 import './max';
+import './maxWith';
 import './min';
 import './natural';
 import './notIn';
