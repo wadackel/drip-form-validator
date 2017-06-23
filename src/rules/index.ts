@@ -27,6 +27,7 @@ import './lowercase';
 import './max';
 import './maxWith';
 import './min';
+import './minWith';
 import './natural';
 import './notIn';
 import './same';
