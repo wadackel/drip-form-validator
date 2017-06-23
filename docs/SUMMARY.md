@@ -11,9 +11,9 @@
     - [Events](usage/events.md)
     - [Custom Validation Rules](usage/custom-rules.md)
     - [Custom Normalizers](usage/custom-normalizers.md)
-    - [l18n](usage/l18n.md)
-* [Builtin Rules](rules/README.md)
-* [Builtin Normalizers](normalizers/README.md)
+    - [i18n](usage/i18n.md)
+* [Built-in Rules](rules/README.md)
+* [Built-in Normalizers](normalizers/README.md)
 
 ---
 

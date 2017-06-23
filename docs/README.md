@@ -6,7 +6,7 @@ drip-form-validator has the following features.
 * Support Asynchronous validation.
 * Support validation of intuitive array.
 * Support normalize values.
-* Support l18n. (welcome PRs!)
+* Support i18n. (welcome PRs!)
 * Written by TypeScript.
 
 

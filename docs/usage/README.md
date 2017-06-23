@@ -12,5 +12,5 @@
 * [Events](events.md)
 * [Custom Validation Rules](custom-rules.md)
 * [Custom Normalizers](custom-normalizers.md)
-* [l18n](l18n.md)
+* [i18n](i18n.md)
 

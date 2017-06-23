@@ -1,4 +1,4 @@
-# Builtin Rules
+# Built-in Rules
 
 * [`after`](#after)
 * [`alpha`](#alpha)
@@ -7,6 +7,7 @@
 * [`array`](#array)
 * [`before`](#before)
 * [`between`](#between)
+* [`betweenWith`](#betweenwith)
 * [`date`](#date)
 * [`dateFormat`](#dateformat)
 * [`different`](#different)
@@ -19,7 +20,9 @@
 * [`integer`](#integer)
 * [`lowercase`](#lowercase)
 * [`max`](#max)
+* [`maxWith`](#maxwith)
 * [`min`](#min)
+* [`minWith`](#minwith)
 * [`natural`](#natural)
 * [`notIn`](#notin)
 * [`number`](#number)
@@ -154,6 +157,27 @@ For character strings and arrays, check the `length` attribute, if it is a numbe
   between: {
     min: 10,
     max: 20,
+  },
+}
+```
+
+
+## `betweenWith`
+
+For character strings and arrays, check the `length` attribute, if it is a number, make sure that they are within the field specified by the `min` and` max` options.
+
+**Parameters:**
+
+* `min`: `string`
+* `max`: `string`
+
+**Example:**
+
+```javascript
+{
+  between: {
+    min: 'minKey',
+    max: 'maxKey',
   },
 }
 ```
@@ -375,6 +399,23 @@ For character strings and arrays, check the `length` attribute, for numeric valu
 ```
 
 
+## `maxWith`
+
+For character strings and arrays, check the `length` attribute, for numeric values, make sure that it does not exceed the numerical value of the specified field.
+
+**Parameters:**
+
+* `string`
+
+**Example:**
+
+```javascript
+{
+  max: 'maxKey',
+}
+```
+
+
 ## `min`
 
 For character strings and arrays, check the length attribute, and for numeric values, check that the value exceeds the specified number.
@@ -388,6 +429,23 @@ For character strings and arrays, check the length attribute, and for numeric va
 ```javascript
 {
   min: 24,
+}
+```
+
+
+## `minWith`
+
+For character strings and arrays, check the length attribute, and for numeric values, make sure that it is larger than the numeric value of the specified field
+
+**Parameters:**
+
+* `string`
+
+**Example:**
+
+```javascript
+{
+  min: 'minKey',
 }
 ```
 
