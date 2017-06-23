@@ -1,6 +1,6 @@
 {
   "name": "drip-form-validator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple and Powerful and Customizable validation library for JavaScript.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
