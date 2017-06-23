@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Builtin Rules · drip-form-validator</title>
+        <title>Built-in Rules · drip-form-validator</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.2">
@@ -64,7 +64,7 @@
     <link rel="next" href="../normalizers/" />
     
     
-    <link rel="prev" href="../usage/l18n.html" />
+    <link rel="prev" href="../usage/i18n.html" />
     
 
     </head>
@@ -250,12 +250,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.11" data-path="../usage/l18n.html">
+        <li class="chapter " data-level="1.2.11" data-path="../usage/i18n.html">
             
-                <a href="../usage/l18n.html">
+                <a href="../usage/i18n.html">
             
                     
-                    l18n
+                    i18n
             
                 </a>
             
@@ -273,7 +273,7 @@
                 <a href="./">
             
                     
-                    Builtin Rules
+                    Built-in Rules
             
                 </a>
             
@@ -286,7 +286,7 @@
                 <a href="../normalizers/">
             
                     
-                    Builtin Normalizers
+                    Built-in Normalizers
             
                 </a>
             
@@ -357,7 +357,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Builtin Rules</a>
+        <a href=".." >Built-in Rules</a>
     </h1>
 </div>
 
@@ -372,7 +372,7 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="builtin-rules">Builtin Rules</h1>
+                                <h1 id="built-in-rules">Built-in Rules</h1>
 <ul>
 <li><a href="#after"><code>after</code></a></li>
 <li><a href="#alpha"><code>alpha</code></a></li>
@@ -381,6 +381,7 @@
 <li><a href="#array"><code>array</code></a></li>
 <li><a href="#before"><code>before</code></a></li>
 <li><a href="#between"><code>between</code></a></li>
+<li><a href="#betweenwith"><code>betweenWith</code></a></li>
 <li><a href="#date"><code>date</code></a></li>
 <li><a href="#dateformat"><code>dateFormat</code></a></li>
 <li><a href="#different"><code>different</code></a></li>
@@ -393,7 +394,9 @@
 <li><a href="#integer"><code>integer</code></a></li>
 <li><a href="#lowercase"><code>lowercase</code></a></li>
 <li><a href="#max"><code>max</code></a></li>
+<li><a href="#maxwith"><code>maxWith</code></a></li>
 <li><a href="#min"><code>min</code></a></li>
+<li><a href="#minwith"><code>minWith</code></a></li>
 <li><a href="#natural"><code>natural</code></a></li>
 <li><a href="#notin"><code>notIn</code></a></li>
 <li><a href="#number"><code>number</code></a></li>
@@ -487,6 +490,21 @@
   between<span class="token punctuation">:</span> <span class="token punctuation">{</span>
     min<span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
     max<span class="token punctuation">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="betweenwith"><code>betweenWith</code></h2>
+<p>For character strings and arrays, check the <code>length</code> attribute, if it is a number, make sure that they are within the field specified by the <code>min</code> and<code>max</code> options.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>min</code>: <code>string</code></li>
+<li><code>max</code>: <code>string</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  between<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    min<span class="token punctuation">:</span> <span class="token string">&apos;minKey&apos;</span><span class="token punctuation">,</span>
+    max<span class="token punctuation">:</span> <span class="token string">&apos;maxKey&apos;</span><span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
@@ -634,6 +652,17 @@
   max<span class="token punctuation">:</span> <span class="token number">120</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
+<h2 id="maxwith"><code>maxWith</code></h2>
+<p>For character strings and arrays, check the <code>length</code> attribute, for numeric values, make sure that it does not exceed the numerical value of the specified field.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>string</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  max<span class="token punctuation">:</span> <span class="token string">&apos;maxKey&apos;</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="min"><code>min</code></h2>
 <p>For character strings and arrays, check the length attribute, and for numeric values, check that the value exceeds the specified number.</p>
 <p><strong>Parameters:</strong></p>
@@ -643,6 +672,17 @@
 <p><strong>Example:</strong></p>
 <pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
   min<span class="token punctuation">:</span> <span class="token number">24</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="minwith"><code>minWith</code></h2>
+<p>For character strings and arrays, check the length attribute, and for numeric values, make sure that it is larger than the numeric value of the specified field</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>string</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token punctuation">{</span>
+  min<span class="token punctuation">:</span> <span class="token string">&apos;minKey&apos;</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="natural"><code>natural</code></h2>
@@ -864,12 +904,12 @@
 
             
                 
-                <a href="../usage/l18n.html" class="navigation navigation-prev " aria-label="Previous page: l18n">
+                <a href="../usage/i18n.html" class="navigation navigation-prev " aria-label="Previous page: i18n">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../normalizers/" class="navigation navigation-next " aria-label="Next page: Builtin Normalizers">
+                <a href="../normalizers/" class="navigation navigation-next " aria-label="Next page: Built-in Normalizers">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -880,7 +920,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Builtin Rules","level":"1.3","depth":1,"next":{"title":"Builtin Normalizers","level":"1.4","depth":1,"path":"normalizers/README.md","ref":"normalizers/README.md","articles":[]},"previous":{"title":"l18n","level":"1.2.11","depth":2,"path":"usage/l18n.md","ref":"usage/l18n.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"rules/README.md","mtime":"2017-06-14T16:13:09.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-14T16:13:26.367Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Built-in Rules","level":"1.3","depth":1,"next":{"title":"Built-in Normalizers","level":"1.4","depth":1,"path":"normalizers/README.md","ref":"normalizers/README.md","articles":[]},"previous":{"title":"i18n","level":"1.2.11","depth":2,"path":"usage/i18n.md","ref":"usage/i18n.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-published-with","prism","-highlight","github","advanced-emoji"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/tsuyoshiwada/drip-form-validator"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"drip-form-validator","gitbook":"*"},"file":{"path":"rules/README.md","mtime":"2017-06-23T12:29:13.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-23T12:29:30.089Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
