@@ -1,4 +1,4 @@
-import Validator from '../validator';
+import Validator from '../Validator';
 
 Validator.registerRule('alphaDash', (value: any) => {
   return /^[A-Za-z\d-_]+$/.test(value);

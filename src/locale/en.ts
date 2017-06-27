@@ -1,5 +1,5 @@
 import format = require('date-fns/format');
-import Validator, { MessageCreatorParams } from '../validator';
+import Validator, { MessageCreatorParams } from '../Validator';
 
 
 const dateToString = (date: Date | string | number): string => format(date, 'YYYY-MM-DD HH:mm:ss');

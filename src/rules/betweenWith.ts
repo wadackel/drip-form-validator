@@ -1,5 +1,5 @@
 import * as dot from 'dot-wild';
-import Validator, { Values } from '../validator';
+import Validator, { Values } from '../Validator';
 import { isNumeric, isString, isArray } from '../internal/utils';
 
 interface RuleBetweenParams {

@@ -1,4 +1,4 @@
-import Validator from '../validator';
+import Validator from '../Validator';
 
 Validator.registerNormalizer('uppercase', (value: any) => {
   return value.toUpperCase();

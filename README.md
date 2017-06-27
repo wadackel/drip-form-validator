@@ -1,6 +1,7 @@
 # drip-form-validator
 
 [![Build Status](http://img.shields.io/travis/tsuyoshiwada/drip-form-validator.svg?style=flat-square)](https://travis-ci.org/tsuyoshiwada/drip-form-validator)
+[![Codecov](https://img.shields.io/codecov/c/github/tsuyoshiwada/drip-form-validator.svg?style=flat-square)](https://codecov.io/gh/tsuyoshiwada/drip-form-validator)
 [![npm version](https://img.shields.io/npm/v/drip-form-validator.svg?style=flat-square)](http://badge.fury.io/js/drip-form-validator)
 
 > Simple and Powerful and Customizable validation library for JavaScript.

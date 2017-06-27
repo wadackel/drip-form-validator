@@ -1,4 +1,4 @@
-import Validator from '../validator';
+import Validator from '../Validator';
 import { isString, isNumber } from '../internal/utils';
 
 Validator.registerRule('format', (value: any, { regex }: { regex: RegExp }) => {

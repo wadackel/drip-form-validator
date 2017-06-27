@@ -5,7 +5,7 @@ import map = require('lodash.map');
 import isPlainObject = require('lodash.isplainobject');
 import * as dot from 'dot-wild';
 
-import * as EventTypes from './event-types';
+import * as EventTypes from './eventTypes';
 import {
   hasProp,
   weakTypeOf,

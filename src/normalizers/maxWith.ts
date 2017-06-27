@@ -1,4 +1,4 @@
-import Validator from '../validator';
+import Validator from '../Validator';
 import { hasProp, isNumeric } from '../internal/utils';
 
 Validator.registerNormalizer('maxWith', (value: any, key: string, _: any, values: any) => {

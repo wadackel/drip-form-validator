@@ -1,4 +1,4 @@
-import Validator from '../validator';
+import Validator from '../Validator';
 import { isNumeric, isString, isArray } from '../internal/utils';
 
 Validator.registerRule('min', (value: any, { min }: { min: number }) => {

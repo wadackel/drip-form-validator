@@ -13,8 +13,7 @@
     ],
     "types": [
       "node",
-      "mocha",
-      "power-assert"
+      "jest"
     ],
     "noImplicitAny": true,
     "strictNullChecks": true,

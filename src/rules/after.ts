@@ -1,5 +1,5 @@
 import isAfter = require('date-fns/is_after');
-import Validator from '../validator';
+import Validator from '../Validator';
 import { isString, isNumber, isDate } from '../internal/utils';
 
 Validator.registerRule('after', (value: any, { date }: { date: string | number | Date }) => {
