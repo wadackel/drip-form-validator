@@ -1,5 +1,5 @@
 import isEqual = require('lodash.isequal');
-import Validator, { Values } from '../validator';
+import Validator, { Values } from '../Validator';
 import { hasProp } from '../internal/utils';
 
 Validator.registerRule('same', (value: any, { key }: { key: string }, _: any, values: Values) => {

@@ -1,7 +1,5 @@
-import Validator from './validator';
-import * as EventTypes from './event-types';
-import createRuleTester from './create-rule-tester';
-import createNormalizeTester from './create-normalize-tester';
+import Validator from './Validator';
+import * as EventTypes from './eventTypes';
 import './rules/';
 import './normalizers/';
 import './locale/en';
@@ -9,6 +7,4 @@ import './locale/en';
 export {
   Validator,
   EventTypes,
-  createRuleTester,
-  createNormalizeTester,
 };

@@ -1,5 +1,5 @@
 import rtrim = require('validator/lib/rtrim');
-import Validator from '../validator';
+import Validator from '../Validator';
 import { isString, isNumber } from '../internal/utils';
 
 Validator.registerNormalizer('rtrim', (value: any, chars: string | boolean) => {

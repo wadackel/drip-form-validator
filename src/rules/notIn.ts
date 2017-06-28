@@ -1,4 +1,4 @@
-import Validator from '../validator';
+import Validator from '../Validator';
 
 Validator.registerRule('notIn', (value: any, { values }: { values: any[] }) => {
   return values.indexOf(value) < 0;

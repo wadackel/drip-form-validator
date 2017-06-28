@@ -1,4 +1,4 @@
-import Validator from '../validator';
+import Validator from '../Validator';
 import { hasProp, isNumeric } from '../internal/utils';
 
 Validator.registerNormalizer('betweenWith', (value: any, { min, max }: { min: string, max: string }, _: any, values: any) => {

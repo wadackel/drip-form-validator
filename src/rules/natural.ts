@@ -1,4 +1,4 @@
-import Validator from '../validator';
+import Validator from '../Validator';
 import { isInteger } from '../internal/utils';
 
 Validator.registerRule('natural', (value: any, params: { disallowZero?: boolean } | null) => {

@@ -1,5 +1,5 @@
 import escape = require('validator/lib/escape');
-import Validator from '../validator';
+import Validator from '../Validator';
 
 Validator.registerNormalizer('escape', (value: any) => {
   return escape(value);

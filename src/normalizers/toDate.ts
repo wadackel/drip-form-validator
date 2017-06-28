@@ -1,5 +1,5 @@
 import parse = require('date-fns/parse');
-import Validator from '../validator';
+import Validator from '../Validator';
 import { isString } from '../internal/utils';
 
 Validator.registerNormalizer('toDate', (value: any) => {
