@@ -790,132 +790,6 @@ describe('Validator', () => {
     });
 
 
-    describe('Rules', () => {
-      let v: Validator;
-
-      beforeEach(() => {
-        v = new Validator();
-      });
-
-
-      test('Should be get/set rules', () => {
-        expect(v.getRules()).toEqual({});
-        v.setRules({ key: { required: true }});
-        expect(v.getRules()).toEqual({ key: { required: true } });
-        v.setRules({ foo: { required: false }});
-        expect(v.getRules()).toEqual({ foo: { required: false } });
-
-        expect(() => v.setRules(<any>null)).toThrow();
-        expect(() => v.setRules(<any>10)).toThrow();
-      });
-
-
-      test('Should be set rules with constructor', () => {
-        const rules = { foo: { required: true }, bar: { rule: { param1: 'value' } } };
-        const vv = new Validator({}, rules);
-        expect(vv.getRules()).toEqual(rules);
-      });
-
-
-      test('Should be merge rules', () => {
-        v.setRules({ k1: { required: true } });
-        v.mergeRules({ k2: { required: false } });
-        expect(v.getRules()).toEqual({
-          k1: { required: true },
-          k2: { required: false },
-        });
-
-        expect(() => v.mergeRules(<any>null)).toThrow();
-      });
-
-
-      test('Should be map arguments to params', () => {
-        Validator.registerRule('rule1', () => true, {
-          mapArgsToParams: a => a,
-        });
-
-        Validator.registerRule('rule2', () => true, {
-          mapArgsToParams: foo => ({ foo }),
-        });
-
-        Validator.registerAsyncRule('rule3', () => Promise.resolve(), {
-          mapArgsToParams: bar => ({ bar }),
-        });
-
-        Validator.registerAsyncRule('rule4', () => Promise.resolve(), {
-          mapArgsToParams: (baz: string, v: Validator) => ({ baz, v }),
-        });
-
-        v.setRules({
-          key1: {
-            rule1: true,
-            rule2: 10,
-            rule3: 'key1-rule3',
-            rule4: 'key1-rule4',
-          },
-          key2: {
-            rule1: true,
-            rule2: 20,
-            rule3: 'key2-rule3',
-            rule4: 'key2-rule4',
-          },
-        });
-
-        expect(v.getRules()).toEqual({
-          key1: {
-            rule1: true,
-            rule2: { foo: 10 },
-            rule3: { bar: 'key1-rule3' },
-            rule4: { baz: 'key1-rule4', v },
-          },
-          key2: {
-            rule1: true,
-            rule2: { foo: 20 },
-            rule3: { bar: 'key2-rule3' },
-            rule4: { baz: 'key2-rule4', v },
-          },
-        });
-      });
-
-
-      test('Should be get fields that specifies sync or async rules', () => {
-        Validator.registerRule('sync1', () => true);
-        Validator.registerRule('sync2', () => true);
-        Validator.registerRule('sync3', () => true);
-        Validator.registerAsyncRule('async1', () => Promise.resolve());
-        Validator.registerAsyncRule('async2', () => Promise.resolve());
-        Validator.registerAsyncRule('async3', () => Promise.resolve());
-
-        v.setRules({
-          onlySync1: { sync1: true, sync2: true },
-          onlySync2: { sync1: true, sync2: false },
-          onlySync3: { sync1: false, sync2: false },
-          onlyAsync1: { async1: true, async2: true },
-          onlyAsync2: { async1: true, async2: false },
-          onlyAsync3: { async1: false, async2: false },
-          mixed1: { sync1: true, async1: true },
-          mixed2: { sync1: true, async1: false },
-          mixed3: { sync1: false, async1: true },
-          mixed4: { sync1: false, async1: false },
-        });
-
-        expect(v.getSyncRuleKeys()).toEqual([
-          'onlySync1',
-          'onlySync2',
-          'mixed1',
-          'mixed2',
-        ]);
-
-        expect(v.getAsyncRuleKeys()).toEqual([
-          'onlyAsync1',
-          'onlyAsync2',
-          'mixed1',
-          'mixed3',
-        ]);
-      });
-    });
-
-
     describe('Messages', () => {
       let v: Validator;
 
@@ -1277,15 +1151,32 @@ describe('Validator', () => {
 
 
       test('Should be set rules with constructor', () => {
-        const rules = { foo: { required: true }, bar: { rule: { param1: 'value' } } };
-        const vv = new Validator({}, rules);
-        expect(vv.getRules()).toEqual(rules);
+        const vv = new Validator({}, {
+          foo: {
+            required: true,
+          },
+          bar: {
+            rule: {
+              param1: 'value',
+            },
+          },
+        });
+
+        expect(vv.getRules()).toEqual({
+          foo: {
+            required: true,
+          },
+          bar: {
+            rule: { param1: 'value' },
+          },
+        });
       });
 
 
       test('Should be merge rules', () => {
         v.setRules({ k1: { required: true } });
         v.mergeRules({ k2: { required: false } });
+
         expect(v.getRules()).toEqual({
           k1: { required: true },
           k2: { required: false },
@@ -1312,12 +1203,17 @@ describe('Validator', () => {
           mapArgsToParams: (baz: string, v: Validator) => ({ baz, v }),
         });
 
+        Validator.registerAsyncRule('rule5', () => Promise.resolve(), {
+          mapArgsToParams: (_: any, v: Validator) => ({ label: v.getLabel('key1') }),
+        });
+
         v.setRules({
           key1: {
             rule1: true,
             rule2: 10,
             rule3: 'key1-rule3',
             rule4: 'key1-rule4',
+            rule5: true,
           },
           key2: {
             rule1: true,
@@ -1327,12 +1223,15 @@ describe('Validator', () => {
           },
         });
 
+        v.mappingRuleParams();
+
         expect(v.getRules()).toEqual({
           key1: {
             rule1: true,
             rule2: { foo: 10 },
             rule3: { bar: 'key1-rule3' },
             rule4: { baz: 'key1-rule4', v },
+            rule5: { label: 'key1' },
           },
           key2: {
             rule1: true,
@@ -1341,6 +1240,16 @@ describe('Validator', () => {
             rule4: { baz: 'key2-rule4', v },
           },
         });
+
+        v.setLabels({ key1: 'KEY 1' });
+        v.mappingRuleParams();
+
+        expect(v.getRules().key1.rule5).toEqual({ label: 'KEY 1' });
+
+        v.setLabels({ key1: '__key__1' });
+        v.mappingRuleParams();
+
+        expect(v.getRules().key1.rule5).toEqual({ label: '__key__1' });
       });
 
 
@@ -1728,7 +1637,9 @@ describe('Validator', () => {
 
 
     describe('Asynchronous validation', () => {
-      test('Should be return resolve (success)', (done) => {
+      test('Should be return resolve (success)', () => {
+        expect.assertions(5);
+
         Validator.registerAsyncRule('returnPromise', () => Promise.resolve());
 
         const values = { key: 'value' };
@@ -1740,23 +1651,25 @@ describe('Validator', () => {
 
         expect(v.isValidating()).toBe(false);
 
-        v.asyncValidate()
+        const res = v.asyncValidate();
+
+        expect(v.isValidating()).toBe(true);
+
+        return res
           .then(resultValues => {
             expect(v.isValidating()).toBe(false);
             expect(resultValues).toEqual(v.getValues());
             expect(resultValues).toEqual(values);
-            done();
           })
           .catch(() => {
-            console.log(v.getAllErrors());
             throw new Error();
           });
-
-          expect(v.isValidating()).toBe(true);
       });
 
 
-      test('Should be return reject (failure)', (done) => {
+      test('Should be return reject (failure)', () => {
+        expect.assertions(4);
+
         Validator.registerAsyncRule('test', () => Promise.reject('Error!!'));
 
         const values = { key: 'value' };
@@ -1764,7 +1677,11 @@ describe('Validator', () => {
           key: { test: true },
         });
 
-        v.asyncValidate()
+        const res = v.asyncValidate();
+
+        expect(v.isValidating()).toBe(true);
+
+        return res
           .then(() => {
             throw new Error();
           })
@@ -1776,14 +1693,13 @@ describe('Validator', () => {
                 { rule: 'test', message: 'Error!!', params: true },
               ],
             });
-            done();
           });
-
-          expect(v.isValidating()).toBe(true);
       });
 
 
-      test('Should be called rules dependent on validation', (done) => {
+      test('Should be called rules dependent on validation', () => {
+        expect.assertions(6);
+
         const returnTrue = sinon.stub().returns(true);
         const returnResolve = sinon.stub().returns(Promise.resolve());
         const returnReject = sinon.stub().returns(Promise.reject(null));
@@ -1801,7 +1717,11 @@ describe('Validator', () => {
           { k1: { rule1: true }, k2: { rule2: true } },
         );
 
-        v.asyncValidate()
+        const res = v.asyncValidate();
+
+        expect(v.isValidating()).toBe(true);
+
+        return res
           .then(() => {
             throw new Error();
           })
@@ -1811,14 +1731,13 @@ describe('Validator', () => {
             expect(returnReject.callCount).toBe(1);
             expect(test1.callCount).toBe(1);
             expect(test2.callCount).toBe(0);
-            done();
           });
-
-        expect(v.isValidating()).toBe(true);
       });
 
 
-      test('Should not be call inline rule', (done) => {
+      test('Should not be call inline rule', () => {
+        expect.assertions(3);
+
         const test1 = sinon.stub().returns(true);
         const test2 = sinon.stub().returns(false);
         const test3 = sinon.stub().returns(Promise.resolve());
@@ -1835,12 +1754,11 @@ describe('Validator', () => {
           },
         });
 
-        v.asyncValidate()
+        return v.asyncValidate()
           .then(() => {
             expect(test1.callCount).toBe(0);
             expect(test2.callCount).toBe(0);
             expect(test3.callCount).toBe(1);
-            done();
           })
           .catch(() => {
             throw new Error();
@@ -1850,7 +1768,9 @@ describe('Validator', () => {
 
 
     describe('Sync & Asynchronous validation', () => {
-      test('Should be return resolve', (done) => {
+      test('Should be return resolve', () => {
+        expect.assertions(8);
+
         const test1 = sinon.stub().returns(true);
         const test2 = sinon.stub().returns(false);
         const test3 = sinon.stub().returns(Promise.resolve());
@@ -1879,7 +1799,11 @@ describe('Validator', () => {
 
         expect(v.isValidating()).toBe(false);
 
-        v.asyncValidate()
+        const res = v.asyncValidate();
+
+        expect(v.isValidating()).toBe(true);
+
+        return res
           .then(returnValues => {
             expect(v.isValidating()).toBe(false);
             expect(returnValues).toEqual(values);
@@ -1887,17 +1811,16 @@ describe('Validator', () => {
             expect(test1.callCount).toBe(1);
             expect(test2.callCount).toBe(0);
             expect(test3.callCount).toBe(1);
-            done();
           })
           .catch(() => {
             throw new Error();
           });
-
-          expect(v.isValidating()).toBe(true);
       });
 
 
-      test('Should be return reject', (done) => {
+      test('Should be return reject', () => {
+        expect.assertions(7);
+
         const test1 = sinon.stub().returns(true);
         const test2 = sinon.stub().returns(false);
         const test3 = sinon.stub().returns(Promise.reject(null));
@@ -1932,7 +1855,11 @@ describe('Validator', () => {
 
         expect(v.isValidating()).toBe(false);
 
-        v.asyncValidate()
+        const res = v.asyncValidate();
+
+        expect(v.isValidating()).toBe(true);
+
+        return res
           .then(() => {
             throw new Error();
           })
@@ -1942,10 +1869,7 @@ describe('Validator', () => {
             expect(test1.callCount).toBe(1);
             expect(test2.callCount).toBe(0);
             expect(test3.callCount).toBe(1);
-            done();
           });
-
-          expect(v.isValidating()).toBe(true);
       });
     });
 
@@ -2013,7 +1937,9 @@ describe('Validator', () => {
       });
 
 
-      test('Should be return custom error message from async rule', (done) => {
+      test('Should be return custom error message from async rule', () => {
+        expect.assertions(1);
+
         Validator.registerAsyncRule('asyncError', () => Promise.reject(null));
         Validator.setMessage('asyncError', 'async message');
 
@@ -2021,7 +1947,7 @@ describe('Validator', () => {
           k1: { asyncError: true },
         });
 
-        v.asyncValidate()
+        return v.asyncValidate()
           .then(() => {
             throw new Error();
           })
@@ -2031,7 +1957,6 @@ describe('Validator', () => {
                 { rule: 'asyncError', message: 'async message', params: true },
               ],
             });
-            done();
           });
       });
     });
@@ -2066,7 +1991,9 @@ describe('Validator', () => {
 
 
     describe('Events', () => {
-      test('Should be fire before and after validate event.', (done) => {
+      test('Should be fire before and after validate event.', () => {
+        expect.assertions(3);
+
         const v = new Validator({ key: 'value' }, { key: { inline: () => true } });
         let str = '';
 
@@ -2079,31 +2006,32 @@ describe('Validator', () => {
           str += '-after';
           expect(str).toBe('before-after');
           expect(v).toBe(vv);
-          done();
         });
 
         v.validate();
       });
 
 
-      test('Should be fire valid event', (done) => {
+      test('Should be fire valid event', () => {
+        expect.assertions(1);
+
         const v = new Validator({ key: 'value' }, { key: { inline: () => true } });
 
         v.on(EventTypes.VALID, (vv: Validator) => {
           expect(v).toBe(vv);
-          done();
         });
 
         v.validate();
       });
 
 
-      test('Should be fire invalid event', (done) => {
+      test('Should be fire invalid event', () => {
+        expect.assertions(1);
+
         const v = new Validator({ key: 'value' }, { key: { inline: () => false } });
 
         v.on(EventTypes.INVALID, (vv: Validator) => {
           expect(v).toBe(vv);
-          done();
         });
 
         v.validate();
@@ -2186,37 +2114,38 @@ describe('Validator', () => {
       });
 
 
-      test('Should be async validate', (done) => {
+      test('Should be async validate', () => {
+        expect.assertions(1);
+
         const v = new Validator(getValues(), {
           code: { ok: true },
           'data.users.*.username': { resolve: true },
           'data.users.*.followers.*': { reject: true },
         });
 
-        v.asyncValidate()
+        return v.asyncValidate()
           .then(() => {
             throw new Error();
           })
-            .catch(errors => {
-              expect(errors).toEqual({
-                'data.users.0.followers.0': [
-                  { rule: 'reject', params: true, message: 'The data.users.0.followers.0 field is invalid.' },
-                ],
-                'data.users.0.followers.1': [
-                  { rule: 'reject', params: true, message: 'The data.users.0.followers.1 field is invalid.' },
-                ],
-                'data.users.1.followers.0': [
-                  { rule: 'reject', params: true, message: 'The data.users.1.followers.0 field is invalid.' },
-                ],
-                'data.users.2.followers.0': [
-                  { rule: 'reject', params: true, message: 'The data.users.2.followers.0 field is invalid.' },
-                ],
-                'data.users.2.followers.1': [
-                  { rule: 'reject', params: true, message: 'The data.users.2.followers.1 field is invalid.' },
-                ],
-              });
-              done();
+          .catch(errors => {
+            expect(errors).toEqual({
+              'data.users.0.followers.0': [
+                { rule: 'reject', params: true, message: 'The data.users.0.followers.0 field is invalid.' },
+              ],
+              'data.users.0.followers.1': [
+                { rule: 'reject', params: true, message: 'The data.users.0.followers.1 field is invalid.' },
+              ],
+              'data.users.1.followers.0': [
+                { rule: 'reject', params: true, message: 'The data.users.1.followers.0 field is invalid.' },
+              ],
+              'data.users.2.followers.0': [
+                { rule: 'reject', params: true, message: 'The data.users.2.followers.0 field is invalid.' },
+              ],
+              'data.users.2.followers.1': [
+                { rule: 'reject', params: true, message: 'The data.users.2.followers.1 field is invalid.' },
+              ],
             });
+          });
       });
 
 
