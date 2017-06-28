@@ -175,7 +175,7 @@ For character strings and arrays, check the `length` attribute, if it is a numbe
 
 ```javascript
 {
-  between: {
+  betweenWith: {
     min: 'minKey',
     max: 'maxKey',
   },
@@ -411,7 +411,7 @@ For character strings and arrays, check the `length` attribute, for numeric valu
 
 ```javascript
 {
-  max: 'maxKey',
+  maxWith: 'maxKey',
 }
 ```
 
@@ -445,7 +445,7 @@ For character strings and arrays, check the length attribute, and for numeric va
 
 ```javascript
 {
-  min: 'minKey',
+  minWith: 'minKey',
 }
 ```
 
