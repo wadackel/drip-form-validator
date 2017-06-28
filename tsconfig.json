@@ -4,8 +4,7 @@
     "target": "es5",
     "outDir": "./lib",
     "rootDirs": [
-      "./src",
-      "./test"
+      "./src"
     ],
     "lib": [
       "dom",
@@ -42,6 +41,7 @@
     "./src/**/*.ts"
   ],
   "exclude": [
-    "./node_modules"
+    "./node_modules",
+    "./src/**/__tests__/*.ts"
   ]
 }
