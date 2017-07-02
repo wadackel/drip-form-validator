@@ -70,7 +70,7 @@
     "@types/lodash.map": "^4.6.0",
     "@types/validator": "^6.2.0",
     "date-fns": "^1.28.5",
-    "dot-wild": "^2.2.3",
+    "dot-wild": "^2.2.4",
     "invariant": "^2.2.2",
     "lodash.foreach": "^4.5.0",
     "lodash.isempty": "^4.4.0",
