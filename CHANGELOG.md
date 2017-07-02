@@ -1,3 +1,8 @@
+## 0.0.4 (2016-07-02)
+
+* Update dependencies & devDependencies
+
+
 ## 0.0.3 (2017-06-28)
 
 * Switch to `jest` from `mocha` + `power-assert`
