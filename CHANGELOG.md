@@ -1,4 +1,9 @@
-## 0.0.4 (2016-07-02)
+## 0.0.5 (2017-07-02)
+
+* Update `dot-wild`
+
+
+## 0.0.4 (2017-07-02)
 
 * Update dependencies & devDependencies
 
