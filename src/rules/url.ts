@@ -6,7 +6,6 @@ Validator.registerRule('url', (value: any, params: any) => {
   return isURL(
     value,
     {
-      protocols: ['http', 'https', 'ftp'],
       require_protocol: true,
       ...(isPlainObject(params) ? params : {}),
     },
