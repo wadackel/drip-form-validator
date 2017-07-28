@@ -1,3 +1,12 @@
+## 0.0.6
+
+* Remove warnings that occur during installation
+    - Originally unnecessary, `@types/date-fns` has been removed from dependency.
+* Support for validator@8.x
+    - The treatment of `isURL()` has changed. Please check [CHANGELOG](https://github.com/chriso/validator.js/blob/master/CHANGELOG.md#800) of [validator.js](https://github.com/chriso/validator.js) for details.
+* Update dependencies & devDependencies
+
+
 ## 0.0.5
 
 > 2017-07-02
