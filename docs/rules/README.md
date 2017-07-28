@@ -707,15 +707,14 @@ Check if the value is valid URL format.
 // -- or --
 
 {
+  // This parameters is default.
   url: {
-    protocols: ['http','https','ftp'],
-    require_protocol: true,
+    protocols: ['http', 'https', 'ftp'],
     require_tld: true,
+    require_protocol: true,
     require_host: true,
     require_valid_protocol: true,
     allow_underscores: false,
-    host_whitelist: false,
-    host_blacklist: false,
     allow_trailing_dot: false,
     allow_protocol_relative_urls: false,
   },
