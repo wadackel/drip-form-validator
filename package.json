@@ -42,23 +42,23 @@
   },
   "homepage": "https://github.com/tsuyoshiwada/drip-form-validator#readme",
   "devDependencies": {
-    "@types/jest": "^20.0.2",
-    "@types/node": "^8.0.7",
-    "@types/sinon": "^2.3.2",
+    "@types/jest": "^20.0.5",
+    "@types/node": "^8.0.17",
+    "@types/sinon": "^2.3.3",
     "codecov": "^2.2.0",
     "gh-pages": "^1.0.0",
-    "gitbook-cli": "^2.3.0",
+    "gitbook-cli": "^2.3.2",
     "gitbook-plugin-advanced-emoji": "^0.2.2",
     "gitbook-plugin-github": "^3.0.0",
     "gitbook-plugin-hide-published-with": "^1.0.3",
-    "gitbook-plugin-prism": "^2.2.0",
+    "gitbook-plugin-prism": "^2.2.1",
     "glob": "^7.1.2",
     "jest": "^20.0.4",
     "rimraf": "^2.6.1",
-    "sinon": "^2.3.6",
-    "tslint": "^5.4.3",
-    "typedoc": "^0.7.1",
-    "typescript": "^2.4.1"
+    "sinon": "^2.4.1",
+    "tslint": "^5.5.0",
+    "typedoc": "^0.8.0",
+    "typescript": "^2.4.2"
   },
   "dependencies": {
     "@types/invariant": "^2.2.28",
@@ -67,7 +67,7 @@
     "@types/lodash.isequal": "^4.5.1",
     "@types/lodash.isplainobject": "^4.0.2",
     "@types/lodash.map": "^4.6.0",
-    "@types/validator": "^6.2.0",
+    "@types/validator": "^6.2.1",
     "date-fns": "^1.28.5",
     "dot-wild": "^2.2.4",
     "invariant": "^2.2.2",
@@ -76,7 +76,7 @@
     "lodash.isequal": "^4.5.0",
     "lodash.isplainobject": "^4.0.6",
     "lodash.map": "^4.6.0",
-    "validator": "^7.2.0"
+    "validator": "^8.0.0"
   },
   "files": [
     "lib"
