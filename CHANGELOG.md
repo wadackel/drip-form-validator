@@ -1,14 +1,20 @@
-## 0.0.5 (2017-07-02)
+## 0.0.5
+
+> 2017-07-02
 
 * Update `dot-wild`
 
 
-## 0.0.4 (2017-07-02)
+## 0.0.4
+
+> 2017-07-02
 
 * Update dependencies & devDependencies
 
 
-## 0.0.3 (2017-06-28)
+## 0.0.3
+
+> 2017-06-28
 
 * Switch to `jest` from `mocha` + `power-assert`
 * Fix execution timing of `mapArgsToParams`
@@ -19,7 +25,9 @@
 * Fix typo in docs
 
 
-## 0.0.2 (2017-06-23)
+## 0.0.2
+
+> 2017-06-23
 
 ### New rules
 
@@ -35,7 +43,9 @@
 * Update devDependencies
 
 
-## 0.0.1 (2017-06-16)
+## 0.0.1
+
+> 2017-06-16
 
 * First release
 
