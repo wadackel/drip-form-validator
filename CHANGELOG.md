@@ -1,4 +1,13 @@
+## 0.0.7
+
+> 2017-08-30
+
+* Update dependencies & devDependencies
+
+
 ## 0.0.6
+
+> 2017-07-28
 
 * Remove warnings that occur during installation
     - Originally unnecessary, `@types/date-fns` has been removed from dependency.
